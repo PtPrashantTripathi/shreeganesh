@@ -1,4 +1,4 @@
-package prashanttripathi.ga.shreeganesh;
+package ga.prashanttripathi.shreeganesh;
 
 import com.google.gson.Gson;
 

@@ -1,4 +1,4 @@
-package prashanttripathi.ga.shreeganesh;
+package ga.prashanttripathi.shreeganesh;
 
 import android.app.*;
 import android.os.*;
@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import java.util.Timer;
 import java.util.TimerTask;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 public class StartActivity extends Activity {
 	
@@ -29,33 +31,43 @@ public class StartActivity extends Activity {
 	private TextView textview1;
 	private ImageView imageview1;
 	
-	private TimerTask timer;
+	private TimerTask t;
+	private AlertDialog.Builder msg;
 	@Override
 	protected void onCreate(Bundle _savedInstanceState) {
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.start);
-		initialize();
+		initialize(_savedInstanceState);
 		initializeLogic();
 	}
 	
-	private void initialize() {
+	private void initialize(Bundle _savedInstanceState) {
 		
 		textview1 = (TextView) findViewById(R.id.textview1);
 		imageview1 = (ImageView) findViewById(R.id.imageview1);
+		msg = new AlertDialog.Builder(this);
 	}
 	private void initializeLogic() {
-		timer = new TimerTask() {
+		msg.setTitle("About");
+		msg.setMessage("The Astrological services provided by\nme are totally based upon krishna jyotish\npadathi, I am not responsible in any way\nfor any adverse consequences.Because\nAstrology has its limitations.\nDevloper: Pt. Prashant Tripathi");
+		msg.setPositiveButton("ok", new DialogInterface.OnClickListener() {
 			@Override
-			public void run() {
-				runOnUiThread(new Runnable() {
+			public void onClick(DialogInterface _dialog, int _which) {
+				t = new TimerTask() {
 					@Override
 					public void run() {
-						finish();
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								finish();
+							}
+						});
 					}
-				});
+				};
+				_timer.schedule(t, (int)(500));
 			}
-		};
-		_timer.schedule(timer, (int)(5000));
+		});
+		msg.create().show();
 	}
 	
 	@Override

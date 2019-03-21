@@ -1,6 +1,6 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="prashanttripathi.ga.shreeganesh">
+	package="ga.prashanttripathi.shreeganesh">
 	<uses-permission	android:name="android.permission.INTERNET"/>
 	<uses-permission	android:name="android.permission.ACCESS_NETWORK_STATE"/>
 	<application
@@ -21,13 +21,7 @@
 		<activity
 			android:name=".StartActivity"
 			android:configChanges="orientation|screenSize"
+			android:theme="@style/NoActionBar"
 			android:screenOrientation="portrait"/>
-		<activity
-			android:name="com.google.android.gms.ads.AdActivity"
-			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-			android:theme="@android:style/Theme.Translucent"/>
-		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version"/>
 	</application>
 </manifest>

@@ -1,4 +1,4 @@
-package prashanttripathi.ga.shreeganesh;
+package ga.prashanttripathi.shreeganesh;
 
 import android.app.Activity;
 

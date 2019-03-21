@@ -1,4 +1,4 @@
-package prashanttripathi.ga.shreeganesh;
+package ga.prashanttripathi.shreeganesh;
 
 import android.app.*;
 import android.os.*;
@@ -17,43 +17,32 @@ import android.view.animation.*;
 import java.util.*;
 import java.text.*;
 import android.app.Activity;
-import android.widget.LinearLayout;
 import android.webkit.WebView;
 import android.webkit.WebSettings;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.AdRequest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 
 public class MainActivity extends Activity {
 	
 	
-	private LinearLayout linear1;
-	private WebView webview2;
-	private AdView adview4;
+	private WebView webview1;
 	
-	private AlertDialog.Builder about;
 	private Intent i = new Intent();
 	@Override
 	protected void onCreate(Bundle _savedInstanceState) {
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.main);
-		initialize();
+		initialize(_savedInstanceState);
 		initializeLogic();
 	}
 	
-	private void initialize() {
+	private void initialize(Bundle _savedInstanceState) {
 		
-		linear1 = (LinearLayout) findViewById(R.id.linear1);
-		webview2 = (WebView) findViewById(R.id.webview2);
-		webview2.getSettings().setJavaScriptEnabled(true);
-		webview2.getSettings().setSupportZoom(true);
-		adview4 = (AdView) findViewById(R.id.adview4);
-		about = new AlertDialog.Builder(this);
+		webview1 = (WebView) findViewById(R.id.webview1);
+		webview1.getSettings().setJavaScriptEnabled(true);
+		webview1.getSettings().setSupportZoom(true);
 		
-		webview2.setWebViewClient(new WebViewClient() {
+		webview1.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageStarted(WebView _param1, String _param2, Bitmap _param3) {
 				final String _url = _param2;
@@ -70,18 +59,10 @@ public class MainActivity extends Activity {
 		});
 	}
 	private void initializeLogic() {
-		setTitle("|| श्री गणेशाय नमः ||");
 		i.setClass(getApplicationContext(), StartActivity.class);
 		startActivity(i);
-		about.setTitle("About");
-		about.setMessage("The Astrological services provided by me are totally based upon krishna jyotish padathi, I am not responsible in any way for any adverse consequences.Because Astrology has its limitations. \nDevloper : Pt. Prashant Tripathi");
-		about.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface _dialog, int _which) {
-				webview2.loadUrl("http://www.prashanttripathi.ga/portfolio/shreeganesh/shreeganesh.php");
-			}
-		});
-		about.create().show();
+		setTitle("श्री गणेश");
+		webview1.loadUrl("http://prashanttripathi.ga/portfolio/shreeganesh/shreeganesh.php");
 	}
 	
 	@Override

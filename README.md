@@ -1,2 +1,0 @@
-# Shree-Ganesh
-This a Android app for The Astrological services based upon  Krishna Jyotish Padathi,this android app help user to  get answers for Problem of his or her life with astrology.  I am not responsible in any way for any adverse consequences.  Because Astrology has its limitations.  It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app.
