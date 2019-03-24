@@ -19,13 +19,13 @@
 ![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?style=social)
 
 ## Contact
-Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)
-Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) 
-Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) 
-LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)
-GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)
-Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)
-Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
+Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
+Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <br>
+Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
+LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)<br>
+GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
+Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
+Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
                                 
 
 ## About
