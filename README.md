@@ -5,7 +5,9 @@
 ![](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![](https://img.shields.io/github/downloads/PtPrashantTripathi/Shree-Ganesh/total.svg)
 ![](https://img.shields.io/github/license/PtPrashantTripathi/Shree-Ganesh.svg)
-## Developer : [Pt. Parshant Tripathi](http://Prashanttripathi.ga)![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=%40PtPrashantTripathi&logo=github&style=social)[![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?style=social)]
+## Developer : [Pt. Parshant Tripathi](http://Prashanttripathi.ga)
+![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=Follow%20%40PtPrashantTripathi&logo=github&style=social)
+![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?style=social)
 
 ### Links
 Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
@@ -26,29 +28,20 @@ I am not responsible in any way for any adverse consequences.  Because Astrology
 
 ## Technology use
 
-✔️ Android SDK.
-
-✔️ HTML5,CSS3,jScript & PaperCss for front-end development.
-
-✔️ Java for backend.
-
-✔️ Apache server for testing and development.
-
-✔️ Git for version control.
-
-✔️ Notepade++ text for coding
+-[] Android SDK.
+-[] HTML5,CSS3,jScript & PaperCss for front-end development.
+-[] Java for backend.
+-[] Apache server for testing and development.
+-[] Git for version control.
+-[] Notepade++ text for coding
 
 ## Features
 
-✔️ First Online future consulting app.
-
-✔️ Responsive Interface.
-
-✔️ Based on Indian Astrology aka Vedic Astrology or Jyotish .
-
-✔️ Also includes The verious solution regarding your problem.
-
-✔️ It is Simple but Effective android app.
+-[] First Online future consulting app.
+-[] Responsive Interface.
+-[] Based on Indian Astrology aka Vedic Astrology or Jyotish .
+-[] Also includes The verious solution regarding your problem.
+-[] It is Simple but Effective android app.
 
 ## Importent Link 
 To know about it(http://www.prashanttripathi.ga/portfolio/shreeganesh/)
