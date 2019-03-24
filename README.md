@@ -1,18 +1,18 @@
 
 # Shree Ganesh v2.0
 
-![Top-languages](https://img.shields.io/github/languages/top/PtPrashantTripathi/Shree-Ganesh.svg?color=Blue&logo=java)
-![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
-![Code-Size](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
-![Total-Downlode](https://img.shields.io/github/downloads/PtPrashantTripathi/Shree-Ganesh/total.svg)
-![License](https://img.shields.io/github/license/PtPrashantTripathi/Shree-Ganesh.svg)
-![GitHub last commit](https://img.shields.io/github/last-commit/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub release](https://img.shields.io/github/release/PtPrashantTripathi/Shree-Ganesh.svg)
-![GitHub contributors](https://img.shields.io/github/contributors/PtPrashantTripathi/Shree-Ganesh.svg?color=0&logo=git&logoColor=orange)
 ![GitHub Release Date](https://img.shields.io/github/release-date/PtPrashantTripathi/Shree-Ganesh.svg)
-![Website Status](https://img.shields.io/website/http/Prashanttripathi.ga.svg?down_message=Down&up_message=Online)
+![License](https://img.shields.io/github/license/PtPrashantTripathi/Shree-Ganesh.svg)
+![Total-Downlode](https://img.shields.io/github/downloads/PtPrashantTripathi/Shree-Ganesh/total.svg)
+![GitHub contributors](https://img.shields.io/github/contributors/PtPrashantTripathi/Shree-Ganesh.svg?color=0&logo=git&logoColor=orange)
+![GitHub last commit](https://img.shields.io/github/last-commit/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/PtPrashantTripathi/Shree-Ganesh/v2.0.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/PtPrashantTripathi/Shree-Ganesh.svg)
+![Website Status](https://img.shields.io/website/http/Prashanttripathi.ga.svg?down_message=Down&up_message=Online)
+![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
+![Code-Size](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
+![Top-languages](https://img.shields.io/github/languages/top/PtPrashantTripathi/Shree-Ganesh.svg?color=Blue&logo=java)
 
 ## Developer : [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
 ![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=Follow%20%40PtPrashantTripathi&logo=github&style=social)
