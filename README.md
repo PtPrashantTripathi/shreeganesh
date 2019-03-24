@@ -1,5 +1,6 @@
 ![Shree Ganesh v2.0](/source%20code/app/src/main/res/drawable-xhdpi/app_icon.png)
 # Shree Ganesh v2.0
+![Devloper](https://img.shields.io/badge/Devloper-Pt.%20Prashant%20Tripathi-Success.svg)
 ![GitHub release](https://img.shields.io/github/release/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub Release Date](https://img.shields.io/github/release-date/PtPrashantTripathi/Shree-Ganesh.svg)
 ![License](https://img.shields.io/github/license/PtPrashantTripathi/Shree-Ganesh.svg)
@@ -12,20 +13,8 @@
 ![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Code-Size](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Top-languages](https://img.shields.io/github/languages/top/PtPrashantTripathi/Shree-Ganesh.svg?color=Blue&logo=java)
-
-## Developer : [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
 ![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=Follow%20%40PtPrashantTripathi&logo=github&style=social)
 ![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?style=social)
-
-## Contact
-Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
-Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <br>
-Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
-LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)<br>
-GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
-Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
-Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
-                                
 
 ## About
 
@@ -53,3 +42,15 @@ This a Android app for The Astrological services based upon the "Indian Astrolog
 - To know about it http://www.prashanttripathi.ga/portfolio/shreeganesh/
 - To view this project source code https://github.com/PtPrashantTripathi/Shree-Ganesh
 - To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk
+
+## Developer : [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
+
+## Contact
+Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
+Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <br>
+Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
+LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)<br>
+GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
+Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
+Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
+                                
