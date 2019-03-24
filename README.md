@@ -1,6 +1,7 @@
 
 # Shree Ganesh v2.0
-
+<div style="float: left"><img src="/source%20code/app/src/main/res/drawable-xhdpi/app_icon.png"/>
+</div>
 ![GitHub release](https://img.shields.io/github/release/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub Release Date](https://img.shields.io/github/release-date/PtPrashantTripathi/Shree-Ganesh.svg)
 ![License](https://img.shields.io/github/license/PtPrashantTripathi/Shree-Ganesh.svg)
