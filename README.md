@@ -1,9 +1,23 @@
-# Shree-Ganesh
-This a Android app for The Astrological services ba
-This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android appsed upon  Krishna Jyotish Padathi,this android app help user to  get answers for Problem of his or her life with astrology.  I am not responsible in any way for any adverse consequences.  Because Astrology has its limitations.  It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app.
+# Shree Ganesh 2.0
+![Pt. Parshant Tripathi](https://imgur.com/SyeD05H)
+Developer : [Pt. Parshant Tripathi](http://Prashanttripathi.ga)
+Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)
+Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) 
+Twitter : [@PtPrashant09](https://twitter.com/PtPrashant09) 
+LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)
+GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)
+Google+ :[+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)
+Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
+                                
 
-*Technology use*
-°°°°°°°°°°°°°°°°°°°°
+## About
+
+This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", 
+this android app help user to  get answers for Problem of his or her life with astrology.  
+It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app.
+I am not responsible in any way for any adverse consequences.  Because Astrology has its limitations.  
+
+## Technology use
 
 ✔️ Android SDK.
 
@@ -16,17 +30,8 @@ This a Android app for The Astrological services based upon the "Indian Astrolog
 ✔️ Git for version control.
 
 ✔️ Notepade++ text for coding
-*Shree Ganesh 2.0*
-°°°°°°°°°°°°°°°°°°°°°°
-*About*
 
-*Developer : Pt. Parshant Tripathi*
-
-To know about it(http://www.prashanttripathi.ga/portfolio/shreeganesh/)
-To view this project source code (https://github.com/PtPrashantTripathi/Shree-Ganesh)
-To Downlode the app (https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk)
-*Features*
-°°°°°°°°°°°°
+## Features
 
 ✔️ First Online future consulting app.
 
@@ -37,3 +42,8 @@ To Downlode the app (https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/mast
 ✔️ Also includes The verious solution regarding your problem.
 
 ✔️ It is Simple but Effective android app.
+
+## Importent Link 
+To know about it(http://www.prashanttripathi.ga/portfolio/shreeganesh/)
+To view this project source code (https://github.com/PtPrashantTripathi/Shree-Ganesh)
+To Downlode the app (https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk)
