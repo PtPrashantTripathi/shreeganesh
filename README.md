@@ -14,8 +14,8 @@
 ![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Code-Size](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Top-languages](https://img.shields.io/github/languages/top/PtPrashantTripathi/Shree-Ganesh.svg?color=Blue&logo=java)
-![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=Follow%20%40PtPrashantTripathi&logo=github&style=social)
-![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?style=social)
+![GitHub followers](https://img.shields.io/github/followers/PtPrashantTripathi.svg?label=%20%40PtPrashantTripathi&logo=github)
+![Twitter](https://img.shields.io/twitter/follow/PtPrashant09.svg?label=%20%40PtPrashant09&logo=twitter)
 
 ## About
 
