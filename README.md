@@ -1,12 +1,12 @@
 # Shree Ganesh 2.0
-![Pt. Parshant Tripathi](https://imgur.com/SyeD05H)
+
 Developer : [Pt. Parshant Tripathi](http://Prashanttripathi.ga)
 Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)
-Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) 
-Twitter : [@PtPrashant09](https://twitter.com/PtPrashant09) 
+![Facebook](http://i.imgur.com/P3YfQoD.png) : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) 
+![Twitter](http://i.imgur.com/tXSoThF.png) : [@PtPrashant09](https://twitter.com/PtPrashant09) 
 LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)
-GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)
-Google+ :[+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)
+![GitHub](http://i.imgur.com/0o48UoR.png) :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)
+![Google+](http://i.imgur.com/yCsTjba.png) :[+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)
 Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
                                 
 
