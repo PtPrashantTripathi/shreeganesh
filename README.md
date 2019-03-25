@@ -19,11 +19,11 @@
 
 ## About
 
-This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android app help user to  get answers for Problem of his or her life with astrology. It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app. I am not responsible in any way for any adverse consequences.  Because Astrology has its limitations.  
+>This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android app help user to  get answers for Problem of his or her life with astrology. It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app. I am not responsible in any way for any adverse consequences. Because Astrology has its limitations.  
 
 ## Technology use
 
--  Android Studio, Sketchware.
+- Android Studio, Sketchware.
 - HTML5, CSS3, javascript & PaperCss for front-end development.
 - Java for backend.
 - Apache server for testing and development.
@@ -38,6 +38,37 @@ This a Android app for The Astrological services based upon the "Indian Astrolog
 - Also includes The verious solution regarding your problem.
 - It is Simple but Effective android app.
 
+## Contributing
+
+1. Fork it
+Clone this repo to your local machine using
+```bash $ https://github.com/PtPrashantTripathi/Shree-Ganesh```
+2. Create your branch 
+```bash $ git checkout -b "Branch Name"```
+
+3. Commit your changes 
+```bash $ git commit -am 'Add some comment'```
+
+4. Push to the branch 
+```bash $ git push origin "Branch Name"```
+
+5. Create a new Pull Request
+```bash $ git pull```
+
+## Release History
+
+* 0.2.1
+    * CHANGE: Update README.md (module code remains unchanged)
+* 0.2.0
+    * CHANGE: Update in Algorithm
+    * ADD: Add New theme
+    * FIX: Crash bug  
+* 0.1.0
+    * The first proper release
+    * CHANGE: Rename `Shree-Ganesh` 
+* 0.0.1
+    * Work in progress
+
 ## Importent Link 
 
 - To know about it http://www.prashanttripathi.ga/portfolio/shreeganesh/
@@ -46,7 +77,9 @@ This a Android app for The Astrological services based upon the "Indian Astrolog
 
 ## Developer : [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
 
-## Contact
+## Support 
+Reach out to me at one of the following places!
+
 Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
 Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <br>
 Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
@@ -55,3 +88,10 @@ GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
 Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
 Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
                                 
+## License
+
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- Copyright 2019  [@PtPrashanttripathi](http://github.com/PtPrashantTripathi)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
