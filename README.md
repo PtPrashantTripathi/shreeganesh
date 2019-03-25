@@ -42,18 +42,18 @@
 
 1. Fork it
 Clone this repo to your local machine using
-```bash $ https://github.com/PtPrashantTripathi/Shree-Ganesh```
+```sh $ https://github.com/PtPrashantTripathi/Shree-Ganesh```
 2. Create your branch 
-```bash $ git checkout -b "Branch Name"```
+```sh $ git checkout -b "Branch Name"```
 
 3. Commit your changes 
-```bash $ git commit -am 'Add some comment'```
+```sh $ git commit -am 'Add some comment'```
 
 4. Push to the branch 
-```bash $ git push origin "Branch Name"```
+```sh $ git push origin "Branch Name"```
 
 5. Create a new Pull Request
-```bash $ git pull```
+```sh $ git pull```
 
 ## Release History
 
@@ -69,13 +69,11 @@ Clone this repo to your local machine using
 * 0.0.1
     * Work in progress
 
-## Importent Link 
 
-- To know about it http://www.prashanttripathi.ga/portfolio/shreeganesh/
-- To view this project source code https://github.com/PtPrashantTripathi/Shree-Ganesh
-- To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk
+## Developer  
 
-## Developer : [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
+![Pt. Prashant Tripathi](https://avatars2.githubusercontent.com/u/26687933?s=200&v=4)
+[Pt. Prashant Tripathi](http://Prashanttripathi.ga)
 
 ## Support 
 Reach out to me at one of the following places!
@@ -90,8 +88,12 @@ Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
                                 
 ## License
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- This project is licensed under the **[MIT license](http://opensource.org/licenses/mit-license.php)** - see the [LICENSE](LICENSE) file for details[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 - Copyright 2019  [@PtPrashanttripathi](http://github.com/PtPrashantTripathi)
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+
+## Importent Link 
+
+- To know about it http://www.prashanttripathi.ga/portfolio/shreeganesh/
+- To view this project source code https://github.com/PtPrashantTripathi/Shree-Ganesh
+- To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk
