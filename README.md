@@ -83,7 +83,7 @@ $ git pull
 ## Developer  
 
 ![Pt. Prashant Tripathi](https://avatars2.githubusercontent.com/u/26687933?s=200&v=4)
-* **Pt. Prashant Tripathi** - *Designer/Devloper* - [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
+* **Pt. Prashant Tripathi** [@PtPrashantTripathi](http://Prashanttripathi.ga) - *Designer/Devloper* 
 
 ## Support 
 Reach out to me at one of the following places!
@@ -92,7 +92,7 @@ Email : [pt8435782545@gmail.com](mailto:pt8435782545@gmail.com)<br>
 Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <br>
 Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
 LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)<br>
-GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
+GitHub :  [@Pt-Prashant-Triapthi](https://github.com/PtPrashantTripathi)<br>
 Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
 Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
                                 
