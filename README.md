@@ -40,40 +40,50 @@
 
 ## Contributing
 
-1. Fork it
-Clone this repo to your local machine using
-```sh $ https://github.com/PtPrashantTripathi/Shree-Ganesh```
+1. Fork it to github repo or Clone this repo to your local machine using
+```sh 
+$ https://github.com/PtPrashantTripathi/Shree-Ganesh
+```
+
 2. Create your branch 
-```sh $ git checkout -b "Branch Name"```
+```sh 
+$ git checkout -b "Branch Name"
+```
 
 3. Commit your changes 
-```sh $ git commit -am 'Add some comment'```
+```sh 
+$ git commit -am 'Add some comment'
+```
 
 4. Push to the branch 
-```sh $ git push origin "Branch Name"```
+```sh 
+$ git push origin "Branch Name"
+```
 
 5. Create a new Pull Request
-```sh $ git pull```
+```sh 
+$ git pull
+```
 
 ## Release History
 
-* 0.2.1
+* 2.1
     * CHANGE: Update README.md (module code remains unchanged)
-* 0.2.0
+* 2.0
     * CHANGE: Update in Algorithm
     * ADD: Add New theme
     * FIX: Crash bug  
-* 0.1.0
+* 1.0
     * The first proper release
     * CHANGE: Rename `Shree-Ganesh` 
-* 0.0.1
+* 0.1
     * Work in progress
 
 
 ## Developer  
 
 ![Pt. Prashant Tripathi](https://avatars2.githubusercontent.com/u/26687933?s=200&v=4)
-[Pt. Prashant Tripathi](http://Prashanttripathi.ga)
+* **Pt. Prashant Tripathi** - *Designer/Devloper* - [Pt. Prashant Tripathi](http://Prashanttripathi.ga)
 
 ## Support 
 Reach out to me at one of the following places!
@@ -88,7 +98,7 @@ Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
                                 
 ## License
 
-- This project is licensed under the **[MIT license](http://opensource.org/licenses/mit-license.php)** - see the [LICENSE](LICENSE) file for details[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+- This project is licensed under the **[MIT license](http://opensource.org/licenses/mit-license.php)** - see the [LICENSE](LICENSE) file for details
 - Copyright 2019  [@PtPrashanttripathi](http://github.com/PtPrashantTripathi)
 
 
