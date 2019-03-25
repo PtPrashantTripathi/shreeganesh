@@ -19,7 +19,7 @@
 
 ## About
 
-This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android app help user to  get answers for Problem of his or her life with astrology. It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app. I am not responsible in any way for any adverse consequences.  Because Astrology has its limitations.  
+>This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android >app help user to  get answers for Problem of his or her life with astrology. It also provide solution of problem from your >Bhagyank(Lucky Number).  It is Simple but Effective android app. I am not responsible in any way for any adverse consequences.  >Because Astrology has its limitations.  
 
 ## Technology use
 
@@ -55,17 +55,6 @@ GitHub :  [@Pt-Prashant-Triapthi](https://github.com/Pt-Prashant-Tripathi)<br>
 Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
 Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
                                 
-# Product Name
-> Short blurb about what your product does.
-
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
-One to two paragraph statement about your product and what it does.
-
-![](header.png)
-
 ## Installation
 
 OS X & Linux:
