@@ -42,7 +42,7 @@
 
 1. Fork it to github repo or Clone this repo to your local machine using
 ```sh 
-$ https://github.com/PtPrashantTripathi/Shree-Ganesh
+$ git clone https://github.com/PtPrashantTripathi/Shree-Ganesh
 ```
 
 2. Create your branch 
