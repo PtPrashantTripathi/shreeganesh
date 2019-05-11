@@ -67,16 +67,16 @@ $ git pull
 
 ## Release History
 
-* 2.1
+* Release 2.1
     * CHANGE: Update README.md (module code remains unchanged)
-* 2.0
+* Release 2.0
     * CHANGE: Update in Algorithm
     * ADD: Add New theme
     * FIX: Crash bug  
-* 1.0
+* Release 1.0
     * The first proper release
     * CHANGE: Rename `Shree-Ganesh` 
-* 0.1
+* Release 0.1
     * Work in progress
 
 
