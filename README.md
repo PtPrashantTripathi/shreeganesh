@@ -10,7 +10,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/PtPrashantTripathi/Shree-Ganesh/v2.0.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/PtPrashantTripathi/Shree-Ganesh.svg)
-![Website Status](https://img.shields.io/website/http/Prashanttripathi.ga.svg?down_message=Down&up_message=Online)
+<!---![Website Status](https://img.shields.io/website/http/Prashanttripathi.ga.svg?down_message=Down&up_message=Online)--->
 ![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Code-Size](https://img.shields.io/github/languages/code-size/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Top-languages](https://img.shields.io/github/languages/top/PtPrashantTripathi/Shree-Ganesh.svg?color=Blue&logo=java)
