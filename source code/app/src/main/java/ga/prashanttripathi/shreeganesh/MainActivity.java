@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 		i.setClass(getApplicationContext(), StartActivity.class);
 		startActivity(i);
 		setTitle("श्री गणेश");
-		webview1.loadUrl("http://prashanttripathi.ga/portfolio/shreeganesh/shreeganesh.php");
+		webview1.loadUrl("file:///android_asset/index.html");
 	}
 	
 	@Override
