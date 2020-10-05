@@ -1,4 +1,4 @@
-<img align="left" src="/source%20code/src/main/res/drawable-xhdpi/app_icon.png" alt="Shree Ganesh v3.0">
+<img align="left" src="https://raw.githubusercontent.com/PtPrashantTripathi/Shree-Ganesh/master/source%20code/src/main/res/drawable-xhdpi/app_icon.png" alt="Shree Ganesh v3.0">
 
 # Shree Ganesh v3.0
 ![Devloper](https://img.shields.io/badge/Devloper-Pt.%20Prashant%20Tripathi-Success.svg)
