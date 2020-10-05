@@ -103,6 +103,6 @@ Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
 
 ## Importent Link 
 
-- To know about it http://www.prashanttripathi.github.io/shreeganesh/
+- To know about it http://ptprashanttripathi.github.io/Shree-Ganesh
 - To view this project source code https://github.com/PtPrashantTripathi/Shree-Ganesh
 - To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_3.0.apk
