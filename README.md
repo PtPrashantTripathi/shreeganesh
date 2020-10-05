@@ -1,6 +1,6 @@
-<img align="left" src="/source%20code/app/src/main/res/drawable-xhdpi/app_icon.png" alt="Shree Ganesh v2.0">
+<img align="left" src="/source%20code/app/src/main/res/drawable-xhdpi/app_icon.png" alt="Shree Ganesh v3.0">
 
-# Shree Ganesh v2.0
+# Shree Ganesh v3.0
 ![Devloper](https://img.shields.io/badge/Devloper-Pt.%20Prashant%20Tripathi-Success.svg)
 ![GitHub release](https://img.shields.io/github/release/PtPrashantTripathi/Shree-Ganesh.svg)
 ![GitHub Release Date](https://img.shields.io/github/release-date/PtPrashantTripathi/Shree-Ganesh.svg)
@@ -8,7 +8,7 @@
 ![Total-Downlode](https://img.shields.io/github/downloads/PtPrashantTripathi/Shree-Ganesh/total.svg)
 ![GitHub contributors](https://img.shields.io/github/contributors/PtPrashantTripathi/Shree-Ganesh.svg?color=0&logo=git&logoColor=orange)
 ![GitHub last commit](https://img.shields.io/github/last-commit/PtPrashantTripathi/Shree-Ganesh.svg)
-![GitHub commits since latest release](https://img.shields.io/github/commits-since/PtPrashantTripathi/Shree-Ganesh/v2.0.svg)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/PtPrashantTripathi/Shree-Ganesh/v3.0.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/PtPrashantTripathi/Shree-Ganesh.svg)
 ![Website Status](https://img.shields.io/website/http/Prashanttripathi.ga.svg?down_message=Down&up_message=Online)
 ![Repo-Size](https://img.shields.io/github/repo-size/PtPrashantTripathi/Shree-Ganesh.svg)
@@ -83,7 +83,7 @@ $ git pull
 ## Developer  
 
 ![Pt. Prashant Tripathi](https://avatars2.githubusercontent.com/u/26687933?s=200&v=4)
-* **Pt. Prashant Tripathi** [@PtPrashantTripathi](http://Prashanttripathi.ga) - *Designer/Devloper* 
+* **Pt. Prashant Tripathi** [@PtPrashantTripathi](https://Prashanttripathi.github.io) - *Designer/Devloper* 
 
 ## Support 
 Reach out to me at one of the following places!
@@ -93,7 +93,6 @@ Facebook : [@PtPrashantTriapthi](https://www.facebook.com/PtPrashantTripathi) <b
 Twitter : [@PtPrashant09](https://twitter.com/intent/follow?screen_name=ptprashant09) <br>
 LinkedIn :[ptprashanttripathi](https://www.linkedin.com/in/ptprashanttripathi/)<br>
 GitHub :  [@PtPrashantTriapthi](https://github.com/PtPrashantTripathi)<br>
-Google : [+PtPrashantTriapthi](https://plus.google.com/u/0/117932919291115315316)<br>
 Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)<br>
                                 
 ## License
@@ -104,6 +103,6 @@ Quora : [PtPrashantTriapthi](https://www.quora.com/profile/Pt-Prashant-Tripathi)
 
 ## Importent Link 
 
-- To know about it http://www.prashanttripathi.ga/portfolio/shreeganesh/
+- To know about it http://www.prashanttripathi.github.io/shreeganesh/
 - To view this project source code https://github.com/PtPrashantTripathi/Shree-Ganesh
-- To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_2.0.apk
+- To Downlode the app https://github.com/PtPrashantTripathi/Shree-Ganesh/raw/master/shreeganesh_3.0.apk
