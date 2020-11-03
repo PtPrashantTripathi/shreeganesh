@@ -30,8 +30,9 @@
 > This a Android app for The Astrological services based upon the "Indian Astrology aka Vedic Astrology or Jyotish", this android app help user to  get answers for Problem of his or her life with astrology. It also provide solution of problem from your Bhagyank(Lucky Number).  It is Simple but Effective android app. I am not responsible in any way for any adverse consequences. Because Astrology has its limitations.  
 
 ## 🚀 Screenshot 
-
-![](https://raw.githubusercontent.com/PtPrashantTripathi/shreeganesh/screenshot1.png) ![](https://raw.githubusercontent.com/PtPrashantTripathi/shreeganesh/screenshot2.png)
+| Step 1 | Step 2 |
+|---|---|
+| ![](https://raw.githubusercontent.com/PtPrashantTripathi/shreeganesh/master/screenshot1.png) | ![](https://raw.githubusercontent.com/PtPrashantTripathi/shreeganesh/master/screenshot2.png) |
 
 
 > Try the tool: [shreeganesh](https://ptprashanttripathi.github.io/shreeganesh)
