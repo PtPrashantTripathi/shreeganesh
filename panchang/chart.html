@@ -26,6 +26,12 @@
       </section>
 
       <section>
+        <h1>Vimsottari Dasa</h1>
+        <div id="Vimsottari_Dasa_table"></div>
+        <div id="Antardasa_Dasa_table"></div>
+      </section>
+
+      <section>
         <h1>Information Chart</h1>
         <canvas id="canvas_info" width="500" height="190">[ Information ]</canvas>
         <table>
@@ -248,26 +254,44 @@
       </section>
       <section>
         <h1>Birth Chart</h1>
-        <div id="Lagna_chart"><span>Lagna Chart</span><br></div>
-        <div id="Hora_chart"><span>Hora Chart</span><br></div>
-        <div id="Shashthamsa_chart"><span>Shashthamsa Chart</span><br></div>
-        <div id="Ashthamsa_chart"><span>Ashthamsa chart</span><br></div>
-        <div id="Navamsa_chart"><span>Navamsa chart</span><br></div>
-        <div id="Dwadashamsa_chart"><span>Dwadashamsa chart</span><br></div>
+        <div id="Lagna_chart"><span>Lagna Chart</span><br /></div>
+        <div id="Hora_chart"><span>Hora Chart</span><br /></div>
+        <div id="Shashthamsa_chart"><span>Shashthamsa Chart</span><br /></div>
+        <div id="Ashthamsa_chart"><span>Ashthamsa chart</span><br /></div>
+        <div id="Navamsa_chart"><span>Navamsa chart</span><br /></div>
+        <div id="Dwadashamsa_chart"><span>Dwadashamsa chart</span><br /></div>
       </section>
     </main>
   </div>
 </body>
 
+<!-- import from "https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js" -->
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"
-  integrity="sha256-7NQm0bhvDJKosL8d+6ZgSi2LxZCIcA/TD087GLEBO9M=" crossorigin="anonymous"></script>
-<script type="text/javascript" src="./script/planetary_calculation.js"></script>
-<script type="text/javascript" src="./script/kundli_generator.js"></script>
-<script type="text/javascript" src="./script/kundli_chart.js"></script>
-<script>
+<script type="module">
+  import Kundli from "./script/kundli_generator.js";
+  import KundliChart from "./script/kundli_chart.js";
+  import createTable from "./script/ui/table.js";
+
   let kundli = new Kundli();
   kundli.generate();
+
+  var table = document.getElementById("person_details");
+  const data = kundli.details();
+  for (var key in data) {
+    var row = document.createElement("tr");
+    var keyCell = document.createElement("td");
+    keyCell.textContent = key;
+    row.appendChild(keyCell);
+    var valueCell = document.createElement("td");
+    valueCell.textContent = data[key];
+    row.appendChild(valueCell);
+    table.appendChild(row);
+  }
+
+  document
+    .getElementById("Vimsottari_Dasa_table")
+    .appendChild(createTable(kundli.calcVimsottariDasa()));
+
   let kundlichart = new KundliChart({
     width: 250,
     height: 215,
@@ -275,15 +299,21 @@
     // maxLength: 15,
     printLagna: false,
     shortName: false,
-    lang: "HI"
-  }
+    lang: "HI",
+  });
+  document.getElementById("Lagna_chart").innerHTML +=
+    kundlichart.createKundli(kundli.Charts.Lagna);
+  document.getElementById("Hora_chart").innerHTML += kundlichart.createKundli(
+    kundli.Charts.Hora
   );
-  document.getElementById("Lagna_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Lagna);
-  document.getElementById("Hora_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Hora);
-  document.getElementById("Shashthamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Shashthamsa);
-  document.getElementById("Ashthamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Ashthamsa);
-  document.getElementById("Navamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Navamsa);
-  document.getElementById("Dwadashamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Dwadashamsa);
+  document.getElementById("Shashthamsa_chart").innerHTML +=
+    kundlichart.createKundli(kundli.Charts.Shashthamsa);
+  document.getElementById("Ashthamsa_chart").innerHTML +=
+    kundlichart.createKundli(kundli.Charts.Ashthamsa);
+  document.getElementById("Navamsa_chart").innerHTML +=
+    kundlichart.createKundli(kundli.Charts.Navamsa);
+  document.getElementById("Dwadashamsa_chart").innerHTML +=
+    kundlichart.createKundli(kundli.Charts.Dwadashamsa);
 </script>
 
 </html>

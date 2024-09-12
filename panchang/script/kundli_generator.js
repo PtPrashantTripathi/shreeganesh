@@ -1,10 +1,20 @@
-var DateTime = luxon.DateTime;
-const DEGS = 180 / Math.PI;
-const RADS = Math.PI / 180;
-const EPS = 1.0e-12;
-const today = new Date();
+"use strict";
 
-class Kundli {
+import {
+  DEGS,
+  RADS,
+  mod24,
+  mod2pi,
+  mod360,
+  hms2dec,
+  dec2hms,
+} from "./utils.js";
+import Rasi from "./rasi.js";
+
+import calc_vsop87 from "./planetary_calculation.js";
+import DateTime from "./datetime.js";
+
+export default class Kundli {
   /* Planets or Grahas */
   Planets = {
     Lagna: {
@@ -82,105 +92,7 @@ class Kundli {
       Name: "Ketu",
     },
   };
-  RasiSigns = {
-    /* Sidereal Rasi Signs(Fixed) or Rashis */
-    Aries: {
-      Index: 1,
-      Name: "Aries",
-      Element: "Fire",
-      Gender: "M",
-      Nature: "Movable",
-      Lord: "Mars",
-    },
-    Taurus: {
-      Index: 2,
-      Element: "Earth",
-      Gender: "F",
-      Nature: "Fixed",
-      Lord: "Venus",
-      Name: "Taurus",
-    },
-    Gemini: {
-      Index: 3,
-      Element: "Air",
-      Gender: "M",
-      Nature: "Common",
-      Lord: "Mercury",
-      Name: "Gemini",
-    },
-    Cancer: {
-      Index: 4,
-      Element: "Water",
-      Gender: "F",
-      Nature: "Movable",
-      Lord: "Moon",
-      Name: "Cancer",
-    },
-    Leo: {
-      Index: 5,
-      Element: "Fire",
-      Gender: "M",
-      Nature: "Fixed",
-      Lord: "Sun",
-      Name: "Leo",
-    },
-    Virgo: {
-      Index: 6,
-      Element: "Earth",
-      Gender: "F",
-      Nature: "Common",
-      Lord: "Mercury",
-      Name: "Virgo",
-    },
-    Libra: {
-      Index: 7,
-      Element: "Air",
-      Gender: "M",
-      Nature: "Movable",
-      Lord: "Venus",
-      Name: "Libra",
-    },
-    Scorpio: {
-      Index: 8,
-      Element: "Water",
-      Gender: "F",
-      Nature: "Fixed",
-      Lord: "Mars",
-      Name: "Scorpio",
-    },
-    Sagittarius: {
-      Index: 9,
-      Element: "Fire",
-      Gender: "M",
-      Nature: "Common",
-      Lord: "Jupiter",
-      Name: "Sagittarius",
-    },
-    Capricorn: {
-      Index: 10,
-      Element: "Earth",
-      Gender: "F",
-      Nature: "Movable",
-      Lord: "Saturn",
-      Name: "Capricorn",
-    },
-    Aquarius: {
-      Index: 11,
-      Element: "Air",
-      Gender: "M",
-      Nature: "Fixed",
-      Lord: "Saturn",
-      Name: "Aquarius",
-    },
-    Pisces: {
-      Index: 12,
-      Element: "Water",
-      Gender: "F",
-      Nature: "Common",
-      Lord: "Jupiter",
-      Name: "Pisces",
-    },
-  };
+
   Houses = {
     1: {
       Name: "Tanu Bhava",
@@ -550,12 +462,21 @@ class Kundli {
       Name: "Revati",
     },
   };
+  VimsottariDasa = {
+    Mercury: { Year: 17, Index: 1, Name: "Mercury" },
+    Ketu: { Year: 7, Index: 2, Name: "Ketu" },
+    Venus: { Year: 20, Index: 3, Name: "Venus" },
+    Sun: { Year: 6, Index: 4, Name: "Sun" },
+    Moon: { Year: 10, Index: 5, Name: "Moon" },
+    Mars: { Year: 7, Index: 6, Name: "Mars" },
+    Rahu: { Year: 18, Index: 7, Name: "Rahu" },
+    Jupiter: { Year: 16, Index: 8, Name: "Jupiter" },
+    Saturn: { Year: 19, Index: 9, Name: "Saturn" },
+  };
   constructor() {
     this.JatakName = "Prashant Tripathi";
     this.Gender = "M";
-    this.DOB = DateTime.fromISO("1997-08-11T01:55:00", {
-      zone: 5.5 * 60,
-    });
+    this.DOB = new DateTime(new Date(1997, 7, 11, 1, 55, 0, 0), 5.5);
     this.City = "Mandla (Mandlā), India";
     this.Lat = 22.6;
     this.Lon = 80.38;
@@ -613,7 +534,7 @@ class Kundli {
     SayanaPosition.Moon = this.calcMoonPosition(this.JD);
     SayanaPosition.Rahu = this.calcMoonAcendingNode(this.JD);
     SayanaPosition.Ketu = SayanaPosition.Rahu + 180;
-    /* this.mod360(); */
+    /* mod360(); */
     /* calc planets details */
     Object.keys(this.Planets).forEach((key) => {
       Object.assign(
@@ -797,7 +718,7 @@ class Kundli {
     var t4 = t * t * t * t;
     var t3 = t * t * t;
     var t2 = t * t;
-    lprime = this.mod2pi(
+    lprime = mod2pi(
       (218.3164591 +
         481267.88134236 * t -
         0.0013268 * t2 +
@@ -805,7 +726,7 @@ class Kundli {
         t4 / 65194000.0) *
         RADS
     );
-    d = this.mod2pi(
+    d = mod2pi(
       (297.8502042 +
         445267.1115168 * t -
         0.00163 * t2 +
@@ -813,11 +734,11 @@ class Kundli {
         t4 / 113065000.0) *
         RADS
     );
-    m = this.mod2pi(
+    m = mod2pi(
       (357.5291092 + 35999.0502909 * t - 0.0001536 * t2 + t3 / 24490000.0) *
         RADS
     );
-    mprime = this.mod2pi(
+    mprime = mod2pi(
       (134.9634114 +
         477198.8676313 * t +
         0.008997 * t2 +
@@ -825,7 +746,7 @@ class Kundli {
         t4 / 14712000.0) *
         RADS
     );
-    f = this.mod2pi(
+    f = mod2pi(
       (93.2720993 +
         483202.0175273 * t -
         0.0034029 * t2 -
@@ -833,9 +754,9 @@ class Kundli {
         t4 / 863310000.0) *
         RADS
     );
-    a1 = this.mod2pi((119.75 + 131.849 * t) * RADS);
-    a2 = this.mod2pi((53.09 + 479264.29 * t) * RADS);
-    a3 = this.mod2pi((313.45 + 481266.484 * t) * RADS);
+    a1 = mod2pi((119.75 + 131.849 * t) * RADS);
+    a2 = mod2pi((53.09 + 479264.29 * t) * RADS);
+    a3 = mod2pi((313.45 + 481266.484 * t) * RADS);
     e[0] = 1;
     e[1] = 1 - 0.002516 * t - 0.0000074 * t2;
     e[2] = e[1] * e[1];
@@ -867,14 +788,14 @@ class Kundli {
       175.0 * Math.sin(a1 + f) +
       127.0 * Math.sin(lprime - mprime) -
       115.0 * Math.sin(lprime + mprime);
-    return this.mod2pi((lprime * DEGS + sigmaL / 1000000.0) * RADS) * DEGS;
+    return mod2pi((lprime * DEGS + sigmaL / 1000000.0) * RADS) * DEGS;
   }
   calcMoonAcendingNode(jd) {
     /* http://idlastro.gsfc.nasa.gov * Q.What is the licensing for the IDL Astronomy Library? * A.The IDL Astronomy Library procedures are in the public domain. */
     var T = (jd - 2415020.5) / 36525.0;
     /* compute Longitude of Moon's ascending node */
     var n =
-      this.mod2pi(
+      mod2pi(
         (259.183275 - 1800 * T - 134.142008 * T + 0.002078 * T * T) * RADS
       ) * DEGS;
     return n;
@@ -882,32 +803,26 @@ class Kundli {
   calcPlanetDetails(sayana_pos = 0) {
     let planet = {};
     planet.Sayana = sayana_pos;
-    planet.Nirayana = this.mod360(planet.Sayana - this.Ayanamsa);
+    planet.Nirayana = mod360(planet.Sayana - this.Ayanamsa);
     planet.Nakshatra = this.calcNakshatra(planet.Nirayana);
     /* D1 - Rasi*/
-    planet.Rasi = this.calcRasi(planet.Nirayana);
+    planet.Rasi = new Rasi(planet.Nirayana);
     /* D2 - Hora Rasi - parasara traditional 4 and 5 */
-    planet.Hora = this.calcRasi(
+    planet.Hora = new Rasi(
       planet.Nirayana -
         15.0 -
         60.0 * Math.floor((planet.Nirayana - 15.0) * (1.0 / 60.0)) +
         90
     );
     /* D6 - Shashthamsa Rasi */
-    planet.Shashthamsa = this.calcRasi(
-      this.mod2pi(planet.Nirayana * 6.0 * RADS) * DEGS
-    );
+    planet.Shashthamsa = new Rasi(mod2pi(planet.Nirayana * 6.0 * RADS) * DEGS);
     /* D8 - Ashthamsa Rasi */
-    planet.Ashthamsa = this.calcRasi(
-      this.mod2pi(planet.Nirayana * 8.0 * RADS) * DEGS
-    );
+    planet.Ashthamsa = new Rasi(mod2pi(planet.Nirayana * 8.0 * RADS) * DEGS);
     /* D9 - Navamsa Rasi */
-    planet.Navamsa = this.calcRasi(
-      this.mod2pi(planet.Nirayana * 9.0 * RADS) * DEGS
-    );
+    planet.Navamsa = new Rasi(mod2pi(planet.Nirayana * 9.0 * RADS) * DEGS);
     /* D12 - Dwadashamsa Rasi - parasara traditional*/
-    planet.Dwadashamsa = this.calcRasi(
-      this.mod2pi(
+    planet.Dwadashamsa = new Rasi(
+      mod2pi(
         (parseInt(planet.Nirayana / 30) * 30 +
           (planet.Nirayana -
             30.0 * Math.floor(planet.Nirayana * (1.0 / 30.0))) *
@@ -918,32 +833,18 @@ class Kundli {
     return planet;
   }
 
-  calcRasi(pos) {
-    pos = this.mod360(pos);
-    var index = Math.floor(pos / (360 / 12)) + 1;
-    var rasi = structuredClone(
-      Object.values(this.RasiSigns).find((e) => e.Index === index)
-    );
-    rasi.Positions = pos;
-    rasi.Range = {
-      Min: (index - 1) * (360 / 12),
-      Max: index * (360 / 12),
-    };
-    rasi.Degree = pos - rasi.Range.Min;
-    return rasi;
-  }
   calcNakshatra(pos) {
-    pos = this.mod360(pos);
+    pos = mod360(pos);
     var index = Math.floor(pos / (360 / 27)) + 1;
     var Nakshatra = structuredClone(
       Object.values(this.Nakshatras).find((e) => e.Index === index)
     );
     Nakshatra.Positions = pos;
     Nakshatra.Range = {
-      Min: (360 / 27) * (index - 1),
-      Max: (360 / 27) * index,
+      Start: (360 / 27) * (index - 1),
+      End: (360 / 27) * index,
     };
-    Nakshatra.Degree = pos - Nakshatra.Range.Min;
+    Nakshatra.Degree = pos - Nakshatra.Range.Start;
     Nakshatra.Pada = Math.floor(Nakshatra.Degree / (360 / 27 / 4)) + 1;
     return Nakshatra;
   }
@@ -962,13 +863,13 @@ class Kundli {
     var j =
       Math.floor(365.25 * jy) +
       Math.floor(30.6001 * jm) +
-      datetime.day +
+      datetime.date +
       1720995.0;
-    if (datetime.day + 31 * (datetime.month + 12 * datetime.year) >= 588829) {
+    if (datetime.date + 31 * (datetime.month + 12 * datetime.year) >= 588829) {
       var a = Math.floor(0.01 * jy);
       j += 2 - a + Math.floor(0.25 * a);
     }
-    df = (datetime.hour - datetime.offset / 60) / 24.0 - 0.5;
+    df = (datetime.hour - datetime.timezone) / 24.0 - 0.5;
     if (df < 0.0) {
       df += 1.0;
       --j;
@@ -984,7 +885,7 @@ class Kundli {
     var r = 1296000.0;
     var iyear = datetime.year;
     var im = datetime.month;
-    var iday = datetime.day;
+    var iday = datetime.date;
     var month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     /**--------------------------------------------------------------------**/
     /** Calculate iDay and t **/
@@ -1152,7 +1053,7 @@ class Kundli {
         this.Lon / 15 +
         1.002737909350795 *
           (datetime.hour -
-            datetime.offset / 60 +
+            datetime.timezone +
             datetime.minute / 60 +
             datetime.second / 3600)) *
       15;
@@ -1283,116 +1184,7 @@ class Kundli {
     }
     return dt;
   }
-  dms2real(deg, min, sec) {
-    /* convert Latitude/Longitude (deg, min, sec) to Degrees */
-    var r;
-    if (deg < 0) r = deg - min / 60 - sec / 3600;
-    else r = deg + min / 60 + sec / 3600;
-    return r;
-  }
-  hms2deg(hour, min, sec) {
-    return hour * 15 + min / 4 + sec / 240;
-  }
-  hms2dec(hour, min, sec) {
-    return hour + min / 60 + sec / 3600;
-  }
-  dec2hms(x) {
-    /* convert dec hours to hh:mm:ss */
-    if (isNaN(x)) return "00:00:00";
-    var sign = x < 0 ? "-" : "";
-    var st = Math.abs(x);
-    var s = st;
-    var d = Math.floor(s);
-    s = s - d;
-    s = s * 60;
-    var mm = Math.floor(s);
-    var hour = Math.floor(st);
-    st = st - hour;
-    st = st * 60;
-    var min = Math.floor(st);
-    st = st - min;
-    st = st * 60;
-    var sec = Math.floor(st);
-    return (
-      sign +
-      hour.toString().padStart(2, "0") +
-      ":" +
-      min.toString().padStart(2, "0") +
-      ":" +
-      sec.toString().padStart(2, "0")
-    );
-  }
-  deg2hms(x) {
-    /* convert Degrees to hh:mm:ss */
-    if (isNaN(x)) return "00:00:00";
-    var sign = x < 0 ? "-" : "";
-    var st = Math.abs(x);
-    var s = st;
-    st = st / 15.0;
-    var d = Math.floor(s);
-    s = s - d;
-    s = s * 60;
-    var mm = Math.floor(s);
-    var hour = Math.floor(st);
-    st = st - hour;
-    st = st * 60;
-    var min = Math.floor(st);
-    st = st - min;
-    st = st * 60;
-    var sec = Math.floor(st);
-    var str = sign + hour.toString().padStart(2, "0");
-    str += ":" + min.toString().padStart(2, "0");
-    str += ":" + sec.toString().padStart(2, "0");
-    return str;
-  }
-  deg2dms(deg) {
-    /* convert Degree to (deg, Min, sec) format */
-    var d = Math.floor(deg);
-    var m = Math.floor((deg - d) * 60);
-    var s = Math.floor(((deg - d) * 60 - m) * 60);
-    return d + "°" + m + "'" + s + '"';
-  }
-  dec2date(etime) {
-    /* convert dec Number to dd/mm/yyyy */
-    if (isNaN(etime)) return "00/00/0000";
-    var s = etime;
-    var tmp = Math.round(s);
-    var year = parseInt(this.DOB.year - tmp);
-    s = s - tmp;
-    var tmp0 = Math.round(s * 12);
-    var month = parseInt(12 - tmp0 + this.DOB.month - 12);
-    if (isNaN(month) || month < 0) month = 1;
-    var tmp1 = Math.round(s * 12);
-    var tmp2 = Math.abs(tmp1 - s * 12);
-    var tmp3 = Math.round(tmp2 * 30);
-    var Day = Math.abs(30 - this.DOB.day - tmp3);
-    var str = Day.toString().padStart(2, "0");
-    str += "/" + month.toString().padStart(2, "0");
-    str += "/" + year.toString().padStart(4, "0");
-    return str;
-  }
-  absolute(x) {
-    var r;
-    if (x >= 0.0) r = Math.floor(x);
-    else r = Math.ceil(x);
-    return r;
-  }
-  mod24(x) {
-    return (x + 24) % 24;
-  }
-  mod2pi(x) {
-    /* Range 0-2PI radians */
-    var b = x / (2 * Math.PI);
-    var a = 2 * Math.PI * (b - this.absolute(b));
-    if (a < 0) a = 2 * Math.PI + a;
-    return a;
-  }
-  mod360(x) {
-    /* Range 0-360 Degrees */
-    var a = 360 * (x / 360 - this.absolute(x / 360));
-    if (a < 0) a = a + 360;
-    return a;
-  }
+
   calcAyanamsa(jd) {
     /* The Longitudinal difference between the * Tropical(Sayana) and Sidereal(Nirayana) zodiacs. */
     // lahiri chitraPaksha 24"49'
@@ -1487,36 +1279,32 @@ class Kundli {
   }
   calcSunriseSet(rising, hora, hms) {
     /* Almanac for Computers, 1990 * published by Nautical Almanac Office * United States Naval Observatory, Washington, DC 20392 */
-    var offical = 90 + 50 / 60;
-    /* 90°50'00"*/
-    var civil = 96;
-    /* 96°00'00"*/
-    var nautical = 102;
-    /* 102°00'00"*/
-    var astronomical = 108;
-    /* 108°00'00"*/
-    var zenith = offical;
+    /* offical = 90°50'00"*/
+    /* civil = 96°00'00"*/
+    /* nautical 102°00'00"*/
+    /* astronomical 108°00'00"*/
+    var zenith = 90 + 50 / 60;
     /* Day of the Year */
-    var yy, mm, dd, tzdls;
-    yy = this.DOB.year;
-    mm = this.DOB.month;
-    dd = this.DOB.day;
-    tzdls = this.DOB.offset / 60;
-    var a = Math.floor((275 * mm) / 9);
-    var b = Math.floor((mm + 9) / 12);
-    var c = 1 + Math.floor((yy - 4 * Math.floor(yy / 4) + 2) / 3);
-    var n = hora ? a - c * b + (dd + 1) - 30 : a - c * b + dd - 30;
+    var tzdls = this.DOB.timezone;
+    var a = Math.floor((275 * this.DOB.month) / 9);
+    var b = Math.floor((this.DOB.month + 9) / 12);
+    var c =
+      1 +
+      Math.floor((this.DOB.year - 4 * Math.floor(this.DOB.year / 4) + 2) / 3);
+    var n = hora
+      ? a - c * b + (this.DOB.date + 1) - 30
+      : a - c * b + this.DOB.date - 30;
     var lonhour = this.Lon / 15;
     if (rising) var t = n + (6 - lonhour) / 24;
     else var t = n + (18 - lonhour) / 24;
     var Ms = 0.9856 * t - 3.289;
-    var Ls = this.mod360(
+    var Ls = mod360(
       Ms +
         1.916 * Math.sin(Ms * RADS) +
         0.02 * Math.sin(2 * Ms * RADS) +
         282.634
     );
-    var ra = this.mod360(Math.atan(0.91764 * Math.tan(Ls * RADS)) * DEGS);
+    var ra = mod360(Math.atan(0.91764 * Math.tan(Ls * RADS)) * DEGS);
     var Lquadrant = Math.floor(Ls / 90) * 90;
     var RAquadrant = Math.floor(ra / 90) * 90;
     ra = (ra + (Lquadrant - RAquadrant)) / 15;
@@ -1534,169 +1322,102 @@ class Kundli {
         ? (360 - Math.acos(cosh) * DEGS) / 15
         : (Math.acos(cosh) * DEGS) / 15;
       var tm = h + ra - 0.06571 * t - 6.622;
-      var UT = this.mod24(tm - lonhour) + 1.0 * tzdls;
+      var UT = mod24(tm - lonhour) + 1.0 * tzdls;
       if (UT < 0) UT += 24;
       UT %= 24;
     }
-    return hms ? this.dec2hms(UT) : UT;
+    return hms ? dec2hms(UT) : UT;
   }
-  calcVimsottariDasa(d) {
-    var lord = [
-      "Mercury",
-      "Ketu",
-      "Venus",
-      "Sun",
-      "Moon",
-      "Mars",
-      "Rahu",
-      "Jupiter",
-      "Saturn",
-    ];
-    var tdasa = [
-      6209.11643142495, 2556.69500117498, 7304.84286049994, 2191.45285814998,
-      3652.42143024997, 2556.69500117498, 6574.35857444995, 5843.87428839995,
-      6939.60071747494,
-    ];
-    var Ts = (this.JD - 2415020.0) / 36525.0;
-    var Tm = (this.JD - 2451545.0) / 36525.0;
+
+  calcSolarYear() {
     /* Mean Tropical year(solar year), McCarthy & Seidelmann, 2009, page.18, J. Laskar [1986] */
-    var solaryear =
+    var Ts = (this.JD - 2415020.0) / 36525.0;
+    // var Tm = (this.JD - 2451545.0) / 36525.0;
+    let SOLAR_YEAR =
       365.2421896698 -
       6.15359 * 10e-6 * Ts -
       7.29 * 10e-10 * Ts * Ts +
       2.64 * 10e-10 * Ts * Ts * Ts;
 
-    var index = lord.indexOf(this.Planets.Moon.Nakshatra.Lord);
-    var period = tdasa[index];
-    /* Dasa balance http://www.saravali.de/articles/dasa_balance.html */
-    var balance = this.Planets.Moon.Nakshatra.Degree / (360 / 27);
-    var lbalance = 1 - balance;
-    var etime = Math.abs(balance * (period / solaryear));
-    var ta = 0,
-      tp = 0,
-      mLord = this.Planets.Moon.Nakshatra.Lord,
-      aLord,
-      pLord,
-      cmLord,
-      caLord,
-      cpLord,
-      currentmaha = 0,
-      indexcurrent = index,
-      year;
-    var ayear =
-      today.getFullYear() * solaryear +
-      (today.getMonth() + 1) * 30 +
-      today.getDate();
-    var byear = this.DOB.year * solaryear + this.DOB.month * 30 + this.DOB.day;
-    var tyear = ayear - byear;
-    /* Vimsottari Antardasa */
-    for (var i = 0; i < 9; i++) {
-      if (index > 8) index = 0;
-      ta += tdasa[index] / solaryear / 120;
-      if (ta > balance) {
-        aLord = lord[index];
-        break;
-      }
-      index++;
-    }
-    /* Vimsottari Pratyantardasa */
-    ta = 1 - (ta - balance) / (tdasa[index] / solaryear / 120);
-    for (var i = 0; i < 9; i++) {
-      if (index > 8) index = 0;
-      tp += tdasa[index] / solaryear / 120;
-      if (tp > ta) {
-        pLord = lord[index];
-        break;
-      }
-      index++;
-    }
-    /* Current Vimsottari Maha Dasa */
-    var nbalance = lbalance * tdasa[indexcurrent];
-    year = ayear - (byear + nbalance);
-    indexcurrent++;
-    ta = 0;
-    for (var i = 0; i < 9; i++) {
-      if (indexcurrent > 8) indexcurrent = 0;
-      ta += tdasa[indexcurrent];
-      if (ta > year) {
-        cmLord = lord[indexcurrent];
-        break;
-      }
-      indexcurrent++;
-    }
-    /* Current Vimsottari Antardasa */
-    year = 1 - (ta - year) / tdasa[indexcurrent];
-    ta = 0;
-    for (var i = 0; i < 9; i++) {
-      if (indexcurrent > 8) indexcurrent = 0;
-      ta += tdasa[indexcurrent] / solaryear / 120;
-      if (ta > year) {
-        caLord = lord[indexcurrent];
-        break;
-      }
-      indexcurrent++;
-    }
-    /* Current Vimsottari Pratyantardasa */
-    tp = 0;
-    ta = 1 - (ta - year) / (tdasa[indexcurrent] / solaryear / 120);
-    for (var i = 0; i < 9; i++) {
-      if (indexcurrent > 8) indexcurrent = 0;
-      tp += tdasa[indexcurrent] / solaryear / 120;
-      if (tp > ta) {
-        cpLord = lord[indexcurrent];
-        break;
-      }
-      indexcurrent++;
-    }
-    var tstr = this.dec2date(etime);
-    var nowstr = " ";
-    nowstr += (today.getDate() < 10 ? "0" : "") + today.getDate();
-    nowstr += (today.getMonth() + 1 < 10 ? "/0" : "/") + (today.getMonth() + 1);
-    nowstr += (today.getFullYear() < 1000 ? "/0" : "/") + today.getFullYear();
-    var nstr = mLord;
-    /* M.Lord*/
-    nstr += "/";
-    nstr += aLord;
-    /* A.Lord*/
-    nstr += "/";
-    nstr += pLord;
-    /* P.Lord*/
-    nstr += " ";
-    nstr += cmLord;
-    /* C. M.Lord*/
-    nstr += "/";
-    nstr += caLord;
-    /* C. A.Lord*/
-    nstr += "/";
-    nstr += cpLord;
-    /* C. P.Lord*/
-    return d ? tstr + " " + nowstr : nstr;
+    this.SOLAR_YEAR_MS = SOLAR_YEAR * 24 * 60 * 60 * 1000;
+  }
+
+  calcVimsottariDasa() {
+    this.calcSolarYear();
+    // Compute the start and end times of each Maha Dasa and Antardasa
+    const vimshottariDasa = [];
+
+    // Extract sequences and lengths from VimsottariDasa and Reorder the Dasa sequence to start with the moon's Nakshatra Lord
+    const mahadasaSequence = this.reorderArray(
+      Object.keys(this.VimsottariDasa),
+      this.Planets.Moon.Nakshatra.Lord
+    );
+
+    // Compute the dasa Balance of the starting Dasa
+    const dasaBalance =
+      (this.VimsottariDasa[this.Planets.Moon.Nakshatra.Lord].Year *
+        this.Planets.Moon.Nakshatra.Degree *
+        27) /
+      360;
+    let StartDate = this.DOB.addMillisecond(-dasaBalance * this.SOLAR_YEAR_MS);
+
+    mahadasaSequence.forEach((DasaLord) => {
+      const EndDate = StartDate.addMillisecond(
+        this.VimsottariDasa[DasaLord].Year * this.SOLAR_YEAR_MS
+      );
+
+      vimshottariDasa.push({
+        DasaLord,
+        StartDate,
+        EndDate,
+        Antardasa: this.computeAntardasa(DasaLord, StartDate),
+      });
+
+      StartDate = EndDate;
+    });
+
+    return vimshottariDasa;
+  }
+
+  computeAntardasa(mahadasaLord, mahadasaStartDate) {
+    const antardasa = [];
+
+    const antardasaSequence = this.reorderArray(
+      Object.keys(this.VimsottariDasa),
+      mahadasaLord
+    );
+
+    let StartDate = mahadasaStartDate;
+
+    antardasaSequence.forEach((AntardasaLord) => {
+      const antardasaYears =
+        (this.VimsottariDasa[AntardasaLord].Year *
+          this.VimsottariDasa[mahadasaLord].Year) /
+        120; // The total length of all Antardasa in a Maha Dasa is 120 years
+
+      const EndDate = StartDate.addMillisecond(
+        antardasaYears * this.SOLAR_YEAR_MS
+      );
+
+      antardasa.push({
+        AntardasaLord,
+        StartDate,
+        EndDate,
+      });
+
+      StartDate = EndDate;
+    });
+
+    return antardasa;
+  }
+
+  reorderArray(array, startValue) {
+    const startIndex = array.indexOf(startValue);
+    return [...array.slice(startIndex), ...array.slice(0, startIndex)];
   }
 
   details() {
-    /*get the table Element*/
-    var table = document.getElementById("person_details");
-    /* data*/
-
-    // Object.keys(this.Planets).forEach((planet) => {
-    //   canvas.fillText(
-    //     this.real2dms(this.Planets[planet].Rasi.Degree) +
-    //       " - " +
-    //       this.Planets[planet].Rasi.Degree.toFixed(3),
-    //     252,
-    //     y
-    //   );
-    //   y += 15;
-    // });
-    // canvas.fillText("Ayanamsa:" + this.real2dms(this.Ayanamsa), 2, 170);
-    // canvas.fillText(
-    //   "Sid. time: " + this.deg2hms(this.calc_sideral_time(this.DOB)),
-    //   2,
-    //   185
-    // );
-    // canvas.fillText("Day Lord:" + this.calc_Day_Lord(), 223, 170);
-    // canvas.fillText("Hora Lord:" + this.calc_hora_Lord(), 223, 185);
-    let data = {
+    return {
       Name: this.JatakName,
       Gender: this.Gender,
       "Birth Date": this.DOB.toLocaleString(DateTime.DATETIME_FULL),
@@ -1706,8 +1427,8 @@ class Kundli {
       "Hindi day": "TBD",
       Latitude: this.Lat,
       Longitude: this.Lon,
-      Ishtkaal: this.dec2hms(
-        this.hms2dec(this.DOB.hour, this.DOB.minute, this.DOB.second) -
+      Ishtkaal: dec2hms(
+        hms2dec(this.DOB.hour, this.DOB.minute, this.DOB.second) -
           this.calcSunriseSet(false, false, false)
       ),
       Tithi: this.calcTithiPaksha().Tithi,
@@ -1719,7 +1440,7 @@ class Kundli {
       /*TBD*/
       Sunrise: this.calcSunriseSet(true, false, true),
       Sunset: this.calcSunriseSet(false, false, true),
-      "Day Duration": this.dec2hms(
+      "Day Duration": dec2hms(
         this.calcSunriseSet(false, false, false) -
           this.calcSunriseSet(true, false, false)
       ),
@@ -1735,8 +1456,6 @@ class Kundli {
       /*TBD*/
       Nadi: this.calcTithiPaksha().Nadi,
       /*TBD*/
-      "Balance Of Dasha : false": this.calcVimsottariDasa(false),
-      "Balance Of Dasha : true": this.calcVimsottariDasa(true),
       Lagna: "Virgo",
       "Lagna Lord": "MER",
       Rasi: "Aquarius",
@@ -1750,20 +1469,5 @@ class Kundli {
       Obliquity: "023-26-21",
       "Sidereal Time": "07.34.34",
     };
-
-    /* create table rows for each key-value pair in the object*/
-    for (var key in data) {
-      var row = document.createElement("tr");
-      /* add a cell for the key*/
-      var keyCell = document.createElement("td");
-      keyCell.textContent = key;
-      row.appendChild(keyCell);
-      /* add a cell for the value*/
-      var valueCell = document.createElement("td");
-      valueCell.textContent = data[key];
-      row.appendChild(valueCell);
-      /* add the row to the table*/
-      table.appendChild(row);
-    }
   }
 }

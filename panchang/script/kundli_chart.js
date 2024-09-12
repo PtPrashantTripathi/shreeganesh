@@ -11,7 +11,7 @@ const dictionary = {
   Ketu: { HI: "केतु", HI_SHORT: "के", EN_SHORT: "Ke" },
 };
 
-class KundliChart {
+export default class KundliChart {
   constructor(options) {
     // defaultOptions
     this.options = {
