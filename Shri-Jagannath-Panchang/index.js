@@ -589,34 +589,26 @@ var planet_const = [
     circums: 0,
   },
 ];
-handleErr = (msg, url, l) => {
-  txt = "There was an error on this page.\n\n";
-  txt += "Error: " + msg + "\n";
-  txt += "URL: " + url + "\n";
-  txt += "Line: " + l + "\n\n";
-  txt += "Click OK to continue.\n\n";
-  console.log(txt);
-  return true;
-};
-padZero = (t) => {
+
+function padZero(t) {
   return t < 10 ? "0" + t : t;
-};
-frac = (x) => {
-  return x - pI(x);
-};
+}
+function frac(x) {
+  return x - parseInt(x);
+}
 /// the getPanchanga function take,
 /// INPUT VALUES: datetime, long and latitude.
 /// RETURN VALUES: It returns an object with all the panchange values.
 /// .html   : formatted html with all the values. for other values please read the function below with all "this."
-getPanchanga = (date_time, longitude, latitude) => {
+function getPanchanga(date_time, longitude, latitude) {
   this.date_time = date_time;
   this.y0 = date_time.getFullYear();
-  timeZ = di("timeZone").value;
+  timeZ = document.getElementById("timeZone").value;
   cur_date = new Date(date_time).setFullYear(y0); //In Milliseconds.//Date.parse(date_time);Date.parse not used because it returns uncertain value for bellow 100 and negative year periods.
   this.jd2 = m2j(date_time) + timeZ / 1440;
   this.grahas = new getGrahas(jd2, longitude, latitude);
   this.AscData = new calculateAscendant(date_time, latitude, longitude);
-  this.niryan = di("Niryan");
+  this.niryan = document.getElementById("Niryan");
   if (this.niryan.checked) {
     //niryan longitude
     this.grahas.grahas[7] = (this.AscData.node + 36000) % 360;
@@ -685,7 +677,9 @@ getPanchanga = (date_time, longitude, latitude) => {
   }
   for (var i = 0; i < 10; ++i) {
     chart[i].bhava =
-      ((pI(chart[i].long / 30) - pI(chart[0].long / 30) + 12) % 12) + 1;
+      ((parseInt(chart[i].long / 30) - parseInt(chart[0].long / 30) + 12) %
+        12) +
+      1;
     vk[i] = getVakri(grahas.speed[i]);
   }
   //chart.sort((a,b)=>{return a.long - b.long}); //function for sorting according to longitude value
@@ -695,15 +689,17 @@ getPanchanga = (date_time, longitude, latitude) => {
   this.sunrise_next = new Date(date_time);
   var sr = calcSunriseGMT(DtJ(cur_date), latitude, longitude);
   var sr2 = calcSunriseGMT(DtJ(cur_date + day), latitude, longitude);
-  this.sunrise.setTime(pI(cur_date / day) * day + sr * minutes);
-  this.sunrise_next.setTime(pI(cur_date / day) * day + day + sr2 * minutes);
+  this.sunrise.setTime(parseInt(cur_date / day) * day + sr * minutes);
+  this.sunrise_next.setTime(
+    parseInt(cur_date / day) * day + day + sr2 * minutes
+  );
   this.sunset = new Date(date_time);
   var ss = calcSunsetGMT(DtJ(cur_date), latitude, longitude);
-  this.sunset.setTime(pI(cur_date / day) * day + ss * minutes);
+  this.sunset.setTime(parseInt(cur_date / day) * day + ss * minutes);
 
   this.noon = new Date(date_time);
   var n = calcSolNoonGMT(DtJ(cur_date), longitude);
-  this.noon.setTime(pI(cur_date / day) * day + n * minutes);
+  this.noon.setTime(parseInt(cur_date / day) * day + n * minutes);
 
   var error_date = new Date("1 JAN 1970 00:00:01 UTC"); //because of parsing 1/1/1970 and 31/12/1969 return same values so correcting
   var temp = new Date(cur_date - (this.sunrise % day));
@@ -720,12 +716,12 @@ getPanchanga = (date_time, longitude, latitude) => {
 
   this.MaandiDayTime = new Date();
   this.MaandiDayTime.setTime(
-    pI(cur_date / day) * day +
+    parseInt(cur_date / day) * day +
       (ss - sr) * MaandiGunanka[this.vara_cur] * minutes
   );
   this.MaandiNightTime = new Date();
   this.MaandiNightTime.setTime(
-    pI(cur_date / day) * day +
+    parseInt(cur_date / day) * day +
       ss * minutes +
       (24 * 60 - ss + sr2) * MaandiGunanka[(this.vara_cur + 4) % 8] * minutes
   );
@@ -742,7 +738,7 @@ getPanchanga = (date_time, longitude, latitude) => {
 
   this.nakshatra_cur = this.moon_cur / nakshatra_size;
   this.nakshatra_cur1 = this.nakshatra_cur + 1;
-  this.nakshatra_name = nakshatra[pI(this.nakshatra_cur)];
+  this.nakshatra_name = nakshatra[parseInt(this.nakshatra_cur)];
   this.nakshatra_enter = new Date();
   nakshatra_enter.setTime(
     cur_date - (this.moon_cur % nakshatra_size) / this.grahas.speed[1]
@@ -755,7 +751,7 @@ getPanchanga = (date_time, longitude, latitude) => {
 
   this.yoga_cur = ((this.moon_cur + this.sun_cur) % 360) / nakshatra_size;
   this.yoga_cur1 = this.yoga_cur + 1;
-  this.yoga_name = yogas[pI(this.yoga_cur)];
+  this.yoga_name = yogas[parseInt(this.yoga_cur)];
   this.yoga_enter = new Date();
   yoga_enter.setTime(
     cur_date -
@@ -771,7 +767,7 @@ getPanchanga = (date_time, longitude, latitude) => {
 
   this.tithi_cur = ((360 + this.moon_cur - this.sun_cur) % 360) / 12;
   this.tithi_cur1 = this.tithi_cur + 1;
-  this.tithi_name = tithi[pI(this.tithi_cur)];
+  this.tithi_name = tithi[parseInt(this.tithi_cur)];
   this.tithi_enter = new Date();
   tithi_enter.setTime(
     cur_date -
@@ -787,7 +783,7 @@ getPanchanga = (date_time, longitude, latitude) => {
 
   this.karana_cur = this.tithi_cur * 2;
   this.karana_cur1 = this.karana_cur + 1;
-  this.karana_name = karana[pI(this.karana_cur)];
+  this.karana_name = karana[parseInt(this.karana_cur)];
   this.karana_enter = new Date();
   karana_enter.setTime(
     cur_date -
@@ -836,10 +832,12 @@ getPanchanga = (date_time, longitude, latitude) => {
     (((moo % 13.3333333333333333) / 13.3333333333333333) * 360 + lagn) % 360;
   this.Varandalagn =
     (3600 +
-      (pI(lagn / 30) % 2
+      (parseInt(lagn / 30) % 2
         ? 360 -
-          (pI(horalagn / 30) % 2 ? lagn + horalagn : 360 - horalagn - lagn)
-        : pI(horalagn / 30) % 2
+          (parseInt(horalagn / 30) % 2
+            ? lagn + horalagn
+            : 360 - horalagn - lagn)
+        : parseInt(horalagn / 30) % 2
         ? Math.abs(horalagn - 360 + lagn)
         : 360 - lagn + 360 - horalagn)) %
     360;
@@ -1022,7 +1020,7 @@ getPanchanga = (date_time, longitude, latitude) => {
   nclong = get_nclong(ahar, tithi0);
   adhimasa = get_adhimasa(clong, nclong);
   masa_num = get_masa_num(tslong, clong);
-  this.purnimanta = di("Purnimanta");
+  this.purnimanta = document.getElementById("Purnimanta");
   if (this.purnimanta.checked) {
     if (adhimasa_p(clong, nclong)) {
       masa_num += 0;
@@ -1049,7 +1047,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     (this.grahas.grahas[0] > 240 && date_time.getMonth() < 5 ? -7 : -6); //for south indians
   this.sSamvatsara = samvatsara[(this.iSamvatasara + 60 - 1) % 60];
   this.sSamvatsaras = samvatsara[(this.iSamvatasaras + 60 - 1) % 60];
-  this.iSauraMaasa = pI(this.grahas.grahas[0] / 30 + 0.0000000001) % 12;
+  this.iSauraMaasa = parseInt(this.grahas.grahas[0] / 30 + 0.0000000001) % 12;
   this.iSauraMaasafrac = frac(this.grahas.grahas[0] / 30) % 12;
   diff = jd2 - iSauraMaasafrac * 30; //+0.5
   //calculation of Samkranti
@@ -1077,7 +1075,7 @@ getPanchanga = (date_time, longitude, latitude) => {
   this.samkranti = diff3; //(padZero(this.samkranti_date.day0)+" "+emonth[this.samkranti_date.month-1]+" "+this.samkranti_date.year+" "+samkranti_time)//diff3 //alert(date_time)
   this.sSauraMaasa = asRashi[iSauraMaasa].f;
   this.chandramasa = hmonth[masa_num];
-  place = di("placename");
+  place = document.getElementById("placename");
   tt1 = this.nakshatra_cur1 - Math.floor(this.nakshatra_cur1);
   tt2 = this.tithi_cur1 - Math.floor(this.tithi_cur1);
   tt3 = this.karana_cur1 - Math.floor(this.karana_cur1);
@@ -1157,10 +1155,10 @@ getPanchanga = (date_time, longitude, latitude) => {
     " ::-webkit-scrollbar-thumb { border-radius: 10px; background: rgba(255,0,0,0.1) ; box-shadow: inset 0 0 6px rgba(0,0,0,0.9); }" +
     " ::-webkit-scrollbar-thumb:window-inactive { background: rgba(255,0,0,0.4); }" +
     "</style><div class='pA'>";
-  Diamond = di("Diamond");
-  nort = di("nort");
-  sout = di("sout");
-  eaat = di("eaat");
+  Diamond = document.getElementById("Diamond");
+  nort = document.getElementById("nort");
+  sout = document.getElementById("sout");
+  eaat = document.getElementById("eaat");
   eaat.name = sout.name = nort.name = "chartType";
   if (typeof canvasRenderingContext2d !== undefined && Diamond.checked) {
     this.html += "<canvas id='canm' class='pA'></canvas>";
@@ -1182,7 +1180,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     "\n<br/>" +
     "\n</div><div class='pA'><br/><b>नक्षत्र </b>" +
     "(" +
-    tF(this.nakshatra_cur + 1) +
+    fixedLenght(this.nakshatra_cur + 1) +
     ") " +
     this.nakshatra_name +
     "<b>  व्यतीत </b>" +
@@ -1205,7 +1203,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     "\n<br/>" +
     "\n</div><div class='pA'><br/><b>तिथि </b>" +
     " (" +
-    tF(this.tithi_cur + 1) +
+    fixedLenght(this.tithi_cur + 1) +
     ") " +
     this.tithi_name +
     "<b>  व्यतीत </b>" +
@@ -1228,7 +1226,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     "\n<br/>" +
     "\n</div><div class='pA'><br/><b>करण </b>" +
     " (" +
-    tF(this.karana_cur + 1) +
+    fixedLenght(this.karana_cur + 1) +
     ") " +
     this.karana_name +
     "<b>  व्यतीत </b>" +
@@ -1251,7 +1249,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     "\n<br/>" +
     "\n</div><div class='pA'><br/><b>योग </b>" +
     " (" +
-    tF(this.yoga_cur + 1) +
+    fixedLenght(this.yoga_cur + 1) +
     ") " +
     this.yoga_name +
     "<b>  व्यतीत </b>" +
@@ -1274,87 +1272,87 @@ getPanchanga = (date_time, longitude, latitude) => {
     "\n<br/></div>" +
     "<div class='pA'><table>" +
     "<tr><td>Bhaava Lagna</td><td>" +
-    tF(bhaavlagn, 3) +
+    fixedLenght(bhaavlagn, 3) +
     "</td><td>" +
     tSd(bhaavlagn) +
     "</td></tr>" +
     "<tr><td>Hora Lagna</td><td>" +
-    tF(horalagn, 3) +
+    fixedLenght(horalagn, 3) +
     "</td><td>" +
     tSd(horalagn) +
     "</td></tr>" +
     "<tr><td>Ghati Lagna</td><td>" +
-    tF(ghatilagn, 3) +
+    fixedLenght(ghatilagn, 3) +
     "</td><td>" +
     tSd(ghatilagn) +
     "</td></tr>" +
     "<tr><td>Vighati Lagna</td><td>" +
-    tF(vighatilagn, 3) +
+    fixedLenght(vighatilagn, 3) +
     "</td><td>" +
     tSd(vighatilagn) +
     "</td></tr>" +
     "<tr><td>Sree Lagna</td><td>" +
-    tF(sreelagn, 3) +
+    fixedLenght(sreelagn, 3) +
     "</td><td>" +
     tSd(sreelagn) +
     "</td></tr>" +
     "<tr><td>Varanda Lagna</td><td>" +
-    tF(Varandalagn, 3) +
+    fixedLenght(Varandalagn, 3) +
     "</td><td>" +
     tSd(Varandalagn) +
     "</td></tr>" +
     "<tr><td>Dhuma</td><td>" +
-    tF(Dhuma, 3) +
+    fixedLenght(Dhuma, 3) +
     "</td><td>" +
     tSd(Dhuma) +
     "</td></tr>" +
     "<tr><td>Vyatipata</td><td>" +
-    tF(Vyatipata, 3) +
+    fixedLenght(Vyatipata, 3) +
     "</td><td>" +
     tSd(Vyatipata) +
     "</td></tr>" +
     "<tr><td>Parivesha</td><td>" +
-    tF(Parivesha, 3) +
+    fixedLenght(Parivesha, 3) +
     "</td><td>" +
     tSd(Parivesha) +
     "</td></tr>" +
     "<tr><td>Chapa</td><td>" +
-    tF(Chapa, 3) +
+    fixedLenght(Chapa, 3) +
     "</td><td>" +
     tSd(Chapa) +
     "</td></tr>" +
     "<tr><td>Upaketu</td><td>" +
-    tF(Upketu, 3) +
+    fixedLenght(Upketu, 3) +
     "</td><td>" +
     tSd(Upketu) +
     "</td></tr>" +
     "<tr><td>Mandi</td><td>" +
-    tF(Maandi, 3) +
+    fixedLenght(Maandi, 3) +
     "</td><td>" +
     tSd(Maandi) +
     "</td></tr>" +
     "<tr><td>Kaala</td><td>" +
-    tF(Kaala, 3) +
+    fixedLenght(Kaala, 3) +
     "</td><td>" +
     tSd(Kaala) +
     "</td></tr>" +
     "<tr><td>Mrityu</td><td>" +
-    tF(Mrityu, 3) +
+    fixedLenght(Mrityu, 3) +
     "</td><td>" +
     tSd(Mrityu) +
     "</td></tr>" +
     "<tr><td>ArdhaPrahar</td><td>" +
-    tF(ArdhaPrahar, 3) +
+    fixedLenght(ArdhaPrahar, 3) +
     "</td><td>" +
     tSd(ArdhaPrahar) +
     "</td></tr>" +
     "<tr><td>YamaGhantak</td><td>" +
-    tF(YamaGhantak, 3) +
+    fixedLenght(YamaGhantak, 3) +
     "</td><td>" +
     tSd(YamaGhantak) +
     "</td></tr>" +
     "<tr><td>Gulika</td><td>" +
-    tF(Gulika, 3) +
+    fixedLenght(Gulika, 3) +
     "</td><td>" +
     tSd(Gulika) +
     "</td></tr>" +
@@ -1372,7 +1370,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     " " +
     this.chandramasa +
     " " +
-    tithi[pI(tithi0)] +
+    tithi[parseInt(tithi0)] +
     " ( विक्रम सम्वत " +
     this.vikramayear +
     ") ( शक " +
@@ -1425,7 +1423,7 @@ getPanchanga = (date_time, longitude, latitude) => {
         ")</td><td align='right'>" +
         tD(chart[i].long) +
         "</td><td align='right'>-3&#8217 11&#8221 </td><td align='right'>" +
-        nakshatra[pI(getNaks(chart[i].long, 1))] +
+        nakshatra[parseInt(getNaks(chart[i].long, 1))] +
         "</td></tr>";
     } else {
       this.html +=
@@ -1440,23 +1438,23 @@ getPanchanga = (date_time, longitude, latitude) => {
         ")</td><td align='right'>" +
         tD(chart[i].long) +
         "</td><td align='right'>" +
-        tF(chart[i].speed * day * 60, 0) +
+        fixedLenght(chart[i].speed * day * 60, 0) +
         "&#8217 " +
-        tF(
+        fixedLenght(
           (chart[i].speed * day * 60 - Math.floor(chart[i].speed * day * 60)) *
             60,
           0
         ) +
         "&#8221 </td><td align='right'>" +
-        nakshatra[pI(getNaks(chart[i].long, 1))] +
+        nakshatra[parseInt(getNaks(chart[i].long, 1))] +
         "</td></tr>";
     }
   }
   var RS = new rs();
-  Diamond = di("Diamond");
-  nort = di("nort");
-  sout = di("sout");
-  eaat = di("eaat");
+  Diamond = document.getElementById("Diamond");
+  nort = document.getElementById("nort");
+  sout = document.getElementById("sout");
+  eaat = document.getElementById("eaat");
   eaat.name = sout.name = nort.name = "chartType";
   this.html += "</tr></table>" + "";
   this.html +=
@@ -1466,17 +1464,17 @@ getPanchanga = (date_time, longitude, latitude) => {
       "<tr><td>" +
       graha[i] +
       "</td><td>" +
-      tF(this.grahas.gr[i][5] + this.AscData.Ayanamsa, 3) +
+      fixedLenght(this.grahas.gr[i][5] + this.AscData.Ayanamsa, 3) +
       "</td><td>" +
-      tF(this.grahas.speed[i] * day, 3) +
+      fixedLenght(this.grahas.speed[i] * day, 3) +
       "</td><td>" +
-      tF(this.grahas.gr[i][6], 3) +
+      fixedLenght(this.grahas.gr[i][6], 3) +
       "</td><td>" +
-      tF(this.grahas.grn[i][6] - this.grahas.gr[i][6], 3) +
+      fixedLenght(this.grahas.grn[i][6] - this.grahas.gr[i][6], 3) +
       "</td><td>" +
-      tF(this.grahas.gr[i][9], 4) +
+      fixedLenght(this.grahas.gr[i][9], 4) +
       "</td><td>" +
-      tF(this.grahas.grn[i][9] - this.grahas.gr[i][9], 6) +
+      fixedLenght(this.grahas.grn[i][9] - this.grahas.gr[i][9], 6) +
       "</td><td>" +
       RS[i][0] +
       "</td><td>" +
@@ -1484,7 +1482,7 @@ getPanchanga = (date_time, longitude, latitude) => {
       "</td></tr>";
   }
   this.html += "</table></div></div>";
-  Deta = di("Details");
+  Deta = document.getElementById("Details");
   xxz =
     window.innerWidth > 500 ? window.innerWidth / 2 : window.innerWidth / 1.35;
   if (Deta.checked == true) {
@@ -1559,7 +1557,7 @@ getPanchanga = (date_time, longitude, latitude) => {
     }
   }
   return this;
-};
+}
 //get date after/before date_time for any planet in any specific sign etc calculation.
 calcTransit = (d, p, P, v, B) => {
   //d date
@@ -1640,10 +1638,10 @@ calcTransit = (d, p, P, v, B) => {
     }
     cpp++;
   }
-  if (jd2md3(J) == di("TransitDate").value) {
+  if (jd2md3(J) == document.getElementById("TransitDate").value) {
     return calcTransit(jd2md3(J + B * 20), p, P, v, B);
   }
-  di("TransitDate").value = jd2md3(J);
+  document.getElementById("TransitDate").value = jd2md3(J);
   alert(
     "Transit of " +
       g[p] +
@@ -2113,7 +2111,7 @@ calcVimsottariDasa = (date) => {
   g = [];
   d = new Date(date);
   temp = moon / (360 / 27); //calculation of current Nakshatra
-  temp2 = dasa[(pI(temp) + 7) % 9]; //Ashvini nakshatra have dasa of ketu and so on --ketu-on-2-6-2016
+  temp2 = dasa[(parseInt(temp) + 7) % 9]; //Ashvini nakshatra have dasa of ketu and so on --ketu-on-2-6-2016
   balance = (1 - frac(temp)) * temp2.d; //balance of total dasa remaining in years.frac
   e[0] = d.toString();
   f[0] = temp2.l;
@@ -2295,7 +2293,7 @@ writeVimsottariDasa = (date) => {
   return this;
 };
 writePratyantrDasa = (i, j) => {
-  if (!di("pratya" + i + j)) {
+  if (!document.getElementById("pratya" + i + j)) {
     teee = document.createElement("tbody");
     teee.id = "pratya" + i + j;
     teee.innerHTML = calcVimsottariDasa_pratyantr(
@@ -2388,7 +2386,7 @@ getNaksLen = (l) => {
 };
 calcAstottariM_dasa = () => {
   m = getNaks(grahas.grahas[1], 0);
-  s = pI(m) - 5;
+  s = parseInt(m) - 5;
   if (s < 0) s += 28;
   n = getNaksLen(grahas.grahas[1]) / nl;
   if (s < 4) {
@@ -2543,7 +2541,7 @@ writeAshtottariDasa = () => {
   return this;
 };
 wAp = (i, j) => {
-  if (!di("Apdasa" + i + j)) {
+  if (!document.getElementById("Apdasa" + i + j)) {
     teee2 = document.createElement("tbody");
     teee2.id = "Apdasa" + i + j;
     teee2.innerHTML = calcAstottariN_dasa(
@@ -2737,7 +2735,7 @@ vargaChart = (d, e) => {
 writeVargaChart = () => {
   //<!-- <p color=blue>Blue are the Rasi </p><p color=red>Red are the Bhaava</p> -->
   this.html = "<div id='vargas'>";
-  Diamond = di("Diamond");
+  Diamond = document.getElementById("Diamond");
   if (typeof canvasRenderingContext2d !== undefined && Diamond.checked) {
     for (var w = 0; w < varga20.length; w++) {
       this.html += "<canvas id='can" + w + "' class='pA Varga_Chart'></canvas>";
@@ -3410,7 +3408,7 @@ writeSarvatoBhadra = () => {
   a = "";
   a2 = "";
   a3 = "";
-  for (var i = 0; i < 10; i++) gn[i] = pI(getNaks(g[i], 0));
+  for (var i = 0; i < 10; i++) gn[i] = parseInt(getNaks(g[i], 0));
   for (var i = 0; i < 10; i++) {
     "Aswi", (k = gn[i]);
     s[k] = s[k] == "" ? " " : s[k] + " " + n[i];
@@ -3771,7 +3769,7 @@ writeChartToCanvas = (z, n, p, c) => {
     c = document.createElement("canvas");
     c.id = "c";
     t.appendChild(c);
-    c = di("c");
+    c = document.getElementById("c");
   }
   c.width = c.height = z;
   Z = z / 2;
@@ -4072,17 +4070,17 @@ writeVimsopakBala = () => {
       "<tr><td>" +
       graha[a] +
       "</td><td>" +
-      tF(vimsopakaBalaplanet[0][a], 2) +
+      fixedLenght(vimsopakaBalaplanet[0][a], 2) +
       "</td><td>" +
-      tF(vimsopakaBalaplanet[1][a], 2) +
+      fixedLenght(vimsopakaBalaplanet[1][a], 2) +
       "</td><td>" +
-      tF(vimsopakaBalaplanet[2][a], 2) +
+      fixedLenght(vimsopakaBalaplanet[2][a], 2) +
       "</td><td>" +
-      tF(vimsopakaBalaplanet[3][a], 2) +
+      fixedLenght(vimsopakaBalaplanet[3][a], 2) +
       "</td><td>" +
-      tF(avgVimsopakaBala[a], 2) +
+      fixedLenght(avgVimsopakaBala[a], 2) +
       "</td><td>" +
-      tF(perc[a], 2) +
+      fixedLenght(perc[a], 2) +
       "%</td></tr>";
   }
   this.html += "</table></div>";
@@ -4143,9 +4141,9 @@ longativity = () => {
   pp[7] = grahas.grahas[7];
   pp[8] = grahas.grahas[8];
   for (var i = 0; i < 7; i++) {
-    if (pI(pp[i] == exaltation[i])) {
+    if (parseInt(pp[i] == exaltation[i])) {
       age += max[i];
-    } else if (pI(pp[i] == debilitation[i])) {
+    } else if (parseInt(pp[i] == debilitation[i])) {
       age += min[i];
     } else {
       age += max[i]; //calculate age
@@ -4326,15 +4324,17 @@ longativity = () => {
   return this;
 };
 toDMS = (d) => {
-  return pI(d / 30) + ":" + pI(d % 30) + ":" + pI(frac(d) * 60);
+  return (
+    parseInt(d / 30) + ":" + parseInt(d % 30) + ":" + parseInt(frac(d) * 60)
+  );
 };
 toYMD = (d) => {
   return (
-    pI(d) +
+    parseInt(d) +
     " years " +
-    pI(frac(d) * 12) +
+    parseInt(frac(d) * 12) +
     " months " +
-    pI(frac(frac(d) * 12) * 30) +
+    parseInt(frac(frac(d) * 12) * 30) +
     " days "
   );
 };
@@ -4355,7 +4355,7 @@ GetAge = (p, r, T) => {
     if (deg < 0) {
       deg += 1;
     }
-    m = pI(deg * 60);
+    m = parseInt(deg * 60);
     return m;
   };
   toM = (d) => {
@@ -4684,7 +4684,7 @@ writeAshtakVarga = () => {
     }
   }
   agee = agee / 2;
-  agee2 = pI(agee / 365.25) + " year " + (agee % 365.25) + " days";
+  agee2 = parseInt(agee / 365.25) + " year " + (agee % 365.25) + " days";
 
   return this;
 };
@@ -5238,16 +5238,16 @@ writeCharaKarakas = () => {
 change_tabs = (b, a, d, e) => {
   for (var c = 1; c <= a; c++) {
     if (c == d) {
-      di(b + c).className = "active";
-      di(b + "_style" + c).style.display = "block";
+      document.getElementById(b + c).className = "active";
+      document.getElementById(b + "_style" + c).style.display = "block";
       if (e) {
-        di(b + "_arrow" + c).className = "pointer_bottom";
+        document.getElementById(b + "_arrow" + c).className = "pointer_bottom";
       }
     } else {
-      di(b + c).className = "";
-      di(b + "_style" + c).style.display = "none";
+      document.getElementById(b + c).className = "";
+      document.getElementById(b + "_style" + c).style.display = "none";
       if (e) {
-        di(b + "_arrow" + c).className = "no-bg";
+        document.getElementById(b + "_arrow" + c).className = "no-bg";
       }
     }
   }
@@ -5269,7 +5269,7 @@ tCd = (b) => {
   }
 };
 tgD = (b) => {
-  a = di(b);
+  a = document.getElementById(b);
   if (a.style.display == "none") a.style.display = "table-row";
   else a.style.display = "none";
 };
@@ -5295,13 +5295,13 @@ inDualSign = (g) => {
   return getRasi(g) % 3 == 2 ? true : false;
 };
 getRasi = (g) => {
-  return pI(reddeg(g) / 30);
+  return parseInt(reddeg(g) / 30);
 };
 Bhaava = (g) => {
-  return (pI(g / 30) - pI(grahas.grahas[8] / 30) + 12) % 12;
+  return (parseInt(g / 30) - parseInt(grahas.grahas[8] / 30) + 12) % 12;
 };
 naks = (g) => {
-  return pI(g / (40 / 3)) % 27;
+  return parseInt(g / (40 / 3)) % 27;
 };
 plh = (h, a) => {
   if (typeof a == "undefined") a = 0;
@@ -14724,14 +14724,14 @@ rad = 180 / Math.PI;
 j2j = (JulianDay) => {
   //20040205
 
-  j = pI(JulianDay) + 1402;
-  k = pI((j - 1) / 1461);
+  j = parseInt(JulianDay) + 1402;
+  k = parseInt((j - 1) / 1461);
   l = j - 1461 * k;
-  n = pI((l - 1) / 365) - pI(l / 1461);
+  n = parseInt((l - 1) / 365) - parseInt(l / 1461);
   i = l - 365 * n + 30;
-  J = pI((80 * i) / 2447);
-  I2 = pI(J / 11);
-  this.day0 = i - pI((2447 * J) / 80);
+  J = parseInt((80 * i) / 2447);
+  I2 = parseInt(J / 11);
+  this.day0 = i - parseInt((2447 * J) / 80);
   this.month = J + 2 - 12 * I2;
   this.year = 4 * k + n + I2 - 4716;
   return this;
@@ -14739,14 +14739,16 @@ j2j = (JulianDay) => {
 j2g = (JulianDay) => {
   //20030331
   a = JulianDay + 68569;
-  b = pI(a / 36524.25);
-  c = a - pI(36524.25 * b + 0.75);
-  e = pI((c + 1) / 365.2425);
+  b = parseInt(a / 36524.25);
+  c = a - parseInt(36524.25 * b + 0.75);
+  e = parseInt((c + 1) / 365.2425);
 
-  f = c - pI(365.25 * e) + 31;
-  g = pI(f / 30.59);
-  h = pI(g / 11);
-  this.day0 = Math.floor(f - pI(30.59 * g) + (JulianDay - pI(JulianDay)));
+  f = c - parseInt(365.25 * e) + 31;
+  g = parseInt(f / 30.59);
+  h = parseInt(g / 11);
+  this.day0 = Math.floor(
+    f - parseInt(30.59 * g) + (JulianDay - parseInt(JulianDay))
+  );
   this.month = Math.floor(g - 12 * h + 2);
   this.year = Math.floor(100 * (b - 49) + e + h);
   return this;
@@ -14938,8 +14940,8 @@ tithi_naksatra_karana_yoga_at_any_given_ahar = (ahar) => {
   } else {
     paksa = "Suklapaksa";
   }
-  this.naksatra_name = nakshatra[pI((tllong * 27) / 360)];
-  this.karana_name = karana[pI(tithi1 * 2)];
+  this.naksatra_name = nakshatra[parseInt((tllong * 27) / 360)];
+  this.karana_name = karana[parseInt(tithi1 * 2)];
   this.yoga_name = yogas[Math.floor((fix360(tslong, tllong) * 27) / 360)];
 
   return this; //new Array(tithi_day0, ftithi, naksatra_name, karana_name, yoga_name);
@@ -15286,8 +15288,8 @@ tD = (deg) => {
   if (deg < 0) {
     deg += 1;
   }
-  d = pI(deg + 1 / 1800);
-  m = pI((deg - d) * 60);
+  d = parseInt(deg + 1 / 1800);
+  m = parseInt((deg - d) * 60);
   s = ((deg - d) * 60 - m) * 60;
   if (d < 10) {
     d = "0" + d;
@@ -15295,7 +15297,7 @@ tD = (deg) => {
   if (m < 10) {
     m = "0" + m;
   }
-  s = tF(s, 0);
+  s = fixedLenght(s, 0);
   if (s < 10) {
     s = "0" + s;
   }
@@ -15305,9 +15307,9 @@ tD2 = (deg) => {
   if (deg < 0) {
     deg += 1;
   }
-  d = pI(deg + 1 / 1800);
-  d2 = pI(deg + 1 / 1800) % 30;
-  m = pI((deg - d) * 60);
+  d = parseInt(deg + 1 / 1800);
+  d2 = parseInt(deg + 1 / 1800) % 30;
+  m = parseInt((deg - d) * 60);
   s = ((deg - d) * 60 - m) * 60;
   if (d < 10) {
     d = "0" + d;
@@ -15315,7 +15317,7 @@ tD2 = (deg) => {
   if (m < 10) {
     m = "0" + m;
   }
-  s = tF(s, 0);
+  s = fixedLenght(s, 0);
   if (s < 10) {
     s = "0" + s;
   }
@@ -15325,12 +15327,12 @@ toMinutes = (deg) => {
   if (deg < 0) {
     deg += 1;
   }
-  m = pI(deg * 60);
+  m = parseInt(deg * 60);
   return m; //+"&#8217 ";//+tF(s)+
 };
 tSd = (deg) => {
   deg %= 360;
-  sign = pI(deg / 30);
+  sign = parseInt(deg / 30);
   deg %= 30;
   if (sign == 0) sign = asRashi[0].f;
   if (sign == 1) sign = asRashi[1].f;
@@ -15473,7 +15475,7 @@ getChart = (chart) => {
   var i = 0;
   var s = new Array(13);
   for (var i = 0; i <= 9; ++i) {
-    k = pI((chart[i].long % 360) / 30) + 1;
+    k = parseInt((chart[i].long % 360) / 30) + 1;
     s[k] =
       s[k] == ""
         ? ""
@@ -15747,7 +15749,7 @@ getBhaavaTable = function (sun_cur, latitude, longitude, date_time) {
     deg = delta + i * 30;
     t = calcSunriseGMT(DtJ(cur_date), latitude, longitude + deg);
     this.bhaava[i].setTime(
-      pI(cur_date / day) * day + t * minutes + deg * 4 * minutes
+      parseInt(cur_date / day) * day + t * minutes + deg * 4 * minutes
     );
   }
   return this;
@@ -15806,7 +15808,7 @@ calculateAscendant = function (date_time, latitude, longitude) {
     as *= r2d % 360.0;
   }
   // add Ayanamsa
-  this.niryan = di("Niryan");
+  this.niryan = document.getElementById("Niryan");
   if (this.niryan.checked) {
     as = fix360(as + ay); //
     mc = fix360(mc + ay); //
@@ -16199,7 +16201,7 @@ SATURN = 6;
 SUN = 0;
 MOON = 1;
 // The planet object
-planet = function (name, num, N, i, w, a, e, M) {
+function planet(name, num, N, i, w, a, e, M) {
   this.name = name;
   this.num = num;
   this.N = N; // longitude of ascending node
@@ -16208,8 +16210,8 @@ planet = function (name, num, N, i, w, a, e, M) {
   this.a = a; // semimajor axis
   this.e = e; // eccentricity
   this.M = M; // mean anomaly
-};
-updatePosition = function (jday, obs) {
+}
+function updatePosition(jday, obs) {
   // update body-object with current positions
   // elongation NOT calculated! (use updateElong for that)
   this.p = this.number;
@@ -16225,8 +16227,8 @@ updatePosition = function (jday, obs) {
   this.dist = dat[9];
   this.illum = dat[7];
   this.mag = dat[10];
-};
-updateElong = function (jday, obs) {
+}
+function updateElong(jday, obs) {
   // calculate elongation for object
   if (this.number == SUN) return;
   bodies[SUN].update(jday, obs);
@@ -16236,8 +16238,8 @@ updateElong = function (jday, obs) {
   var dat = separation(this.ra, ra2, this.dec, dec2);
   this.elong = dat[0];
   this.pa = dat[1];
-};
-separation = (ra1, ra2, dec1, dec2) => {
+}
+function separation(ra1, ra2, dec1, dec2) {
   // ra, dec may also be long, lat, but PA is relative to the chosen coordinate system
   var d = acosd(
     sind(dec1) * sind(dec2) + cosd(dec1) * cosd(dec2) * cosd(ra1 - ra2)
@@ -16251,8 +16253,9 @@ separation = (ra1, ra2, dec1, dec2) => {
     cosd(dec2) * tand(dec1) - sind(dec2) * cosd(ra1 - ra2)
   ); // angle
   return new Array(d, rev(pa));
-}; // end separation()
-isort = (arr) => {
+} // end separation()
+
+function isort(arr) {
   // Sort 2D array in ascending order on first column of each element using insertion sort
   for (var c = 0; c < arr.length - 1; c++) {
     var tmp = arr[c + 1];
@@ -16263,16 +16266,17 @@ isort = (arr) => {
     }
     arr[a + 1] = tmp;
   }
-}; // end isort()
-dfrac2tstr = (t) => {
+} // end isort()
+
+function dfrac2tstr(t) {
   // returns time string from fraction of day (0 <= t < 1). If t < 0 return '--:--'
   if (t < 0 || t >= 1) return "--:--";
   t1 = Math.round(1440 * t); // round to nearest minute
   var hours = Math.floor(t1 / 60);
   var minutes = t1 - 60 * hours;
   return hmstring2(hours, minutes, 0);
-};
-hmstring2 = (hours, minutes, seconds) => {
+}
+function hmstring2(hours, minutes, seconds) {
   // hmstring2 returns time as a string HH:MM (added 2004.01.02), seconds needed for rounding
   if (seconds >= 30) minutes++;
   if (minutes >= 60) {
@@ -16282,8 +16286,8 @@ hmstring2 = (hours, minutes, seconds) => {
   var timestr = (hours < 10 ? "0" : "") + hours;
   timestr += (minutes < 10 ? ":0" : ":") + minutes;
   return timestr;
-};
-findEvents = (obj, jday, obs) => {
+}
+function findEvents(obj, jday, obs) {
   // Version 2
   // Calculate daily events (rise, transit, set etc) for one day starting at jday
   // Returns chronological sorted array of records, each record comprising time [0<=t<1] relative to jday
@@ -16383,9 +16387,9 @@ findEvents = (obj, jday, obs) => {
   events[count++] = new Array(1.0, -9); // end marker
   isort(events); // bring in chronological order
   return events;
-}; // end findEvents()
+} // end findEvents()
 
-Body = function (name, number, colour, colleft, colright) {
+function Body(name, number, colour, colleft, colright) {
   this.name = name;
   this.number = number;
   this.colour = colour;
@@ -16406,7 +16410,7 @@ Body = function (name, number, colour, colleft, colright) {
   this.pa = 0; // position angle (elongation)
   this.update = updatePosition;
   this.elongupdate = updateElong;
-};
+}
 
 bodies = new Array();
 bodies[0] = new Body("Sun    ", SUN, 0, 26, 27);
@@ -16417,7 +16421,7 @@ bodies[4] = new Body("Jupiter", JUPITER, 4, 24, 25);
 bodies[5] = new Body("Venus  ", VENUS, 5, 24, 25);
 bodies[6] = new Body("Saturn ", SATURN, 6, 24, 25);
 
-jd0 = (year, month, day) => {
+function jd0(year, month, day) {
   // The Julian date at 0 hours(*) UT at Greenwich
   // (*) or actual UT time if day comprises time as fraction
   var y = year;
@@ -16435,8 +16439,8 @@ jd0 = (year, month, day) => {
     b -
     1524.5;
   return j;
-};
-rs = function () {
+}
+function rs() {
   var J =
     jd2 -
     (date_time.getHours() +
@@ -16447,7 +16451,7 @@ rs = function () {
   var zz = [];
   //i;
   for (var i = 0; i < 7; i++) {
-    var oe = findEvents(i, J, obs);
+    var oe = findEvents(i, J, longlat);
     for (var j = oe.length - 2; j > 0; j--) {
       var t = oe[j][0];
       var e = oe[j][1];
@@ -16456,12 +16460,12 @@ rs = function () {
       //if (e == 0) tr = t;
     }
     // console.log(re)
-    bodies[i].update(J + 0.5, obs);
-    bodies[i].elongupdate(J + 0.5, obs);
+    bodies[i].update(J + 0.5, longlat);
+    bodies[i].elongupdate(J + 0.5, longlat);
     zz[i] = new Array(dfrac2tstr(re), dfrac2tstr(se));
   }
   return zz;
-};
+}
 
 // elements from Paul Schlyter
 var planets = new Array();
@@ -16516,7 +16520,7 @@ planets[6] = new planet(
   new Array(316.967, 0.0334442282)
 );
 
-PlanetAlt = function (p, jday, obs) {
+function PlanetAlt(p, jday, obs) {
   // Alt/Az, hour angle, ra/dec, ecliptic long. and lat, illuminated fraction, dist(Sun), dist(Earth), brightness of planet p
   if (p == SUN) return SunAlt(jday, obs);
   if (p == MOON) return MoonPos(jday, obs);
@@ -16591,7 +16595,7 @@ PlanetAlt = function (p, jday, obs) {
     dist,
     mag
   );
-};
+}
 helios = function (p, jday) {
   var d = jday - 2451543.5;
   var w = p.w[0] + p.w[1] * d; // argument of perihelion
@@ -16669,51 +16673,63 @@ radecr = function (obj, sun, jday, obs) {
 //Ephemarid functions ends here
 //functions for changing date_time starts
 seec = function (t) {
-  var a = new Date(di("date").value).setFullYear(di("year").value);
+  var a = new Date(document.getElementById("date").value).setFullYear(
+    document.getElementById("year").value
+  );
   var s = new Date(a);
   var w = new Date(s.setSeconds(s.getSeconds() + t));
-  di("date").value = w.toLS();
-  di("year").value = w.getFullYear();
+  document.getElementById("date").value = w.toLS();
+  document.getElementById("year").value = w.getFullYear();
 };
 Mint = function (t) {
-  var a = new Date(di("date").value).setFullYear(di("year").value);
+  var a = new Date(document.getElementById("date").value).setFullYear(
+    document.getElementById("year").value
+  );
   var s = new Date(a);
   var w = new Date(s.setMinutes(s.getMinutes() + t));
-  di("date").value = w.toLS();
-  di("year").value = w.getFullYear();
+  document.getElementById("date").value = w.toLS();
+  document.getElementById("year").value = w.getFullYear();
 };
 Hoou = function (t) {
-  var a = new Date(di("date").value).setFullYear(di("year").value);
+  var a = new Date(document.getElementById("date").value).setFullYear(
+    document.getElementById("year").value
+  );
   var s = new Date(a);
   var w = new Date(s.setHours(s.getHours() + t));
-  di("date").value = w.toLS();
-  di("year").value = w.getFullYear();
+  document.getElementById("date").value = w.toLS();
+  document.getElementById("year").value = w.getFullYear();
 };
 Datt = function (t) {
-  var a = new Date(di("date").value).setFullYear(di("year").value);
+  var a = new Date(document.getElementById("date").value).setFullYear(
+    document.getElementById("year").value
+  );
   var s = new Date(a);
   var w = new Date(s.setDate(s.getDate() + t));
-  di("date").value = w.toLS();
-  di("year").value = w.getFullYear();
+  document.getElementById("date").value = w.toLS();
+  document.getElementById("year").value = w.getFullYear();
 };
 Mont = function (t) {
-  var a = new Date(di("date").value).setFullYear(di("year").value);
+  var a = new Date(document.getElementById("date").value).setFullYear(
+    document.getElementById("year").value
+  );
   var s = new Date(a);
   var w = new Date(s.setMonth(s.getMonth() + t));
-  di("date").value = w.toLS();
-  di("year").value = w.getFullYear();
+  document.getElementById("date").value = w.toLS();
+  document.getElementById("year").value = w.getFullYear();
 };
 Yeer = function (t) {
-  var s = di("year").value;
-  di("year").value = pI(s) + t;
-  di("date").value = new Date(
-    new Date(di("date").value).setFullYear(di("year").value)
+  var s = document.getElementById("year").value;
+  document.getElementById("year").value = parseInt(s) + t;
+  document.getElementById("date").value = new Date(
+    new Date(document.getElementById("date").value).setFullYear(
+      document.getElementById("year").value
+    )
   ).toLS();
 };
 noow = function () {
   var s = new Date();
-  di("date").value = s.toLS();
-  di("year").value = s.getFullYear();
+  document.getElementById("date").value = s.toLS();
+  document.getElementById("year").value = s.getFullYear();
 };
 //functions for changing date_time ends
 Date.prototype.toLocaleString = function () {
@@ -16789,7 +16805,7 @@ setCookie = function (c_name, value, expiredays) {
     document.cookie =
       c_name +
       "=" +
-      escape(value) +
+      value +
       (expiredays == null ? "" : ";expires=" + exdate.toGMTString());
   } catch (err) {
     alert("SetCookieError" + err.description);
@@ -16820,14 +16836,14 @@ getXMLFile = function (f) {
     alert("Your browser does not support AJAX!");
     return;
   }
-  var file = "file://" + di("filename").value;
+  var file = "file://" + document.getElementById("filename").value;
   xmlHttp.onreadystatechange = stateChanged;
   xmlHttp.open("GET", file, true);
   xmlHttp.send(null);
 };
 stateChanged = function () {
   if (xmlHttp.readyState == 4) {
-    di("txtHint").innerHTML = xmlHttp.responseText;
+    document.getElementById("txtHint").innerHTML = xmlHttp.responseText;
     var p = /.*\n/g;
     alert(xmlHttp.responseText.match(p));
   }
@@ -16848,7 +16864,7 @@ GetXmlHttpObject = function () {
   return xmlHttp;
 };
 ib = function () {
-  Deta = di("Details"); //$1\("ib")
+  Deta = document.getElementById("Details"); //$1\("ib")
   if (typeof canvasRenderingContext2d !== undefined && Diamond.checked) {
     zc = nort.checked
       ? writeDiamondChart
@@ -16859,7 +16875,7 @@ ib = function () {
       : undefined;
     zc(
       vChart(vargas(varga20[0]), vk, 0, varga20[0]).apl,
-      di("canm"),
+      document.getElementById("canm"),
       xxz,
       100,
       1,
@@ -16871,7 +16887,7 @@ ib = function () {
       for (var w = 0; w < varga20.length; w++) {
         zc(
           vChart(vargas(varga20[w]), 0, 0, varga20[w]).apl,
-          di("can" + w),
+          document.getElementById("can" + w),
           xxz,
           100,
           varga20[w],
@@ -16882,7 +16898,7 @@ ib = function () {
       }
       zc(
         writeSudarshanChkra(xxz).aBC,
-        di("canc"),
+        document.getElementById("canc"),
         xxz,
         100,
         "Chandra",
@@ -16891,8 +16907,26 @@ ib = function () {
         "#0f0"
       );
 
-      zc(nbc2, di("cann"), xxz, 100, "Nir.Bha.Cha", "ल", "#00f", "#0f0");
-      zc(bc2, di("canb"), xxz, 100, "Bha.Cha", "ल", "#00f", "#0f0");
+      zc(
+        nbc2,
+        document.getElementById("cann"),
+        xxz,
+        100,
+        "Nir.Bha.Cha",
+        "ल",
+        "#00f",
+        "#0f0"
+      );
+      zc(
+        bc2,
+        document.getElementById("canb"),
+        xxz,
+        100,
+        "Bha.Cha",
+        "ल",
+        "#00f",
+        "#0f0"
+      );
     }
   } else {
     zc = nort.checked
@@ -16904,7 +16938,7 @@ ib = function () {
       : undefined;
     zc(
       vChart(vargas(varga20[0]), vk, 0, varga20[0]).apl,
-      di("canm"),
+      document.getElementById("canm"),
       xxz,
       1,
       "ल"
@@ -16913,15 +16947,21 @@ ib = function () {
       for (var w = 0; w < varga20.length; w++) {
         zc(
           vChart(vargas(varga20[w]), 0, 0, varga20[w]).apl,
-          di("can" + w),
+          document.getElementById("can" + w),
           xxz,
           varga20[w],
           "ल"
         );
       }
-      zc(writeSudarshanChkra(xxz).aBC, di("canc"), xxz, "Chandra", "चं");
-      zc(nbc2, di("cann"), xxz, "Nir.Bha.Cha", "ल");
-      zc(bc2, di("canb"), xxz, "Bha.Cha", "ल");
+      zc(
+        writeSudarshanChkra(xxz).aBC,
+        document.getElementById("canc"),
+        xxz,
+        "Chandra",
+        "चं"
+      );
+      zc(nbc2, document.getElementById("cann"), xxz, "Nir.Bha.Cha", "ल");
+      zc(bc2, document.getElementById("canb"), xxz, "Bha.Cha", "ल");
     }
   }
   //di('m').insertBefore(di('wb_style1'),di('wb_style2'));
@@ -16929,22 +16969,27 @@ ib = function () {
   ////di('m').insertBefore(document.createElement('br'),di('wb_style1'))
   //document.body.insertBefore(di('p'),di('wb_style1'))
   if (Deta.checked) {
-    writeChartToCanvas(xxz * 1.5, nbc, grahas.grahas, di("canv"));
+    writeChartToCanvas(
+      xxz * 1.5,
+      nbc,
+      grahas.grahas,
+      document.getElementById("canv")
+    );
   }
-  di("pTransitcalc").onclick = function () {
+  document.getElementById("pTransitcalc").onclick = function () {
     return calcTransit(
-      di("TransitDate").value,
-      di("plan").selectedIndex,
-      di("posit").value,
+      document.getElementById("TransitDate").value,
+      document.getElementById("plan").selectedIndex,
+      document.getElementById("posit").value,
       2,
       -1
     );
   };
-  di("nTransitcalc").onclick = function () {
+  document.getElementById("nTransitcalc").onclick = function () {
     return calcTransit(
-      di("TransitDate").value,
-      di("plan").selectedIndex,
-      di("posit").value,
+      document.getElementById("TransitDate").value,
+      document.getElementById("plan").selectedIndex,
+      document.getElementById("posit").value,
       2,
       1
     );
@@ -16957,8 +17002,18 @@ ib = function () {
 };
 ic = function () {
   //console.log("ic")
-  di("m").insertBefore(di("wb_style1"), di("wb_style2"));
-  di("m").insertBefore(di("wb_style13"), di("wb_style2"));
+  document
+    .getElementById("m")
+    .insertBefore(
+      document.getElementById("wb_style1"),
+      document.getElementById("wb_style2")
+    );
+  document
+    .getElementById("m")
+    .insertBefore(
+      document.getElementById("wb_style13"),
+      document.getElementById("wb_style2")
+    );
   change_tabs("wb", 13, 2, 0);
   setTimeout(ib, 500);
   // change_tabs('wb',13,1,0);
@@ -16995,27 +17050,29 @@ w3_close = function () {
   document.getElementsByClassName("sidenav")[0].style.display = "none";
   document.getElementsByClassName("w3-overlay")[0].style.display = "none";
 };
-cdata =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAgBAMAAABnfayDAAAAElBMVEUujBMAAAAAAICAAADw8PD///8fFepxAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfgBxYIDB5Fa0amAAAApklEQVQoz6XRyw3EIAwEUA40gLSUwH0lKADENJBI9N/KYsB8HOW0Pj55HOMo9X9pAIIAYz6Igoq9DtRIpda1xwFLVrZG3ewmw2pLtyOr4bis3M41w4wmW7EUMw3on937Totsc5dh+s34HWNgs/HeZdn70O6yW4DHrDdT3TJoQuD9hlUQFqgp52G6WQtmzwckyzVM+mWr06VpiE34Mr2ieqD46Q866weBw1hJ758d8wAAAABJRU5ErkJggg==";
-cprin =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAgBAMAAACIv8e9AAAAIVBMVEUAAJUAAAAKDhMRExSkpafm6+/7/RTt7/Dw8PD0+P37/f6E2kxZAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfgBxYIDhyZU0UIAAAAlElEQVQoz8XQLQ7DMAwF4MDQFm1HGDawVNwr7ArDkTLNdKkUyXgsOGynXLoUPLd8e/DTc37s3G+i+jzI3lT35jUNLYqUL6WU1xXn8kQ0sQSg5d2C5HWpRJVYgM6tVGMESiMRMRPQKYtINK1hbRFH27rPwmzpcRO80W2DDE9N/Xh8ve8tMd+Wb3BfnYLZ4VFWC+5f+QAT1T3hHlQzoAAAAABJRU5ErkJggg==";
-cnorm =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAhCAMAAACGE/kZAAAAYFBMVEUAAAAAAAACAgIDAwMKDhMQEhMRExSAAAD+AAD/AAD+AQH+BwegoKCkpKSkpaeoqKjk6Ozm6+/7/RTs7u/t7/Du7/Dv7+/v7/Dw8PDz8/P29vb39/f0+P34+Pj7+/v7/f6M3wjdAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAHdElNRQfgBxYIEikpl9x2AAAA2klEQVQ4y7XS7RKCIBBAUdYIow8Lw9zK8v3fskVIMlnyT7fGyenMwihCTDse9pTgu97uD+qZITiWM0Wx8rEKjexC0hgWqV65emUpZjHZh/LIDwIqjRChC4PAuk/agFQ+qyykESAa61PsJIiTaJbNTqqqyo9Kbjyguq4JKUg/gelyDKJRp7DxNZmGeS0Qs03bpk8Dnr1oKGfKcq4QL22MyIBwhrYe7IIZmh9L7WZs3K8MQj1832rYV+KAaz2e80UowNxyPNLjhUfhb80jgYm+H0FUn3fiZ0vMf3oBN1oj5N0GHD4AAAAASUVORK5CYII=";
-cmenu =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgBxYJBjaL82zhAAAAHWlUWHRDb21tZW50AAAAAABDcmVhdGVkIHdpdGggR0lNUGQuZQcAAAAUSURBVAjXY2AgFtT/QyGoKIsPAABPrQ1mR0pALwAAAABJRU5ErkJggg==";
-doForm = function () {
+cdata = "cdata.png";
+cprin = "cprin.png";
+cnorm = "cnorm.png";
+cmenu = "cmenu.png";
+function doForm() {
   //console.log("doform");
-  document.body.insertBefore(di("wb_style1"), di("xp"));
-  document.body.insertBefore(di("wb_style13"), di("xp"));
-  d = $d = new Date(di("date").value);
-  d.setFullYear(di("year").value); //added year input box entering extreme dates(below 100, -ve and beyond 10000)
+  document.body.insertBefore(
+    document.getElementById("wb_style1"),
+    document.getElementById("xp")
+  );
+  document.body.insertBefore(
+    document.getElementById("wb_style13"),
+    document.getElementById("xp")
+  );
+  d = $d = new Date(document.getElementById("date").value);
+  d.setFullYear(document.getElementById("year").value); //added year input box entering extreme dates(below 100, -ve and beyond 10000)
 
-  lon = di("longitude").value;
-  lat = di("latitude").value;
-  pla = di("placename").value;
-  timeZ = di("timeZone").value;
-  Diamond = di("Diamond");
-  c = di("placename").value;
+  lon = document.getElementById("longitude").value;
+  lat = document.getElementById("latitude").value;
+  pla = document.getElementById("placename").value;
+  timeZ = document.getElementById("timeZone").value;
+  Diamond = document.getElementById("Diamond");
+  c = document.getElementById("placename").value;
   places[c] = lat + ";" + lon;
   z = "";
   for (x in places) z = z + x + "#" + places[x] + "&";
@@ -17025,19 +17082,19 @@ doForm = function () {
   var link = "" + location.protocol + "//" + location.host + location.pathname;
   var parm =
     "?chartname=" +
-    escape(di("chartname").value) +
+    document.getElementById("chartname").value +
     "&datetimezone=" +
-    escape(di("date").value) +
+    document.getElementById("date").value +
     "&placename=" +
-    escape(di("placename").value) +
+    document.getElementById("placename").value +
     "&latitude=" +
-    escape(lat) +
+    lat +
     "&longitude=" +
-    escape(lon) +
+    lon +
     "&timezone=" +
-    escape(timeZ) +
+    timeZ +
     "&canvas=" +
-    escape(Diamond.checked);
+    Diamond.checked;
   lat2 =
     lat < 0
       ? Math.ceil(lat) * -1 + "S" + Math.round(frac(lat) * -10000)
@@ -17046,9 +17103,9 @@ doForm = function () {
     lon < 0
       ? Math.ceil(lon) * -1 + "E" + Math.round(frac(lon) * -10000)
       : Math.floor(lon) + "W" + Math.round(frac(lon) * 10000);
-  di("xp").innerHTML =
+  document.getElementById("xp").innerHTML =
     "<TITLE> " +
-    di("chartname").value +
+    document.getElementById("chartname").value +
     ' - Sri Jagannatha Panchanga - JavaScript</TITLE><div class="pA collap whit animate-left sidenav" id="bt">' +
     '<a href="javascript:void(0)" onclick="w3_close()"  class="closenav hide-large">Close ×</a>' +
     '<a onclick="change_tabs(&#39;wb&#39;, 13, 1, 0);" id="wb1"> Input Data </a>' +
@@ -17069,7 +17126,7 @@ doForm = function () {
     parm +
     ">url</a>" +
     "<strong> स्थान:</strong>" +
-    di("placename").value +
+    document.getElementById("placename").value +
     "<strong> अक्षांश:</strong>" +
     lat2 +
     "<strong> देशान्तर:</strong>" +
@@ -17081,25 +17138,25 @@ doForm = function () {
     ")</div>" +
     s +
     "</div></div></div>";
-  di("cda").style.background =
+  document.getElementById("cda").style.background =
     "#7636f4 url(" + cdata + ") no-repeat center center";
-  di("cpa").style.background =
+  document.getElementById("cpa").style.background =
     "#7636f4 url(" + cprin + ") no-repeat center center";
-  di("cna").style.background =
+  document.getElementById("cna").style.background =
     "#7636f4 url(" + cnorm + ") no-repeat center center";
-  di("cme").style.background =
+  document.getElementById("cme").style.background =
     "#7636f4 url(" + cmenu + ") no-repeat center center";
   document.close();
   setTimeout(ic, 500);
-};
+}
 setLatLong = function () {
-  o = di("placeslist");
+  o = document.getElementById("placeslist");
   loc = o.options[o.selectedIndex].text;
   k = loc.split(/#/);
-  di("placename").value = k[0];
+  document.getElementById("placename").value = k[0];
   k = k[1].split(/;/);
-  di("longitude").value = k[0];
-  di("latitude").value = k[1];
+  document.getElementById("longitude").value = k[0];
+  document.getElementById("latitude").value = k[1];
 };
 gup = function (name) {
   //Get URL Parameter value for 'name'
@@ -17111,119 +17168,112 @@ gup = function (name) {
   else return unescape(results[1]);
 };
 
-function di(t) {
-  return document.getElementById(t);
-}
-tF = function (t, y) {
+const fixedLenght = function (t, y) {
   return t.toFixed(y);
 };
-pI = function (t) {
-  return parseInt(t);
-};
 
-//self made function
-getGrahas = function (j, l, lat) {
-  obs = { longitude: l, latitude: lat };
-  this.grahas = new Array(9);
-  this.grahas_next = new Array(9);
-  this.speed = new Array(9);
-  this.retro = new Array(9);
-  this.gr = new Array(9);
-  this.grn = new Array(9);
-  for (var a = 0; a < 7; a++) {
-    this.gr[a] = PlanetAlt(a, j, obs);
-    this.grahas[a] = this.gr[a][5];
-    this.grn[a] = PlanetAlt(a, j + 1, obs);
-    this.grahas_next[a] = this.grn[a][5];
-    this.speed[a] =
-      this.grahas_next[a] - this.grahas[a] < -300
-        ? ((this.grahas_next[a] - this.grahas[a] + 360) % 360) / day
-        : ((this.grahas_next[a] - this.grahas[a]) % 360) / day;
-    this.retro[a] = this.speed[a] < 0 ? 1 : 0;
+let longlat = { longitude: 0, latitude: 0 };
+
+class getGrahas {
+  constructor(j, l, lat) {
+    longlat = { longitude: l, latitude: lat };
+    this.grahas = new Array(9);
+    this.grahas_next = new Array(9);
+    this.speed = new Array(9);
+    this.retro = new Array(9);
+    this.gr = new Array(9);
+    this.grn = new Array(9);
+
+    for (var i = 0; i < 7; i++) {
+      this.gr[i] = PlanetAlt(i, j, longlat);
+      this.grahas[i] = this.gr[i][5];
+      this.grn[i] = PlanetAlt(i, j + 1, longlat);
+      this.grahas_next[i] = this.grn[i][5];
+      this.speed[i] =
+        this.grahas_next[i] - this.grahas[i] < -300
+          ? ((this.grahas_next[i] - this.grahas[i] + 360) % 360) / day
+          : ((this.grahas_next[i] - this.grahas[i]) % 360) / day;
+      this.retro[i] = this.speed[i] < 0 ? 1 : 0;
+    }
   }
-};
-showtime = function () {
-  di("date").value = new Date().toString();
-  timerID = setTimeout("showtime()", timeOut);
-};
-
-//window_onload=function ()
-//Initialization block
-{
-  //htt=''
-  //document.write(htt);
-  main = function () {
-    //console.log("main")
-    var icon = document.createElement("link");
-    icon.rel = "icon";
-    icon.type = "image/x-icon";
-    icon.href =
-      "data:image/x-icon;base64,AAABAAEAMDAAAAEAGACGBAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgGAAAAVwL5hwAABE1JREFUaIHtmHtMlWUcxz8vHA5MrmEJzgGSwWACBgg0nLVyIpeDObmUWRu5MceI/kgiV1muP+yyUhRr06at4fQfWbaJchFyBtigYQghwQTBaAJxUQ/Xcw5vf1APvnIOB0h8x3Y+fz3v7/d7nuf7PXvf53Ikg3O/zBLGTm0B/xebAbWxGVCbJW9A83BgQjPB+bQfubDtPM3rmhj0HMTBoMH1nht+N1ez9noIsZc3sqFyI1qj1uygtUO+FieM9uiaGTw5s16e0MKIO3QHItcnIv2chmR0mlEnPbgPdDzdzluFu2lb+4dFAf/h0e9O7ZrGRTMwgzt+TB48hd3ffoqwMDCwvJ/kqi30rewF4IWSl8g8nEVASyBOo470efXxa2wt5UmlVCaUI9vLtJoTY8WQVQO7pvKy/QSydzvEH8NuQ9FUrG8VfHgJyeAsysUrVJCXL8S/euJ1PtlzQDGHb6cfvp1+bD+Txi3/Dt4veHdO4heKZNIidQfBiUPITnqkyFKkp7qR405CcY6oEx9xRUK5CGZ9lT3r4Ks7/DmtO7sIsi1QmimaUkSJIiUM9Hn3iuAT/Z6PQdU8uB0smvKKTkVKGHAbchPBxnDzH6dqmB5Y7bSjipQwEF0TI4L7juTRHPL7jHFkybQI6qwje9yZfri3XJETH/HuQ9mUJ5Ux6WCiPbCdbVUJBDUGE1UdQ8hvYYRcC2VNawDSY5M9jeTfMP3QHq7ICQMhDWEcyfiG977ew7CHHoCW0Bu0hN4Qxc5DLsQVx/PG8QxCGsIWWfYUsmYMSVcwHahJVeQVR4m44gQqI6p4Z38e62rDcRhT7rTDHnp+2HmW7T/pOJqbv3iqAdlRjxx4FXJ3gs/Uxio3Po/UsFlRJ812IzPaG2kLaqUhsp5rMfWU6S4y7D4s8kdfO07chXirYua1kVky1BIDh79DGneZu4GH0bvcJ+f7LKo3XQEgsjqKM0lFVvstxIBstAe9J/wZDL+8DDUpSGbOnjMOc7Phonflg70fk1i3CYD2gJvz6T43/j1KzHWxmPdx2ufW9K81tmx0lsopJu0Noi1Pznc26wgD2YWZjGvHrHbo8p/eCZ9pCbRab3hyQLQ1g+7z1WcVYaA8uZQdF1NpCrW8C5vsTBz86AvxnHIq3eoE+ufqRNu5/tmF6rSI4hVqirxOymUd2YWZlGwt5q9V3Yw7jHPbp4uSrcWkVCZToSsDIKJmPemFOxSDNVXoGNxciclxFKOznoH4Mro+2y/yXt9mPHIDYhXal7+Xc+lFjC8bt9ppy7kEDuR8iet9V0V8tovMys/fxufTXPNJM/eBuaJYRu+63+VSYilVL16hJayZXu8ehp1HcBzTsqLHi/VXo0ktfIXI2iizg7We3sVIUBsGrx5krQFNvycudRF4HXsT96pYyyoelYGlyJL/V8JmQG1sBtTGZkBtbAbUxmZAbWwG1MZmQG1sBtTGZkBtlryBfwA6P3ANRuBajgAAAABJRU5ErkJggg==";
-    document.head.appendChild(icon);
-    var today = new Date();
-    di("date").value = today.toLS();
-    di("TransitDate").value = today.toLS();
-    di("year").value = today.getFullYear();
-    di("chartname").value = "Krishna";
-    // di('longitude').value = getCookie('longitude');
-    // di('latitude').value = getCookie('latitude');
-    // di('Nodes').value = getCookie('Nodes');
-    if (di("longitude").value == "") di("longitude").value = "-77.3930120"; //-77.3930120
-    if (di("latitude").value == "") di("latitude").value = "23.2175960"; //23.2175960
-    if (di("timeZone").value == "") di("timeZone").value = "-330"; //-330 India
-    if (di("placename").value == "") di("placename").value = "Bhopal";
-    datetimezone = gup("datetimezone");
-    longitude = gup("longitude");
-    latitude = gup("latitude");
-    placename = gup("placename");
-    chartname = gup("chartname");
-    timeZ = gup("timezone");
-    if (datetimezone != "") {
-      urlparam = 1;
-      di("date").value = datetimezone;
-      di("placename").value = placename;
-      di("chartname").value = chartname;
-      di("latitude").value = latitude;
-      di("longitude").value = longitude;
-      di("timeZone").value = timeZ;
-      di("Diamond").checked = Diamond.checked;
-      di("datetimeplace").submit();
-      doForm();
-    }
-    places_c = getCookie("placeslist");
-    if (places_c == "") {
-      places_c =
-        "Home#-77.3930120;23.2175960&Bhopal#-77.28;23.17&Bhubaneshwar#-85.50;20.13&Varanasi#-83.00;25.20&Kanpur#-80.41;26.28&Mumbai#-72.50;18.58&Nagpur#-79.12;21.10&Nasik#-73.52;20.00&Calcutta#-88.20;22.30&Ajmer#-74.40;26.29&Kota#-75.58;25.11&Madurai#-78.07;9.55&Puri#-85.52;19.48&Delhi#-77.13;28.39&Chennai#-80.18;13.05&Ujjain#-75.50;23.11";
-    }
-    amp = new RegExp(/&/);
-    places_str = places_c.split(amp);
-    o = di("placeslist");
-    for (var i = 0; i < o.length; ++i) o.remove(i);
-    for (var x in places_str) {
-      var y = document.createElement("option");
-      y.text = places_str[x];
-      try {
-        o.add(y, null);
-      } catch (ex) {
-        o.add(y);
-      }
-      ////console.log(places_str[x]);
-      k = places_str[x].split(/#/); ////console.log(k);
-      places[k[0]] = k[1];
-      ////console.log(places);
-    }
-    //showtime();
-    if (typeof date_time != "undefined") {
-      di("date").value = date_time.toLS();
-      di("year").value = date_time.getFullYear();
-      di("placename").value = pla;
-      di("longitude").value = lon;
-      di("latitude").value = lat;
-    }
-  };
-  main();
 }
-onerror = handleErr;
+
+function showtime() {
+  document.getElementById("date").value = new Date().toString();
+  timerID = setTimeout("showtime()", timeOut);
+}
+
+function main() {
+  //console.log("main")
+  var icon = document.createElement("link");
+  icon.rel = "icon";
+  icon.type = "image/x-icon";
+  icon.href = "favicon.ico";
+  document.head.appendChild(icon);
+  var today = new Date();
+  document.getElementById("date").value = today.toLS();
+  document.getElementById("TransitDate").value = today.toLS();
+  document.getElementById("year").value = today.getFullYear();
+  document.getElementById("chartname").value = "Krishna";
+  // di('longitude').value = getCookie('longitude');
+  // di('latitude').value = getCookie('latitude');
+  // di('Nodes').value = getCookie('Nodes');
+  if (document.getElementById("longitude").value == "")
+    document.getElementById("longitude").value = "-77.3930120"; //-77.3930120
+  if (document.getElementById("latitude").value == "")
+    document.getElementById("latitude").value = "23.2175960"; //23.2175960
+  if (document.getElementById("timeZone").value == "")
+    document.getElementById("timeZone").value = "-330"; //-330 India
+  if (document.getElementById("placename").value == "")
+    document.getElementById("placename").value = "Bhopal";
+  datetimezone = gup("datetimezone");
+  longitude = gup("longitude");
+  latitude = gup("latitude");
+  placename = gup("placename");
+  chartname = gup("chartname");
+  timeZ = gup("timezone");
+  if (datetimezone != "") {
+    urlparam = 1;
+    document.getElementById("date").value = datetimezone;
+    document.getElementById("placename").value = placename;
+    document.getElementById("chartname").value = chartname;
+    document.getElementById("latitude").value = latitude;
+    document.getElementById("longitude").value = longitude;
+    document.getElementById("timeZone").value = timeZ;
+    document.getElementById("Diamond").checked = Diamond.checked;
+    document.getElementById("datetimeplace").submit();
+    doForm();
+  }
+  places_c = getCookie("placeslist");
+  if (places_c == "") {
+    places_c = "Bhopal#-77.28;23.17";
+  }
+  places_str = places_c.split(new RegExp(/&/));
+  o = document.getElementById("placeslist");
+  for (var i = 0; i < o.length; ++i) o.remove(i);
+  for (var x in places_str) {
+    var y = document.createElement("option");
+    y.text = places_str[x];
+    try {
+      o.add(y, null);
+    } catch (ex) {
+      o.add(y);
+    }
+    console.log(places_str[x]);
+    k = places_str[x].split(/#/); ////console.log(k);
+    places[k[0]] = k[1];
+    ////console.log(places);
+  }
+  //showtime();
+  if (typeof date_time != "undefined") {
+    document.getElementById("date").value = date_time.toLS();
+    document.getElementById("year").value = date_time.getFullYear();
+    document.getElementById("placename").value = pla;
+    document.getElementById("longitude").value = lon;
+    document.getElementById("latitude").value = lat;
+  }
+}
+main();
 
 /*	Top=function () {
       var top = 0;
@@ -17272,9 +17322,3 @@ Array.prototype.maxElement =
   };
 doForm();
 ib();
-
-//function to es6
-//function ([\w]+)[\s]*\(([\w,_]*)\) to \1\(\2\)=>
-// funciton name(a) to name=(a)=>
-//function [\s]*\(([\w\s,_]*)\) to \(\1\)=>
-//name=funciton( a,_) to name=( a,_)=>
