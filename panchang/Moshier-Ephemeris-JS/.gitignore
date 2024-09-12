@@ -1,5 +1,0 @@
-.project
-node_modules/*
-.grunt/*
-
-test-script.js

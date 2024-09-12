@@ -1,0 +1,4 @@
+{
+    "java.dependency.packagePresentation": "flat",
+    "java.format.settings.url": ".vscode/java-formatter.xml"
+}

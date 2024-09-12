@@ -1,1 +1,0 @@
-jarsigner -keystore astrosoft_keys -keypass astrosoft AstroSoft.jar Raja

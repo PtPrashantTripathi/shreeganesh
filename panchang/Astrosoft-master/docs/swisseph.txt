@@ -1,3 +1,0 @@
-version 1.71.00
-
-java Precompile -qf -iswesrc -iprogs -DNO_JPL -DTRANSITS
