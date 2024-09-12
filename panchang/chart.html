@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>chart</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="jyotish birth chart" />
+  <meta name="keywords" content="jyotish,vedic astrology,birth chart,rasi,navamsa,astronomy" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./asset/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./asset/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./asset/apple-touch-icon.png" />
+  <link rel="manifest" href="./asset/site.webmanifest" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+  <div class="demo-page">
+    <main class="demo-page-content">
+      <section>
+        <h1>Basic Birth Details</h1>
+        <table id="person_details"></table>
+      </section>
+
+      <section>
+        <h1>Information Chart</h1>
+        <canvas id="canvas_info" width="500" height="190">[ Information ]</canvas>
+        <table>
+          <tr>
+            <td>Graha</td>
+            <td>Longitude</td>
+            <td>Nakshatra</td>
+            <td>Ruler of</td>
+            <td>Is In</td>
+            <td>B. Owner</td>
+            <td>Relationship</td>
+            <td>Dignities</td>
+          </tr>
+          <tr>
+            <td>Lagna (Q)</td>
+            <td>03° Mitu 01′ 17″</td>
+            <td>Mrigashirsha 3, Mangal</td>
+            <td></td>
+            <td>1 Bhava</td>
+            <td>Budha</td>
+            <td></td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>☉ Surya</td>
+            <td>24° Kark 23′ 55″</td>
+            <td>Ashlesha 3, Budha</td>
+            <td>3 Bhava</td>
+            <td>2 Bhava</td>
+            <td>Chandra</td>
+            <td>Friend's House</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>☾ Chandra (T)</td>
+            <td>16° Tula 37′ 31″</td>
+            <td>Swati 3, Rahu</td>
+            <td>2 Bhava</td>
+            <td>5 Bhava</td>
+            <td>Shukra</td>
+            <td>Neutral</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>♂ Mangal (T)</td>
+            <td>04° Tula 01′ 37″</td>
+            <td>Chitra 4, Mangal</td>
+            <td>11, 6 Bhava</td>
+            <td>5 Bhava</td>
+            <td>Shukra</td>
+            <td>Neutral</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>☿ Budha 🌸</td>
+            <td>20° Simh 21′ 14″</td>
+            <td>P Phalguni 3, Shukra</td>
+            <td>1, 4 Bhava</td>
+            <td>3 Bhava</td>
+            <td>Surya</td>
+            <td>Friend's House</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>♃ Guru</td>
+            <td>23° Maka 00′ 06″</td>
+            <td>Shravana 4, Chandra</td>
+            <td>7, 10 Bhava</td>
+            <td>8 Bhava</td>
+            <td>Shani</td>
+            <td>Neutral</td>
+            <td>Debilitated</td>
+          </tr>
+          <tr>
+            <td>♀ Shukra 🌸</td>
+            <td>28° Simh 07′ 23″</td>
+            <td>U Phalguni 1, Surya</td>
+            <td>12, 5 Bhava</td>
+            <td>3 Bhava</td>
+            <td>Surya</td>
+            <td>Enemy's House</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>♄ Shani (Q) ↺ 💱</td>
+            <td>26° Meen 27′ 29″</td>
+            <td>Revati 3, Budha</td>
+            <td>8, 9 Bhava</td>
+            <td>10 Bhava</td>
+            <td>Guru</td>
+            <td>Neutral</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>☊ Rahu ↺ 🌸</td>
+            <td>27° Simh 28′ 37″</td>
+            <td>U Phalguni 1, Surya</td>
+            <td></td>
+            <td>3 Bhava</td>
+            <td>Surya</td>
+            <td>Enemy's House</td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>☋ Ketu (T) ↺</td>
+            <td>27° Kumb 28′ 37″</td>
+            <td>P Bhadrapada 3, Guru</td>
+            <td></td>
+            <td>9 Bhava</td>
+            <td>Shani</td>
+            <td>Friend's House</td>
+            <td>-</td>
+          </tr>
+        </table>
+        <table class="table table- t-sm no-margin">
+          <thead>
+            <tr class="title tc">
+              <th>Planets</th>
+              <th>Positions</th>
+              <th>Degrees</th>
+              <th>Rasi</th>
+              <th>Rasi Lord</th>
+              <th>Nakshatra</th>
+              <th>Nakshatra Lord</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Sun</th>
+              <td>251° 3'</td>
+              <td>11° 3′</td>
+              <td title="Sagittarius">Dhanu</td>
+              <td>Jupiter</td>
+              <td>Moola</td>
+              <td>Ketu</td>
+            </tr>
+            <tr>
+              <th>Moon</th>
+              <td>74° 17'</td>
+              <td>14° 17′</td>
+              <td title="Gemini">Mithuna</td>
+              <td class="b text-success">Mercury</td>
+              <td>Ardra</td>
+              <td>Rahu</td>
+            </tr>
+            <tr>
+              <th>Mercury</th>
+              <td>240° 50'</td>
+              <td>0° 50′</td>
+              <td title="Sagittarius">Dhanu</td>
+              <td>Jupiter</td>
+              <td>Moola</td>
+              <td>Ketu</td>
+            </tr>
+            <tr>
+              <th>Venus</th>
+              <td>212° 42'</td>
+              <td>2° 42′</td>
+              <td title="Scorpio">Vrischika</td>
+              <td>Mars</td>
+              <td>Vishaka</td>
+              <td>Jupiter</td>
+            </tr>
+            <tr>
+              <th>Mars</th>
+              <td>239° 38'</td>
+              <td>29° 38′</td>
+              <td title="Scorpio">Vrischika</td>
+              <td>Mars</td>
+              <td>Jyeshta</td>
+              <td>Mercury</td>
+            </tr>
+            <tr>
+              <th>Jupiter</th>
+              <td>11° 24'</td>
+              <td>11° 24′</td>
+              <td title="Aries">Mesha</td>
+              <td>Mars</td>
+              <td>Ashwini</td>
+              <td>Ketu</td>
+            </tr>
+            <tr>
+              <th>Saturn</th>
+              <td>308° 38'</td>
+              <td>8° 38′</td>
+              <td title="Aquarius">Kumbha</td>
+              <td>Saturn</td>
+              <td>Shatabhisha</td>
+              <td>Rahu</td>
+            </tr>
+            <tr>
+              <th>Ascendant</th>
+              <td>353° 1'</td>
+              <td>23° 1′</td>
+              <td title="Pisces">Meena</td>
+              <td class="b text-success">Jupiter</td>
+              <td>Revati</td>
+              <td>Mercury</td>
+            </tr>
+            <tr>
+              <th>Rahu</th>
+              <td>356° 56'</td>
+              <td>26° 56′</td>
+              <td title="Pisces">Meena</td>
+              <td>Jupiter</td>
+              <td>Revati</td>
+              <td>Mercury</td>
+            </tr>
+            <tr>
+              <th>Ketu</th>
+              <td>176° 56'</td>
+              <td>26° 56′</td>
+              <td title="Virgo">Kanya</td>
+              <td>Mercury</td>
+              <td>Chitra</td>
+              <td>Mars</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section>
+        <h1>Birth Chart</h1>
+        <div id="Lagna_chart"><span>Lagna Chart</span><br></div>
+        <div id="Hora_chart"><span>Hora Chart</span><br></div>
+        <div id="Shashthamsa_chart"><span>Shashthamsa Chart</span><br></div>
+        <div id="Ashthamsa_chart"><span>Ashthamsa chart</span><br></div>
+        <div id="Navamsa_chart"><span>Navamsa chart</span><br></div>
+        <div id="Dwadashamsa_chart"><span>Dwadashamsa chart</span><br></div>
+      </section>
+    </main>
+  </div>
+</body>
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"
+  integrity="sha256-7NQm0bhvDJKosL8d+6ZgSi2LxZCIcA/TD087GLEBO9M=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="./script/planetary_calculation.js"></script>
+<script type="text/javascript" src="./script/kundli_generator.js"></script>
+<script type="text/javascript" src="./script/kundli_chart.js"></script>
+<script>
+  let kundli = new Kundli();
+  kundli.generate();
+  let kundlichart = new KundliChart({
+    width: 250,
+    height: 215,
+    // fontHeight: 15,
+    // maxLength: 15,
+    printLagna: false,
+    shortName: false,
+    lang: "HI"
+  }
+  );
+  document.getElementById("Lagna_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Lagna);
+  document.getElementById("Hora_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Hora);
+  document.getElementById("Shashthamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Shashthamsa);
+  document.getElementById("Ashthamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Ashthamsa);
+  document.getElementById("Navamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Navamsa);
+  document.getElementById("Dwadashamsa_chart").innerHTML += kundlichart.createKundli(kundli.Charts.Dwadashamsa);
+</script>
+
+</html>

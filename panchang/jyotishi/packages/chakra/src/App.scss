@@ -1,0 +1,21 @@
+@import "@blueprintjs/core/src/blueprint.scss";
+@import "~@blueprintjs/core/lib/scss/variables";
+@import "~@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+@import "./geosuggest.css";
+
+.jy-data-form {
+    max-width: 500px;
+    margin: 20px auto auto;
+    padding: 0;
+
+    & &__body {
+        padding: 20px;
+    }
+
+    & &__footer {
+        display: flex;
+        flex-direction: row-reverse;
+        padding: 20px;
+        background: $light-gray5;
+    }
+}

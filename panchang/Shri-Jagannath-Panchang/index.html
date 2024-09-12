@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang='en-US'>
+<META charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Jagannatha Panchanga</title>
+
+
+
+<div class="whitebox pA" id="wb_style1" style="display:none;">
+  <div id="Iform">
+    <form action="javascript:doForm()" method="Get" enctype="application/x-www-form-urlencoded" ID="datetimeplace">
+      <label for="chartname">ChartName</label> <input id="chartname" type="text">
+      <input id="q" class="pt fr" onclick="noow()" type="button" value="Now">
+      <input id="Submit1" onclick="doForm()" type="submit" value="GetPanchanga" action="javascript:doForm()">
+      <label for="date">Change Date/Mon/Year and Location if needed</label> <input id="date" type="text"
+        onchange='di("year").value=new Date(di("date").value).getFullYear();'>
+      <label for="year">Changing in year figure necessary for year below 100 and negative dates and +10000 dates</label>
+      <input id="year" type="text">
+      <div id="pm">
+        <p>
+          <input type="button" class="pt" onclick="seec(-1)" value="-Sec">
+          <input type="button" class="pt" onclick="seec(-15)" value="-15Sec">
+          <input type="button" class="pt" onclick="Mint(-1)" value="-Min">
+          <input type="button" class="pt" onclick="Hoou(-1)" value="-Hour">
+          <input type="button" class="pt" onclick="Datt(-1)" value="-Day">
+          <input type="button" class="pt" onclick="Mont(-1)" value="-Month">
+          <input type="button" class="pt" onclick="Yeer(-1)" value="-Year">
+        </p>
+        <p><input type="button" class="pt" onclick="seec(1)" value="+Sec">
+          <input type="button" class="pt" onclick="seec(15)" value="+15Sec">
+          <input type="button" class="pt" onclick="Mint(1)" value="+Min">
+          <input type="button" class="pt" onclick="Hoou(1)" value="+Hour">
+          <input type="button" class="pt" onclick="Datt(1)" value="+Day">
+          <input type="button" class="pt" onclick="Mont(1)" value="+Month">
+          <input type="button" class="pt" onclick="Yeer(1)" value="+Year">
+        </p>
+      </div>
+      <p>
+        <label for="placename">Place Name:</label> <input id="placename" type="text">
+        <label for="longitude">Longitude:(East -ve/West+ve)</label> <input id="longitude" type="text">
+        <label for="latitude">Latitude:(South -ve/North +ve)</label> <input id="latitude" type="text">
+        <label for="timeZone">TimeZone</label><input id="timeZone" type="text" />
+      </p>
+      <p class="inp"><label for="Purnimanta">Purnimanta/Amanta.</label>(default is Purnimanta)<label
+          class="switch"><input id="Purnimanta" type="checkbox" checked><span class="slider round"></span></label></p>
+      <p class="inp"> <label for="Niryan">Niryan/Sayan.</label>(default is Niryan)<label class="switch"><input
+            id="Niryan" type="checkbox" checked><span class="slider round"></span></label></p>
+      <p class="inp">
+        <label for="Diamond">Use canvas Element</label>(default is North)
+        <label class="switch"><input id="Diamond" type="checkbox" check ed><span
+            class="slider round"></span></label></br></br>
+        <span id="dimo">
+          <label for="nort">North Indian</label><input type="radio" id="nort" checked>
+          <label for="sout">South Indian</label><input type="radio" id="sout">
+          <label for="eaat">East Indian</label><input type="radio" id="eaat">
+        </span>
+      </p>
+      <P class="inp">
+        <label for="Details">Summary/Detailed View</label>(default is Detailed)
+        <label class="switch"><input id="Details" type="checkbox" checked><span class="slider round"></span></label>
+      </P>
+      <p class="inp">
+        <label for="placeslist">OR Select previously entered values<br />Recently used places:</label>
+        <select id="placeslist" onchange="setLatLong()" name="placelist"></select>
+      </p><br />
+      <p class="inp">©Made for <a href="http://www.srijagannath.org">SriJagannatha Center</a>.
+        <br />To save this file on your local machine or mobile, Use File;Save As menu in your browser.<br />
+        <i>For Credits do View,Source in menu.<br />
+          Version Date:15 Jun 2016<br />
+          on first time Bhopal(-77.28E 23.17N),India location is default as example.</i>
+        <br />NOTE: ACCURACY warning: Calculations are approximate upto few minutes.
+        <br />Valid for dates from year -180000 to +180000 <b>
+          <br />Feel FREE to edit/modify/upgrade this javascript, right click on this screen area and do "save as" or do
+          "view source".
+          <br /><em>WAIT PAGE LOADING.....</em></b>
+      </p>
+  </div>
+</div>
+<div class='whitebox pA' id='wb_style13' style='display:none;'>
+  <p class="inp">
+    Special Transit calculation
+    Input Date for Transit calculation
+    <input type="text" id="TransitDate">
+    Select Planet<select id="plan" name="plan">
+      <option>Sun</option>
+      <option>Moon</option>
+      <option>Mars</option>
+      <option>Mercury</option>
+      <option>Jupiter</option>
+      <option>Venus</option>
+      <option>Saturn</option>
+      <option>Rahu</option>
+      <!-- <option>Lagna</option>
+ <option>Ketu</option> -->
+    </select>
+    Enter Degree<Input type="text" id="posit" value=0>
+    <!-- Before/After<select id="baf" name="baf">
+ <option>Before</option>
+ <option>After</option>
+ </select>-->
+    <input type="button" id="pTransitcalc" value="Previous Transit">
+    <input type="button" id="nTransitcalc" value="Next Transit">
+  </p>
+</div>
+<div id='xp'></div>
+<br>
+
+<script src="./index.js"></script>
+
+</HTML>
