@@ -50,7 +50,16 @@ jobs:
             # Step 4: Install project dependencies
             - name: Install dependencies
               run: npm install && pip install requests pandas
-
+         
+            - name: Install Emscripten SDK
+              run: |
+                   git clone https://github.com/emscripten-core/emsdk.git
+                   cd emsdk
+                   ./emsdk install latest
+                   ./emsdk activate latest
+                   echo "EMSDK_PATH=$(pwd)" >> $GITHUB_ENV
+                   echo "PATH=$EMSDK_PATH:$EMSDK_PATH/upstream/bin:$PATH" >> $GITHUB_ENV
+          
             # Step 5: Build the project
             - name: Build project
               run: npm run build
