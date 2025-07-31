@@ -9,6 +9,19 @@ on:
 
     # Allow manual trigger via GitHub Actions UI
     workflow_dispatch:
+        inputs:
+            build_env:
+                description: "Build environment"
+                required: false
+                default: "prod"
+            verbose:
+                description: "Enable verbose logging"
+                required: false
+                default: "true"
+            download_source_files:
+                description: "Download source files"
+                required: false
+                default: "false"
 
 # Set required permissions for GitHub Pages
 permissions:
@@ -27,8 +40,12 @@ jobs:
         environment:
             name: github-pages
             url: ${{ steps.deployment.outputs.page_url }}
-
         runs-on: ubuntu-latest
+        env:
+            build_env: ${{ github.event.inputs.build_env || 'dev' }}
+            verbose: ${{ github.event.inputs.verbose || 'false' }}
+            download_source_files:
+                ${{ github.event.inputs.download_source_files || 'false' }}
 
         steps:
             # Checkout the repository

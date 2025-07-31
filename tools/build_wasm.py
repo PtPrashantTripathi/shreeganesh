@@ -1,4 +1,6 @@
+import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -15,7 +17,8 @@ class SwissephBuildTools:
     lib_dir = base_dir / "swisseph-lib"
     wasm_dir = base_dir / "wasm"
     header_file = lib_dir / "swephexp.h"
-    output_ts = wasm_dir / "index.ts"
+    output_ts = wasm_dir / "index.d.ts"
+    output_js = wasm_dir / "swisseph.js"
     json_file = wasm_dir / "exported_funtion.json"
     source_files = [
         "swemptab.h",
@@ -61,17 +64,22 @@ class SwissephBuildTools:
         "centisec": "number",
     }
 
-    def __init__(self, build=True, download_source_files=False, cleanup=True):
+    def __init__(
+        self,
+        env: str = "dev",
+        verbose: bool = False,
+        download_source_files: bool = False,
+    ):
+        self.env = env
+        self.verbose = verbose
         self.check_emcc()
-        if cleanup:
-            shutil.rmtree(self.wasm_dir, True)
-            self.wasm_dir.mkdir(parents=True, exist_ok=True)
+        shutil.rmtree(self.wasm_dir, True)
+        self.wasm_dir.mkdir(parents=True, exist_ok=True)
         if download_source_files:
             self.download_source_files()
         self.build_function_map()
-        if build:
-            self.build()
-            self.generate_typescript_interface()
+        self.build()
+        self.generate_typescript_interface()
 
     def check_emcc(self):
         if shutil.which("emcc") is None:
@@ -162,14 +170,10 @@ class SwissephBuildTools:
         return functions
 
     def generate_typescript_interface(self):
-
         interfaces_lines = [
-            "/* eslint-disable */",
-            "// @ts-nocheck",
-            "",
             "/**",
-            " * Represents the extended interface for the Swisseph WebAssembly module.",
-            " * Includes Emscripten runtime functions and wrapped native methods.",
+            " * TypeScript bindings for the Swisseph Emscripten-generated WebAssembly module.",
+            " * Extends the EmscriptenModule with custom wrapped native functions.",
             " */",
             "export interface WASMModule extends EmscriptenModule {",
             "    /** Sets a value in the WebAssembly heap memory. */",
@@ -236,21 +240,17 @@ class SwissephBuildTools:
                 "}",
                 "",
                 "/**",
-                " * Emscripten Fucation for creating and initializing the Swisseph wasm module.",
+                " * Initializes and returns the Swisseph WebAssembly module.",
                 " *",
-                " * @param {Partial<EmscriptenModule>} moduleArg",
-                " * @returns {Promise<WASMModule>} : Promise<WASMModule>",
+                " * @param moduleArg - Optional configuration object for the Emscripten module.",
+                " * @returns A Promise that resolves to the initialized WASMModule instance.",
                 " */",
-                "export default async function Module(moduleArg: Partial<EmscriptenModule> = {}): Promise<WASMModule> {",
+                "",
+                "export default function Module(moduleArg?: Partial<EmscriptenModule>): Promise<WASMModule>;",
             ]
         )
 
-        # Strip Emscripten boilerplate: remove first and last 3 lines from JS output
-        interfaces_lines.extend(
-            self.output_ts.read_text(encoding="utf-8").splitlines()[4:-3]
-        )
-
-        data = "\n".join(interfaces_lines).replace("index.wasm", "swisseph.wasm")
+        data = "\n".join(interfaces_lines)
 
         self.output_ts.write_text(
             data,
@@ -291,9 +291,6 @@ class SwissephBuildTools:
         ]
 
         flags = [
-            # Optimize aggressively
-            "-O3",
-            "-g0",
             # Enable WebAssembly output
             "-sWASM=1",
             # Wrap the module in a function (ES6-friendly)
@@ -322,9 +319,20 @@ class SwissephBuildTools:
             "--no-entry",
             # Output file
             "-o",
-            str(self.output_ts),
-            # "-v",
+            str(self.output_js),
         ]
+
+        if self.build == "prod":
+            # Optimize aggressively
+            flags.extend(
+                [
+                    "-O3",
+                    "-g0",
+                ]
+            )
+
+        if self.verbose:
+            flags.append("-v")
 
         src_paths = [
             str(self.lib_dir / file_name)
@@ -341,13 +349,48 @@ class SwissephBuildTools:
         # Run the command, raising an error if compilation fails
         subprocess.run(command, check=True)
 
-        # Rename the default Emscripten output (e.g. index.wasm) to swisseph.wasm for consistency
-        output_wasm = self.wasm_dir / "index.wasm"
-        output_wasm = output_wasm.rename(output_wasm.with_name("swisseph.wasm"))
+        # Rename the default Emscripten output (e.g. index.js) to swisseph.js for consistency
+        self.output_js = self.output_js.rename(self.output_js.with_name("index.js"))
 
         # Indicate that the WASM build and cleanup process is complete
-        print(f"✅ WASM build complete → {output_wasm}")
+        print(f"✅ WASM build complete → {self.output_js.with_name("swisseph.wasm")}")
 
 
 if __name__ == "__main__":
-    SwissephBuildTools(build=True, download_source_files=False)
+    # Create the parser
+    parser = argparse.ArgumentParser(description="A simple Python CLI example.")
+
+    # Add arguments
+    parser.add_argument(
+        "-b",
+        "--build_env",
+        default=str(os.environ.get("build_env", "dev")),
+        help="build env",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable verbose output.",
+        default=str(os.environ.get("verbose")).lower() == "true",
+    )
+    parser.add_argument(
+        "-d",
+        "--download_source_files",
+        action="store_true",
+        help="Download source files.",
+        default=str(os.environ.get("download_source_files")).lower() == "true",
+    )
+
+    # Parse the arguments
+    args = parser.parse_args()
+
+    # Use the parsed arguments
+    if args.verbose:
+        print("Running in verbose mode.")
+
+    SwissephBuildTools(
+        env=args.build_env,
+        verbose=args.verbose,
+        download_source_files=args.download_source_files,
+    )
