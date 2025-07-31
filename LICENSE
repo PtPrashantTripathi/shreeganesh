@@ -1,21 +1,25 @@
-MIT License
+This program is copyrighted (C) 2003-2023 Martin Pettau, and is distributed
+under terms of the GNU GPL v. 2.0 or later.
 
-Copyright (c) 2019 Pt. Prashant tripathi
+The author can be contacted at <http://www.saravali.de/contact.html>.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The software is Open Source and free for private and commercial use.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## Parts of this program contain code from
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. Swiss Ephemeris project <http://www.astro.com/swisseph/>. which is licensed
+   under the GNU GPL v. 2.0 or later. Swiss Ephemeris is authored by Dieter Koch
+   and Alois Treindl and is copyrighted (C) 1997 - 2013 Astrodienst AG,
+   Switzerland.
+
+## Atlas Data
+
+The atlas uses the Geonames location database (<http://geonames.org>) which is
+based upon the Creative Commons License.
+
+## Symbol Font
+
+The font Saravali.ttf is licensed under the SIL Open Font License. For details
+see the license file under src/fonts/OFL.txt
+
+Details of the GNU v2 license are

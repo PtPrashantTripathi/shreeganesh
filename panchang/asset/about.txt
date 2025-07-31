@@ -1,6 +1,0 @@
-This favicon was generated using the following font:
-
-- Font Title: Noto Sans Lydian
-- Font Author: Copyright 2022 The Noto Project Authors (https://github.com/notofonts/lydian)
-- Font Source: https://fonts.gstatic.com/s/notosanslydian/v18/c4m71mVzGN7s8FmIukZJ1v4ZlcPReUPXMoIjEQI.ttf
-- Font License: SIL Open Font License, 1.1 (http://scripts.sil.org/OFL))

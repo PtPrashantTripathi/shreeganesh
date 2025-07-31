@@ -1,0 +1,133 @@
+# Universal Git Ignore for Fullstack C/Node/Python/WASM
+
+# OS and Editor Junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.temp
+*.orig
+
+# VSCode and JetBrains IDEs
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Editor History
+.history/
+.node_repl_history
+
+# Node.js Related
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Build and Dependency Directories
+build/
+dist/
+dist-ssr/
+.cache/
+jspm_packages/
+bower_components/
+typings/
+.npm
+.yarn-integrity
+
+# Framework Specific
+.next/
+.nuxt/
+.vuepress/dist
+.serverless/
+.fusebox/
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint, Prettier
+.eslintcache
+.prettiercache
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Test and Instrumentation
+lib-cov/
+.grunt/
+
+# Python Related
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg-info/
+*.egg
+.eggs/
+.env
+.venv/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.tox/
+.mypy_cache/
+.pyre/
+
+# C / C++ / Emscripten
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.lib
+*.exe
+*.out
+*.app
+*.hex
+*.elf
+*.bin
+*.map
+*.d
+
+# Binary executable files
+swisseph/src/swetest
+swisseph/src/swetests
+swisseph/src/swevents
+swisseph/src/swemini
+
+# Log Files
+logs/
+log/
+*.log
+
+# Process IDs
+pids/
+*.pid
+*.pid.lock
+*.seed
+
+# Output of `npm pack` or other archives
+*.tgz
+*.tar.gz
+*.zip
+
+# Vite Env
+tsconfig.tsbuildinfo
+public/.well-known
+
+

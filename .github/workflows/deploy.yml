@@ -1,0 +1,68 @@
+# Workflow: Build and Deploy to GitHub Pages
+name: Deploy GitHub Pages
+
+on:
+    # Trigger deployment on push to the main branch
+    push:
+        branches:
+            - main
+
+    # Allow manual run from GitHub Actions tab
+    workflow_dispatch:
+
+# Required permissions for GitHub Pages deployment
+permissions:
+    contents: read # Allows reading repository content
+    pages: write # Allows writing to GitHub Pages
+    id-token: write # Enables OIDC token for deployment
+
+# Prevent concurrent deployments
+concurrency:
+    group: pages-deployments
+    cancel-in-progress: false
+
+jobs:
+    deploy:
+        # Target environment for deployment
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the latest commit
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1 # Speeds up checkout by skipping full history
+
+            # Step 2: Configure GitHub Pages
+            - name: Setup GitHub Pages
+              uses: actions/configure-pages@v5
+
+            # Step 3: Install latest Node.js version
+            - name: Use latest Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "latest"
+
+            # Step 4: Install project dependencies
+            - name: Install dependencies
+              run: npm install
+
+            # Step 5: Build the project
+            - name: Build project
+              run: npm run build
+
+            # Step 6: Upload the `dist` folder as GitHub Pages artifact
+            - name: Upload Build Output
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./dist
+                  retention-days: 5 # Retain artifacts for 5 days
+
+            # Step 7: Deploy to GitHub Pages
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

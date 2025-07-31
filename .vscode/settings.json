@@ -1,4 +1,59 @@
 {
-    "java.dependency.packagePresentation": "flat",
-    "java.format.settings.url": ".vscode/java-formatter.xml"
+    "liveServer.settings.port": 5501,
+
+    // Extend terminal PATH to include local node_modules/.bin
+    "terminal.integrated.env.linux": {
+        "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
+    },
+    "terminal.integrated.env.osx": {
+        "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
+    },
+    "terminal.integrated.env.windows": {
+        "PATH": "${workspaceFolder}\\node_modules\\.bin;${env:PATH}"
+    },
+
+    // Environment config
+    "python.envFile": "${workspaceFolder}/.env",
+
+    // Editor behavior
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    // Tailwind CSS support
+    "tailwindCSS.classAttributes": [
+        "class",
+        "className",
+        "classNames",
+        "containerClassName"
+    ],
+
+    // TypeScript settings
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+
+    // File-specific formatters
+    "[ignore]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[properties]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    }
 }
