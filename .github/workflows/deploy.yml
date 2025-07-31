@@ -64,16 +64,15 @@ jobs:
             # Install and activate Emscripten SDK
             - name: Install and Activate Emscripten SDK
               run: |
-                  cd ~/
-                  git clone https://github.com/emscripten-core/emsdk.git
-                  ~/emsdk install latest
-                  ~/emsdk activate latest
+                  git clone https://github.com/emscripten-core/emsdk.git ~/emsdk
+                  ~/emsdk/emsdk install latest
+                  ~/emsdk/emsdk activate latest
               shell: bash
 
             # Build the project using npm and EMSDK
             - name: Build Project
               run: |
-                  source ~/emsdk_env.sh
+                  source ~/emsdk/emsdk_env.sh
                   npm run build
 
             # Upload the build output (dist/) as an artifact for Pages
