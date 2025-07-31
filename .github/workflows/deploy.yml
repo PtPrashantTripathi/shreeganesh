@@ -1,76 +1,89 @@
+# Workflow: Build and Deploy to GitHub Pages
 name: Deploy GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    # Trigger on push to main branch
+    push:
+        branches:
+            - main
 
+    # Allow manual trigger via GitHub Actions UI
+    workflow_dispatch:
+
+# Set required permissions for GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read # Read access to repository
+    pages: write # Write access to GitHub Pages
+    id-token: write # Required for OIDC authentication
 
+# Prevent overlapping deployments
 concurrency:
-  group: pages-deployments
-  cancel-in-progress: false
+    group: pages-deployments
+    cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    deploy:
+        # Target deployment environment
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
 
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-    steps:
-      # Step 1: Checkout code
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
+        steps:
+            # Checkout the repository
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 1 # Faster checkout with shallow clone
 
-      # Step 2: Setup GitHub Pages
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
+            # Configure GitHub Pages
+            - name: Setup GitHub Pages
+              uses: actions/configure-pages@v5
 
-      # Step 3: Use latest Node.js
-      - name: Use latest Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "latest"
+            # Set up Node.js for building the project
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "latest"
 
-      # Step 4: Setup Python and install dependencies
-      - name: Setup Python and Install Deps
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
+            # Install Node.js project dependencies
+            - name: Install Node dependencies
+              run: npm install
 
-      - name: Install npm and Python dependencies
-        run: |
-          npm install
-          pip install requests pandas
+            # Set up Python for tasks
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.x"
 
-      # Step 5: Install & Activate EMSDK + Build Everything
-      - name: Install Emscripten and Build Project
-        run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install latest
-          ./emsdk activate latest
-          source ./emsdk_env.sh
-          cd ..
-          npm run build
-        shell: bash
+            # Install Node.js project dependencies
+            - name: Install Python packages
+              run: pip install requests pandas
 
-      # Step 6: Upload `dist` folder for GitHub Pages
-      - name: Upload Build Output
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
-          retention-days: 5
+            # Install and activate Emscripten SDK
+            - name: Install and Activate Emscripten SDK
+              run: |
+                  cd ~/
+                  git clone https://github.com/emscripten-core/emsdk.git
+                  ~/emsdk install latest
+                  ~/emsdk activate latest
+              shell: bash
 
-      # Step 7: Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+            # Build the project using npm and EMSDK
+            - name: Build Project
+              run: |
+                  source ~/emsdk_env.sh
+                  npm run build
+
+            # Upload the build output (dist/) as an artifact for Pages
+            - name: Upload Build Artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./dist
+                  retention-days: 5
+
+            # Deploy the uploaded artifact to GitHub Pages
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

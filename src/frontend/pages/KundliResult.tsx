@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { calcKundli } from "src/backend/Kundli";
+import { getPlanetaryPosition } from "src/backend/Kundli";
 import { DMS } from "src/backend/utils";
 import ChartInfoTable from "src/frontend/component/ChartInfoTable";
 import KundliChartSVG from "src/frontend/component/KundliChartSVG";
@@ -14,7 +14,7 @@ export default function KundliResult() {
 
     useEffect(() => {
         async function fetchKundli() {
-            const result = await calcKundli(
+            const result = await getPlanetaryPosition(
                 session.data.datetime,
                 session.data.longitude,
                 session.data.latitude,

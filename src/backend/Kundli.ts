@@ -7,7 +7,7 @@ import { reorderArray } from "src/backend/utils";
 import { calcVimsottariDasa } from "src/backend/VimsottariDasa";
 import { calcYogPhala } from "src/backend/YogPhala";
 
-export async function calcKundli(
+export async function getPlanetaryPosition(
     datetime = new DateTime(1997, 8, 11, 1, 55, 0, 0, 5.5),
     longitude = 80.38, // north positive
     latitude = 22.6, // east positive
