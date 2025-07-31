@@ -104,12 +104,6 @@ pip-delete-this-directory.txt
 *.map
 *.d
 
-# Binary executable files
-swisseph/src/swetest
-swisseph/src/swetests
-swisseph/src/swevents
-swisseph/src/swemini
-
 # Log Files
 logs/
 log/
@@ -129,5 +123,4 @@ pids/
 # Vite Env
 tsconfig.tsbuildinfo
 public/.well-known
-
 

@@ -1,6 +1,4 @@
 {
-    "liveServer.settings.port": 5501,
-
     // Extend terminal PATH to include local node_modules/.bin
     "terminal.integrated.env.linux": {
         "PATH": "${workspaceFolder}/node_modules/.bin:${env:PATH}"
@@ -22,14 +20,6 @@
         "source.fixAll": "explicit"
     },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-
-    // Tailwind CSS support
-    "tailwindCSS.classAttributes": [
-        "class",
-        "className",
-        "classNames",
-        "containerClassName"
-    ],
 
     // TypeScript settings
     "typescript.preferences.importModuleSpecifier": "non-relative",
