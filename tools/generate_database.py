@@ -1,6 +1,7 @@
 import gzip
 import json
 import logging
+import shutil
 from pathlib import Path
 
 import pandas as pd
@@ -22,9 +23,15 @@ class TimezoneETL:
 
     def __init__(self) -> None:
         """Initialize paths and load timezone offset cache if available."""
-        self.root = Path(__file__).resolve().parent
-        self.TZ_DATA_PATH = self.root / "../public/database/tz_offset.json"
-        self.CITY_DATA_PATH = self.root / "../public/database/city_database.cjson"
+        self.root = Path(__file__).resolve().parent.parent
+
+        self.source_dir = self.root / "tools/geonames"
+        self.database_dir = self.root / "public/database"
+        shutil.rmtree(self.database_dir, True)
+        self.database_dir.mkdir(parents=True, exist_ok=True)
+
+        self.TZ_DATA = self.database_dir / "tz_offset.json"
+        self.CITY_DATA = self.database_dir / "city_database.cjson"
 
     def run(self) -> None:
         """
@@ -37,7 +44,7 @@ class TimezoneETL:
 
         # Load world cities CSV
         df_cities = pd.read_csv(
-            self.root / "geonames/cities5000.txt",
+            self.source_dir / "cities5000.txt",
             encoding="utf-8",
             sep="\t",
             header=None,
@@ -66,7 +73,7 @@ class TimezoneETL:
 
         # Load timeZones.txt
         df_tz = pd.read_csv(
-            self.root / "geonames/timeZones.txt",
+            self.source_dir / "timeZones.txt",
             encoding="utf-8",
             sep="\t",
             header=0,
@@ -81,7 +88,7 @@ class TimezoneETL:
 
         # Load admin1CodesASCII.txt (tab-separated)
         df_admin = pd.read_csv(
-            self.root / "geonames/admin1CodesASCII.txt",
+            self.source_dir / "admin1CodesASCII.txt",
             encoding="utf-8",
             sep="\t",
             header=None,
@@ -90,7 +97,7 @@ class TimezoneETL:
 
         # Load countryInfo.txt (tab-separated)
         df_country = pd.read_csv(
-            self.root / "geonames/countryInfo.txt",
+            self.source_dir / "countryInfo.txt",
             sep="\t",
             comment="#",
             header=None,
@@ -149,21 +156,26 @@ class TimezoneETL:
         df_cities["latitude"] = pd.to_numeric(df_cities["latitude"], errors="coerce")
         df_cities["longitude"] = pd.to_numeric(df_cities["longitude"], errors="coerce")
 
-        # Save compressed city database
-        with gzip.open(self.CITY_DATA_PATH, "wt", encoding="utf-8") as f:
-            json.dump(
-                df_cities.sort_values(by=["country_name", "state_name", "city_name"])[
-                    ["city_name", "latitude", "longitude", "timezone"]
-                ]
-                .drop_duplicates()
-                .values.tolist(),
-                f,
-                ensure_ascii=False,
+        # Compress with deterministic gzip (mtime=0)
+        with gzip.GzipFile(
+            mode="wb",
+            fileobj=self.CITY_DATA.open("wb"),
+            mtime=0,
+        ) as f:
+            f.write(
+                json.dumps(
+                    df_cities.sort_values(
+                        by=["country_name", "state_name", "city_name"]
+                    )[["city_name", "latitude", "longitude", "timezone"]]
+                    .drop_duplicates()
+                    .values.tolist(),
+                    ensure_ascii=False,
+                ).encode("utf-8")
             )
-            logger.info(f"Saved city data to: {self.CITY_DATA_PATH}")
+            logger.info(f"Saved compressed city data to: {self.CITY_DATA}")
 
-        # Save compressed timezone offset database
-        with open(self.TZ_DATA_PATH, "w", encoding="utf-8") as f:
+        # Save timezone offset database
+        with self.TZ_DATA.open("w", encoding="utf-8") as f:
             json.dump(
                 dict(
                     df_tz[["timezone", "gmt_offset"]]
@@ -175,7 +187,7 @@ class TimezoneETL:
                 ensure_ascii=False,
                 indent=4,
             )
-            logger.info(f"Saved timezone offsets data to: {self.TZ_DATA_PATH}")
+            logger.info(f"Saved timezone offsets data to: {self.TZ_DATA}")
         logger.info("ETL process completed successfully")
 
 
