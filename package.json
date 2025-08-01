@@ -2,9 +2,9 @@
     "name": "vedic-ephemeris",
     "version": "1.0.4",
     "private": true,
-    "homepage": "https://github.com/ptprashanttripathi/swisseph-wasm",
+    "homepage": "https://github.com/ptprashanttripathi/VedicJyotish",
     "bugs": {
-        "url": "https://github.com/ptprashanttripathi/swisseph-wasm/issues"
+        "url": "https://github.com/ptprashanttripathi/VedicJyotish/issues"
     },
     "repository": {
         "type": "git",
