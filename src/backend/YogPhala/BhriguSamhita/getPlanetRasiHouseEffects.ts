@@ -2,7 +2,7 @@ import type { Planet } from "src/backend/Planet";
 import type {
     HouseNumber,
     NavagrahaEn,
-    phala,
+    Phala,
     PlanetEn,
     RasiEn,
     Translation,
@@ -15,23 +15,20 @@ import type {
  */
 export function getBhriguSamhitaPlanetRasiHouseYogPhala(
     planetPositions: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     const ascendantRasi = planetPositions.Ascendant.rasi.name;
     const ascendantHouseMap = PlanetRasiHouseEffects[ascendantRasi.english];
 
     return Object.entries(ascendantHouseMap).map(
         ([planetName, planetEffects]) => {
-            const planetData = planetPositions[planetName];
-            const { english: rasiEng, hindi: rasiHin } = planetData.rasi.name;
-            const { english: houseEng, hindi: houseHin } =
-                planetData.house.name;
+            const planet = planetPositions[planetName];
 
             return {
                 description: {
-                    english: `${ascendantRasi.english} ascendant, ${planetName} in the ${houseEng} House in ${rasiEng} Rasi`,
-                    hindi: `${ascendantRasi.hindi} लग्न, ${planetName} ${houseHin} भाव में, ${rasiHin} राशि में`,
+                    english: `${ascendantRasi.english} ascendant, ${planet.name.english} in the ${planet.house.name.english} House in ${planet.rasi.name.english} Rasi`,
+                    hindi: `${ascendantRasi.hindi} लग्न, ${planet.name.hindi} ${planet.house.name.hindi} भाव में, ${planet.rasi.name.hindi} राशि में`,
                 },
-                effect: planetEffects[planetData.house.num],
+                effect: planetEffects[planet.house.num],
             };
         }
     );

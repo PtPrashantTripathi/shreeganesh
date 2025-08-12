@@ -42,7 +42,7 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         runs-on: ubuntu-latest
         env:
-            build_env: ${{ github.event.inputs.build_env || 'dev' }}
+            build_env: ${{ github.event.inputs.env || 'prod' }}
             verbose: ${{ github.event.inputs.verbose || 'false' }}
             download_source_files:
                 ${{ github.event.inputs.download_source_files || 'false' }}

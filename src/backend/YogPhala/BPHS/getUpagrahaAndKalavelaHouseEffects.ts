@@ -3,7 +3,7 @@ import type {
     HouseNumber,
     KalavelasEn,
     NavagrahaEn,
-    phala,
+    Phala,
     PlanetEn,
     Translation,
     UpagrahaEn,
@@ -18,7 +18,7 @@ import type {
  */
 export function getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala(
     planetaryPositions: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     return Object.entries(PlanetHouseEffectTable).map(
         ([grahaName, houseEffectMap]) => {
             const grahaData = planetaryPositions[grahaName as NavagrahaEn];

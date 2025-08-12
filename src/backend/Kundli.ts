@@ -1,6 +1,6 @@
 // Import utility functions
+import { DateTime } from "luxon";
 import { calcSunRiseSunSet } from "src/backend/calcSunRiseSunSet";
-import { DateTime } from "src/backend/datetime";
 import { Planet } from "src/backend/Planet";
 import SwissEPH from "src/backend/swisseph-wasm";
 import type {
@@ -15,10 +15,10 @@ import { calcYogPhala } from "src/backend/YogPhala";
 
 // getPlanetaryPosition
 export async function Kundli(
-    datetime = new DateTime(1997, 8, 11, 1, 55, 0, 0, 5.5),
-    longitude = 80.38, // north positive
-    latitude = 22.6, // east positive
-    altitude = 0 // height above sea level in meters
+    datetime: DateTime<true>,
+    longitude: number, // north positive
+    latitude: number, // east positive
+    altitude: number = 0 // height above sea level in meters
 ) {
     // todo : we neet to use tjd_et (Julian Day in Ephemeris Time or Terrestrial Time):
     const swe = await SwissEPH.init();
@@ -36,15 +36,14 @@ export async function Kundli(
     // swe.SEFLG_EQUATORIAL; this for chalit
     const IFLAGS = swe.SEFLG_SWIEPH | swe.SEFLG_SPEED | swe.SEFLG_SIDEREAL;
 
+    const utc = datetime.toUTC();
     const julian_datetime = swe.swe_julday(
-        datetime.jsDate.getUTCFullYear(),
-        datetime.jsDate.getUTCMonth() + 1,
-        datetime.jsDate.getUTCDate(),
-        datetime.jsDate.getUTCHours() +
-            datetime.jsDate.getUTCMinutes() / 60 +
-            (datetime.jsDate.getUTCSeconds() +
-                datetime.jsDate.getUTCMilliseconds() / 1000) /
-                3600,
+        utc.year,
+        utc.month,
+        utc.day,
+        utc.hour +
+            utc.minute / 60 +
+            (utc.second + utc.millisecond / 1000) / 3600,
         swe.SE_GREG_CAL
     );
 
@@ -180,16 +179,16 @@ export async function Kundli(
 
     swe.swe_close();
     return {
+        datetime,
         daybirth,
         weekday: dayLords[day_of_weekday],
-        sunrise,
-        sunset,
-        datetime,
+        sunrise: datetime.plus({ days: sunrise - julian_datetime }),
+        sunset: datetime.plus({ days: sunset - julian_datetime }),
         latitude,
         longitude,
-        planets: planets as Record<PlanetEn, Planet>,
         julian_datetime,
         ayanamsa,
+        planets: planets as Record<PlanetEn, Planet>,
         vimsottari_dasa,
         yogPhala: calcYogPhala(planets as Record<PlanetEn, Planet>),
     };

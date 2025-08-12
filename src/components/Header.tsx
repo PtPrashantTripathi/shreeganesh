@@ -9,8 +9,8 @@ export function Header() {
             nav.classList.toggle("active");
 
             const handleClickOutside = (event: MouseEvent) => {
-                if (!nav?.contains(event.target as Node)) {
-                    nav?.classList.remove("active");
+                if (!nav.contains(event.target as Node)) {
+                    nav.classList.remove("active");
                     document.removeEventListener("click", handleClickOutside);
                 }
             };

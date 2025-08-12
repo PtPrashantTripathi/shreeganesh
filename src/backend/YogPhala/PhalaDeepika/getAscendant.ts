@@ -1,5 +1,5 @@
 import type { Planet } from "src/backend/Planet";
-import type { phala, PlanetEn, RasiEn, Translation } from "src/backend/types";
+import type { Phala, PlanetEn, RasiEn, Translation } from "src/backend/types";
 
 /**
  * Retrieves the ascendant effects from Phala Deepika based on the Ascendant's
@@ -12,7 +12,7 @@ import type { phala, PlanetEn, RasiEn, Translation } from "src/backend/types";
  */
 export function getPhalaDeepikaAscendantYogPhala(
     planets: Record<PlanetEn, Planet>
-): phala {
+): Phala {
     const { english: rasiEnglishName, hindi: rasiHindiName } =
         planets.Ascendant.rasi.name;
 

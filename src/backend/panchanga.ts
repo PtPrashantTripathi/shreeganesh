@@ -1,4 +1,4 @@
-import type { DateTime } from "src/backend/datetime";
+import type { DateTime } from "luxon";
 import { getKarana } from "src/backend/Karana";
 import { MaahaDetails } from "src/backend/Maaha";
 import { getNakshatra } from "src/backend/Nakshatra";
@@ -69,7 +69,7 @@ function calculateRahuKalam(
 }
 
 export async function getPanchanga(
-    date: DateTime,
+    date: DateTime<true>,
     latitude: number,
     longitude: number,
     altitude: number = 0,
@@ -138,19 +138,19 @@ export async function getPanchanga(
 
     // Calculate Hindu Sunrise
     const sunrise_jd = get_rise(tjd_ut, swe.SE_SUN);
-    const sunrise = date.addDays(sunrise_jd - tjd_ut);
+    const sunrise = date.plus({ days: sunrise_jd - tjd_ut });
 
     // Calculate Hindu Sunset
     const sunset_jd = get_set(sunrise_jd, swe.SE_SUN);
-    const sunset = date.addDays(sunset_jd - tjd_ut);
+    const sunset = date.plus({ days: sunset_jd - tjd_ut });
 
     // Calculate Hindu Moonrise
     const moonrise_jd = get_rise(tjd_ut, swe.SE_MOON);
-    const moonrise = date.addDays(moonrise_jd - tjd_ut);
+    const moonrise = date.plus({ days: moonrise_jd - tjd_ut });
 
     // Calculate Hindu Moonset
     const moonset_jd = get_set(moonrise_jd, swe.SE_MOON);
-    const moonset = date.addDays(moonset_jd - tjd_ut);
+    const moonset = date.plus({ days: moonset_jd - tjd_ut });
 
     // Calculate Hindu Next Day Sunrise
     const next_sunrise_jd = get_rise(sunset_jd, swe.SE_SUN);
@@ -308,10 +308,10 @@ export async function getPanchanga(
         samvatsara_num,
 
         jd: tjd_ut,
-        sunrise: sunrise.toTimeZone(5.5).toString(),
-        sunset: sunset.toTimeZone(5.5).toString(),
-        moonrise: moonrise.toTimeZone(5.5).toString(),
-        moonset: moonset.toTimeZone(5.5).toString(),
+        sunrise,
+        sunset,
+        moonrise,
+        moonset,
         vaara: Object.values(VarasDetails).find(
             item => item.num === Math.floor(tjd_ut + 1) % 7
         ) as VaraDetail,

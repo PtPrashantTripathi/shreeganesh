@@ -1,6 +1,6 @@
 import type { Planet } from "src/backend/Planet";
 import type {
-    phala,
+    Phala,
     PlanetEn,
     RasiEn,
     SaptagrahaEn,
@@ -21,8 +21,8 @@ import type {
  */
 export function getSaravaliAspectYogPhala(
     planets: Record<PlanetEn, Planet>
-): phala[] {
-    const results: phala[] = [];
+): Phala[] {
+    const results: Phala[] = [];
 
     for (const [aspectingPlanet, aspectedMap] of Object.entries(
         AspectPhalaData

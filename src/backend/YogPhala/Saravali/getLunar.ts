@@ -1,10 +1,10 @@
 import type { Planet } from "src/backend/Planet";
-import type { phala, PlanetEn } from "src/backend/types";
+import type { Phala, PlanetEn } from "src/backend/types";
 import { NORMALIZE12 } from "src/backend/utils";
 export function getSaravaliLunarYogPhala(
     planets: Record<PlanetEn, Planet>
-): phala[] {
-    const effectTable: Array<phala & { rule: boolean }> = [
+): Phala[] {
+    const effectTable: Array<Phala & { rule: boolean }> = [
         {
             description: {
                 english: "Sunapha Yoga caused by Mars",

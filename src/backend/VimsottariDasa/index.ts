@@ -1,4 +1,4 @@
-import type { DateTime } from "src/backend/datetime";
+import type { DateTime } from "luxon";
 import type {
     Dasha,
     DashaName,
@@ -33,7 +33,7 @@ export function calcVimsottariDasa(
         DurationOfVimsottariDasa[moon_nakshatra.lord] *
         ((moon_nakshatra.degree * 27) / 360);
 
-    const StartDate = DOB.addDays(-dasaBalance * solarYear);
+    const StartDate = DOB.plus({ days: -dasaBalance * solarYear });
 
     return computeDasha(
         "MahaDasha",
@@ -63,7 +63,7 @@ function computeDasha(
         const durationYears =
             (DurationOfVimsottariDasa[currentLord] * parentDuration) / 120;
 
-        const endDate = cursor.addDays(durationYears * solarYear);
+        const endDate = cursor.plus({ days: durationYears * solarYear });
 
         const childDashaName = childDasha[dashaName];
 

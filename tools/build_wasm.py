@@ -274,7 +274,7 @@ class SwissephBuildTools:
                         f.write(chunk)
                 print(f"Saved to: {local_path}")
             except requests.exceptions.RequestException as e:
-                print(f"Failed to download {full_url}\nError: {e}")
+                print(f"Failed to download {filename}\nError: {e}")
 
     def build(self):
         print("🔧 Building WebAssembly...")
@@ -322,7 +322,7 @@ class SwissephBuildTools:
             str(self.output_js),
         ]
 
-        if self.build == "prod":
+        if self.env.strip().lower() == "prod":
             # Optimize aggressively
             flags.extend(
                 [
@@ -362,9 +362,9 @@ if __name__ == "__main__":
 
     # Add arguments
     parser.add_argument(
-        "-b",
-        "--build_env",
-        default=str(os.environ.get("build_env", "dev")),
+        "-e",
+        "--env",
+        default=str(os.environ.get("env", "dev")),
         help="build env",
     )
     parser.add_argument(
@@ -390,7 +390,7 @@ if __name__ == "__main__":
         print("Running in verbose mode.")
 
     SwissephBuildTools(
-        env=args.build_env,
+        env=args.env,
         verbose=args.verbose,
         download_source_files=args.download_source_files,
     )

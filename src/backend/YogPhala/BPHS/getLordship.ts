@@ -3,7 +3,7 @@ import type { Planet } from "src/backend/Planet";
 import { RasiDetails } from "src/backend/Rasi";
 import type {
     HouseNumber,
-    phala,
+    Phala,
     PlanetEn,
     Translation,
 } from "src/backend/types";
@@ -15,7 +15,7 @@ import { reorderArray } from "src/backend/utils";
  */
 export function getBPHSLordshipYogPhala(
     planetPositions: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     // Determine the sequence of Rashis starting from the Ascendant
     const reorderedRashiNames = reorderArray(
         Object.values(RasiDetails).map(rasi => rasi.name.english),
@@ -37,7 +37,7 @@ export function getBPHSLordshipYogPhala(
         return {
             description: {
                 english: `Lord of ${HouseDetails[currentHouseNumber].name.english} House (${rashiNameForCurrentHouse}) in ${HouseDetails[lordPlacementHouseNumber].name.english} House`,
-                hindi: `${HouseDetails[currentHouseNumber].name.hindi} भाव का स्वामी (${rashiNameForCurrentHouse}) ${HouseDetails[lordPlacementHouseNumber].name.hindi} भाव में स्थित है।`,
+                hindi: `${HouseDetails[currentHouseNumber].name.hindi} भाव का स्वामी (${rashiNameForCurrentHouse}) ${HouseDetails[lordPlacementHouseNumber].name.hindi} भाव में`,
             },
             effect: HouseLordPositionEffect[currentHouseNumber][
                 lordPlacementHouseNumber

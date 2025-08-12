@@ -19,8 +19,9 @@ export default defineConfig({
         outDir: "dist",
         emptyOutDir: true,
         sourcemap: true, // optional: helps debugging
-        minify: true, // ⛔ disable minification
+        minify: "esbuild",
         rollupOptions: {
+            treeshake: true,
             external: [],
             output: {
                 // This will name the JS entry file like: index.[hash].js or result.[hash].js

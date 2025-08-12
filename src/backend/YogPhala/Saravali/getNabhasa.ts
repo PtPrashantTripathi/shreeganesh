@@ -1,11 +1,11 @@
 import type { Planet } from "src/backend/Planet";
 import { DEG_PER_TITHI } from "src/backend/Tithi";
-import type { HouseNumber, phala, PlanetEn } from "src/backend/types";
+import type { HouseNumber, Phala, PlanetEn } from "src/backend/types";
 import { memoizeFunction, MOD360 } from "src/backend/utils";
 
 export function getSaravaliNabhasaYogPhala(
     planets: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     const countPlanetsInHouse = memoizeFunction(
         (houseNum: HouseNumber): number =>
             Object.values(planets).filter(
@@ -75,7 +75,7 @@ export function getSaravaliNabhasaYogPhala(
         return false;
     });
 
-    const effectTable: Array<phala & { rule: boolean }> = [
+    const effectTable: Array<Phala & { rule: boolean }> = [
         {
             description: {
                 english:

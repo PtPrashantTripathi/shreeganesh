@@ -1,5 +1,5 @@
+import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { DateTime } from "src/backend/datetime";
 import { getPanchanga } from "src/backend/panchanga";
 import Loader from "src/components/Loader";
 import { useSessionContext } from "src/contexts/SessionContext";
@@ -14,10 +14,11 @@ export default function Panchang() {
     useEffect(() => {
         async function fetchKundli() {
             const result = await getPanchanga(
-                DateTime.fromDate(`${session.data.date}T${session.data.time}`),
+                DateTime.fromISO(`${session.data.date}T${session.data.time}`, {
+                    zone: session.data.tz_name,
+                }) as DateTime<true>,
                 session.data.lon,
                 session.data.lat,
-
                 0,
                 0
             );
@@ -63,16 +64,16 @@ export default function Panchang() {
                 <section>
                     <h1>🌄 समय</h1>
                     <p>
-                        <strong>सूर्योदय:</strong> {data.sunrise}
+                        <strong>सूर्योदय:</strong> {data.sunrise.toISO()}
                     </p>
                     <p>
-                        <strong>सूर्यास्त:</strong> {data.sunset}
+                        <strong>सूर्यास्त:</strong> {data.sunset.toISO()}
                     </p>
                     <p>
-                        <strong>चंद्रोदय:</strong> {data.moonrise}
+                        <strong>चंद्रोदय:</strong> {data.moonrise.toISO()}
                     </p>
                     <p>
-                        <strong>चंद्रास्त:</strong> {data.moonset}
+                        <strong>चंद्रास्त:</strong> {data.moonset.toISO()}
                     </p>
                     <p>
                         <strong>राहु काल:</strong> {data.rahuKalam.start} -{" "}

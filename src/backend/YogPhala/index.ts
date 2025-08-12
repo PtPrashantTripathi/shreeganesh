@@ -1,5 +1,5 @@
 import type { Planet } from "src/backend/Planet";
-import type { phala, PlanetEn, SourceBookEn } from "src/backend/types";
+import type { Phala, PlanetEn } from "src/backend/types";
 import { getBhriguSamhitaPlanetRasiHouseYogPhala } from "src/backend/YogPhala/BhriguSamhita/getPlanetRasiHouseEffects";
 import { getBPHSLordshipYogPhala } from "src/backend/YogPhala/BPHS/getLordship";
 import { getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala } from "src/backend/YogPhala/BPHS/getUpagrahaAndKalavelaHouseEffects";
@@ -15,32 +15,24 @@ import { getSaravaliRasiPositionYogPhala } from "src/backend/YogPhala/Saravali/g
 
 export function calcYogPhala(
     planets: Record<PlanetEn, Planet>
-): Partial<Record<SourceBookEn, Record<string, phala[]>>> {
+): Record<string, Phala[]> {
     return {
-        BhriguSamhita: {
-            PlanetRasiHouse: getBhriguSamhitaPlanetRasiHouseYogPhala(planets),
-        },
-        BPHS: {
-            Lordship: getBPHSLordshipYogPhala(planets),
-            UpagrahasAndKalavelas:
-                getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala(planets),
-        },
-        BrihatJataka: {
-            NakshatraPosition: [
-                getBrihatJatakaMoonNakshatraEffectYogPhala(planets),
-            ],
-        },
-        PhalaDeepika: {
-            Ascendant: [getPhalaDeepikaAscendantYogPhala(planets)],
-            HousePosition: getPhalaDeepikaPlanetHouseEffectsYogPhala(planets),
-        },
-        Saravali: {
-            Aspect: getSaravaliAspectYogPhala(planets),
-            Conjunction: getSaravaliConjunctionYogPhala(planets),
-            HousePosition: getSaravaliPlanetHouseYogPhala(planets),
-            Lunar: getSaravaliLunarYogPhala(planets),
-            Nabhasa: getSaravaliNabhasaYogPhala(planets),
-            RasiPosition: getSaravaliRasiPositionYogPhala(planets),
-        },
+        "Ascendant (PhalaDeepika)": [getPhalaDeepikaAscendantYogPhala(planets)],
+        "HousePosition (PhalaDeepika)":
+            getPhalaDeepikaPlanetHouseEffectsYogPhala(planets),
+        "NakshatraPosition {BrihatJataka}": [
+            getBrihatJatakaMoonNakshatraEffectYogPhala(planets),
+        ],
+        "Lordship (BPHS)": getBPHSLordshipYogPhala(planets),
+        "UpagrahasAndKalavelas (BPHS)":
+            getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala(planets),
+        "PlanetRasiHouse {BhriguSamhita}":
+            getBhriguSamhitaPlanetRasiHouseYogPhala(planets),
+        "Aspect (Saravali)": getSaravaliAspectYogPhala(planets),
+        "Conjunction (Saravali)": getSaravaliConjunctionYogPhala(planets),
+        "HousePosition (Saravali)": getSaravaliPlanetHouseYogPhala(planets),
+        "Lunar (Saravali)": getSaravaliLunarYogPhala(planets),
+        "Nabhasa (Saravali)": getSaravaliNabhasaYogPhala(planets),
+        "RasiPosition (Saravali)": getSaravaliRasiPositionYogPhala(planets),
     };
 }

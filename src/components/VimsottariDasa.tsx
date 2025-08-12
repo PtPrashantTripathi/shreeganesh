@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import type { Dasha } from "src/backend/types";
 import { DasaTable } from "src/components/DasaTable";
 interface Props {
@@ -5,29 +6,29 @@ interface Props {
 }
 
 export default function VimsottariDasa({ dasaData }: Props) {
-    const now = new Date();
+    const now = DateTime.now();
     const mahadasa = dasaData.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     const antardasha = mahadasa.ChildDasha.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     const pratyantardasha = antardasha.ChildDasha.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     const sookshmadasha = pratyantardasha.ChildDasha.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     const praanadasha = sookshmadasha.ChildDasha.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     const dehadasha = praanadasha.ChildDasha.filter(
-        d => d.StartDate.jsDate <= now && now <= d.EndDate.jsDate
+        d => d.StartDate <= now && now <= d.EndDate
     )[0];
 
     return (

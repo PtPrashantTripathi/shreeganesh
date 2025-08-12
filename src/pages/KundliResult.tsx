@@ -1,5 +1,5 @@
+import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { DateTime } from "src/backend/datetime";
 import { Kundli } from "src/backend/Kundli";
 import { DMS } from "src/backend/utils";
 import ChartInfoTable from "src/components/ChartInfoTable";
@@ -18,7 +18,9 @@ export default function KundliResult() {
     useEffect(() => {
         async function fetchKundli() {
             const result = await Kundli(
-                DateTime.fromDate(`${session.data.date}T${session.data.time}`),
+                DateTime.fromISO(`${session.data.date}T${session.data.time}`, {
+                    zone: session.data.tz_name,
+                }) as DateTime<true>,
                 session.data.lon,
                 session.data.lat,
                 0
@@ -44,7 +46,15 @@ export default function KundliResult() {
                         <tbody>
                             <tr>
                                 <td>datetime</td>
-                                <td>{kundliData.datetime.toString()}</td>
+                                <td>{kundliData.datetime.toISO()}</td>
+                            </tr>
+                            <tr>
+                                <td>weekday</td>
+                                <td>{kundliData.weekday}</td>
+                            </tr>
+                            <tr>
+                                <td>daybirth</td>
+                                <td>{String(kundliData.daybirth)}</td>
                             </tr>
                             <tr>
                                 <td>latitude</td>
@@ -57,6 +67,14 @@ export default function KundliResult() {
                             <tr>
                                 <td>julian_datetime</td>
                                 <td>{kundliData.julian_datetime}</td>
+                            </tr>
+                            <tr>
+                                <td>sunrise</td>
+                                <td>{kundliData.sunrise.toISO()}</td>
+                            </tr>
+                            <tr>
+                                <td>sunset</td>
+                                <td>{kundliData.sunset.toISO()}</td>
                             </tr>
                             <tr>
                                 <td>ayanamsa</td>

@@ -1,6 +1,6 @@
 import type { Planet } from "src/backend/Planet";
 import type {
-    phala,
+    Phala,
     PlanetEn,
     RasiEn,
     SaptagrahaEn,
@@ -16,7 +16,7 @@ import type {
  */
 export function getSaravaliRasiPositionYogPhala(
     planetaryPositions: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     return Object.entries(PlanetRasiEffectTable).map(
         ([planetName, rasiEffectMap]) => {
             const planet = planetaryPositions[planetName];

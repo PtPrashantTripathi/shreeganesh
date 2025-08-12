@@ -2,7 +2,7 @@ import type { Planet } from "src/backend/Planet";
 import type {
     HouseNumber,
     NavagrahaEn,
-    phala,
+    Phala,
     PlanetEn,
     Translation,
 } from "src/backend/types";
@@ -16,7 +16,7 @@ import type {
  */
 export function getPhalaDeepikaPlanetHouseEffectsYogPhala(
     planetaryPositions: Record<PlanetEn, Planet>
-): phala[] {
+): Phala[] {
     return Object.entries(PlanetHouseEffectTable).map(
         ([grahaName, houseEffectMap]) => {
             const grahaData = planetaryPositions[grahaName];

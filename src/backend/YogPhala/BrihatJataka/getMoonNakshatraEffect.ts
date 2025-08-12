@@ -1,7 +1,7 @@
 import type { Planet } from "src/backend/Planet";
 import type {
     NakshatraEn,
-    phala,
+    Phala,
     PlanetEn,
     Translation,
 } from "src/backend/types";
@@ -15,7 +15,7 @@ import type {
  */
 export function getBrihatJatakaMoonNakshatraEffectYogPhala(
     planetPositions: Record<PlanetEn, Planet>
-): phala {
+): Phala {
     const { english: moonNakshatraEng, hindi: moonNakshatraHin } =
         planetPositions.Moon.nakshatra.name;
 

@@ -1,4 +1,4 @@
-import type { DateTime } from "src/backend/datetime";
+import type { DateTime } from "luxon";
 
 /** Ascendant (Lagna) at the time of birth. */
 export type AscendantEn = "Ascendant";
@@ -623,7 +623,7 @@ export type SourceBookEn =
     | "Saravali"
     | "BhriguSamhita";
 
-export interface phala {
+export interface Phala {
     description: Translation<string, string>;
     effect: Translation<string, string>;
 }

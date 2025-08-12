@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { useState } from "react";
 import type { SearchParams, SessionData, SessionState } from "src/types";
 import { parseValidTimezoneOffset } from "src/utils/parseTimezoneOffset";
@@ -29,11 +30,11 @@ const searchParamKeys: (keyof SearchParams)[] = [
 export function useSessionState(): SessionState {
     // const data = JSON.parse(localStorage.getItem("data-form") || "{}");
 
-    const now = new Date();
+    const now = DateTime.now();
     const sessionData: SessionData = {
         page: "Home",
-        date: now.toISOString().split("T")[0],
-        time: now.toISOString().split("T")[1].split(".")[0],
+        date: now.toFormat("yyyy-MM-dd"),
+        time: now.toFormat("HH:mm:ss"),
         tz: 5.5,
         tz_name: "Asia/Kolkata",
         city: "Ujjain, Madhya Pradesh, India",
@@ -43,11 +44,12 @@ export function useSessionState(): SessionState {
         error: [],
     };
 
-    const searchParams = new URLSearchParams(
-        window.location.hash.startsWith("#")
-            ? atob(window.location.hash.slice(1))
-            : window.location.search
-    );
+    let searchParams = new URLSearchParams(window.location.search);
+
+    const id = searchParams.get("id");
+    if (id) {
+        searchParams = new URLSearchParams(atob(id));
+    }
 
     searchParamKeys.forEach(key => {
         try {

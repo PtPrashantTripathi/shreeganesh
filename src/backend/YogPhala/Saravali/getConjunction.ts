@@ -1,5 +1,5 @@
 import type { Planet } from "src/backend/Planet";
-import type { NavagrahaEn, phala, PlanetEn } from "src/backend/types";
+import type { NavagrahaEn, Phala, PlanetEn } from "src/backend/types";
 /**
  * Returns conjunction-based effects from predefined conjunction data.
  *
@@ -11,8 +11,8 @@ import type { NavagrahaEn, phala, PlanetEn } from "src/backend/types";
  */
 export function getSaravaliConjunctionYogPhala(
     planets: Record<PlanetEn, Planet>
-): phala[] {
-    const results: phala[] = [];
+): Phala[] {
+    const results: Phala[] = [];
 
     for (const conjunction of conjunctionData) {
         const { conjunctionPlanets, english, hindi } = conjunction;
