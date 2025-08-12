@@ -51,6 +51,38 @@ export default ts.config([
             ],
             "simple-import-sort/exports": "warn",
             "simple-import-sort/imports": "warn",
+
+            "no-var": "warn",
+            "object-shorthand": ["warn", "properties"],
+
+            eqeqeq: ["error", "always", { null: "ignore" }],
+
+            "lines-between-class-members": [
+                "error",
+                "always",
+                { exceptAfterSingleLine: true },
+            ],
+
+            "spaced-comment": [
+                "error",
+                "always",
+                {
+                    line: { markers: ["*package", "!", "/", ",", "="] },
+                    block: {
+                        balanced: true,
+                        markers: [
+                            "*package",
+                            "!",
+                            ",",
+                            ":",
+                            "::",
+                            "flow-include",
+                        ],
+                        exceptions: ["*"],
+                    },
+                },
+            ],
+            // "symbol-description": "error",
         },
     },
 ]);
