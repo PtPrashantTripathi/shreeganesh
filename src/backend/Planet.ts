@@ -1,18 +1,76 @@
 import { getHouse } from "src/backend/Houses";
 import { getNakshatra } from "src/backend/Nakshatra";
 import { getRasi } from "src/backend/Rasi";
+import type {
+    AscendantEn,
+    AscendantHi,
+    BahyagrahaEn,
+    BahyagrahaHi,
+    ChhayagrahaEn,
+    ChhayagrahaHi,
+    DayEn,
+    HouseDetail,
+    HouseNumber,
+    KalavelasEn,
+    KalavelasHi,
+    Nakshatra,
+    PlanetDetail,
+    PlanetEn,
+    PlanetHi,
+    Rasi,
+    RasiEn,
+    RasiNumber,
+    SaptagrahaEn,
+    SaptagrahaHi,
+    Translation,
+    UpagrahaEn,
+    UpagrahaHi,
+} from "src/backend/types";
 import { DEGS, mod2pi, MOD360, NORMALIZE12, RADS } from "src/backend/utils";
 
-export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
+const AscendantDetails: Record<
+    AscendantEn,
+    {
+        name: Translation<AscendantEn, AscendantHi>;
+        type: "Ascendant";
+        shortname: Translation<string, string>;
+        symbol: string;
+        color: string;
+    }
+> = {
     Ascendant: {
         name: { english: "Ascendant", hindi: "लग्न" },
         type: "Ascendant",
         color: "#1e90ff",
         symbol: "☉",
+        shortname: { english: "Asc", hindi: "ल" },
     },
+};
+
+const SaptagrahaDetails: Record<
+    SaptagrahaEn,
+    {
+        name: Translation<SaptagrahaEn, SaptagrahaHi>;
+        shortname: Translation<string, string>;
+        type: "Saptagraha";
+        day: DayEn;
+        aspect: HouseNumber[];
+        happy_house: HouseNumber[];
+        sad_house: HouseNumber[];
+        friend: SaptagrahaEn[];
+        enemy: SaptagrahaEn[];
+        neutral: SaptagrahaEn[];
+        exaltation: RasiEn;
+        debilitation: RasiEn;
+        /* Swakshetra */
+        ownsign: RasiEn[];
+        symbol: string;
+        color: string;
+    }
+> = {
     Sun: {
         name: { english: "Sun", hindi: "सूर्य" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Sunday",
         aspect: [7],
         happy_house: [1, 5, 9, 10],
@@ -22,10 +80,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Moon"],
         symbol: "☼",
         color: "#f39c12",
+        exaltation: "Aries",
+        debilitation: "Libra",
+        ownsign: ["Leo"],
+        shortname: { english: "Su", hindi: "सू" },
     },
     Moon: {
         name: { english: "Moon", hindi: "चंद्र" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Monday",
         aspect: [7],
         happy_house: [4, 7, 9, 11, 12],
@@ -35,10 +97,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Mercury", "Saturn", "Mars"],
         symbol: "☽",
         color: "#5dade2",
+        exaltation: "Taurus",
+        debilitation: "Scorpio",
+        ownsign: ["Cancer"],
+        shortname: { english: "Mo", hindi: "च" },
     },
     Mars: {
         name: { english: "Mars", hindi: "मंगल" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Tuesday",
         aspect: [4, 7, 8],
         happy_house: [1, 3, 5, 8, 10, 11],
@@ -48,10 +114,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Saturn"],
         symbol: "♂",
         color: "#e74c3c",
+        exaltation: "Capricorn",
+        debilitation: "Cancer",
+        ownsign: ["Aries", "Scorpio"],
+        shortname: { english: "Ma", hindi: "मं" },
     },
     Mercury: {
         name: { english: "Mercury", hindi: "बुध" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Wednesday",
         aspect: [7],
         happy_house: [1, 3, 5, 6, 7, 10, 11],
@@ -61,10 +131,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Jupiter", "Mars"],
         symbol: "☿",
         color: "#27ae60",
+        exaltation: "Virgo",
+        debilitation: "Pisces",
+        ownsign: ["Gemini", "Virgo"],
+        shortname: { english: "Me", hindi: "बु" },
     },
     Jupiter: {
         name: { english: "Jupiter", hindi: "गुरु" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Thursday",
         aspect: [5, 7, 9],
         happy_house: [1, 4, 5, 7, 9, 10, 2, 11],
@@ -74,10 +148,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Mercury", "Saturn"],
         symbol: "♃",
         color: "#b7950b",
+        exaltation: "Cancer",
+        debilitation: "Capricorn",
+        ownsign: ["Sagittarius", "Pisces"],
+        shortname: { english: "Ju", hindi: "गु" },
     },
     Venus: {
         name: { english: "Venus", hindi: "शुक्र" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Friday",
         aspect: [7],
         happy_house: [1, 2, 4, 5, 7, 9, 11, 12],
@@ -87,10 +165,14 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Mercury", "Saturn", "Jupiter", "Mars"],
         symbol: "♀",
         color: "#ff69b4",
+        exaltation: "Pisces",
+        debilitation: "Virgo",
+        ownsign: ["Taurus", "Libra"],
+        shortname: { english: "Ve", hindi: "शु" },
     },
     Saturn: {
         name: { english: "Saturn", hindi: "शनि" },
-        type: "Navagraha",
+        type: "Saptagraha",
         day: "Saturday",
         aspect: [3, 7, 10],
         happy_house: [3, 6, 7, 10, 11],
@@ -100,150 +182,203 @@ export const PlanetDetails: Record<PlanetEnglishType, PlanetDetail> = {
         neutral: ["Mars"],
         symbol: "♄",
         color: "#5d6d7e",
+        exaltation: "Libra",
+        debilitation: "Aries",
+        ownsign: ["Capricorn", "Aquarius"],
+        shortname: { english: "Sa", hindi: "श" },
     },
+};
+
+const ChhayagrahaDetails: Record<
+    ChhayagrahaEn,
+    {
+        name: Translation<ChhayagrahaEn, ChhayagrahaHi>;
+        type: "Chhayagraha";
+        aspect: HouseNumber[];
+        happy_house: HouseNumber[];
+        sad_house: HouseNumber[];
+        exaltation: RasiEn;
+        debilitation: RasiEn;
+        shortname: Translation<string, string>;
+        symbol: string;
+        color: string;
+    }
+> = {
     Rahu: {
         name: { english: "Rahu", hindi: "राहु" },
-        type: "Navagraha",
+        type: "Chhayagraha",
         aspect: [5, 7, 9],
         happy_house: [1, 2, 3, 5, 10, 11],
         sad_house: [4, 6, 7, 8, 9, 12],
         symbol: "☊",
         color: "#7f8c8d",
+        exaltation: "Gemini",
+        debilitation: "Sagittarius",
+        shortname: { english: "Ra", hindi: "रा" },
     },
     Ketu: {
         name: { english: "Ketu", hindi: "केतु" },
-        type: "Navagraha",
+        type: "Chhayagraha",
         aspect: [5, 7, 9],
         happy_house: [4, 6, 8, 9, 12],
         sad_house: [1, 2, 3, 5, 7, 10, 11],
         symbol: "☋",
         color: "#d35400",
+        exaltation: "Sagittarius",
+        debilitation: "Gemini",
+        shortname: { english: "Ke", hindi: "के" },
     },
+};
+
+const BahyagrahaDetails: Record<
+    BahyagrahaEn,
+    {
+        name: Translation<BahyagrahaEn, BahyagrahaHi>;
+        type: "Bahyagraha";
+        shortname: Translation<string, string>;
+        symbol: string;
+        color: string;
+    }
+> = {
     Uranus: {
         name: { english: "Uranus", hindi: "अरुण" },
-        type: "Upagraha",
+        type: "Bahyagraha",
         symbol: "♅",
         color: "#00bcd4",
+        shortname: { english: "Ur", hindi: "अ" },
     },
     Neptune: {
         name: { english: "Neptune", hindi: "वरुण" },
-        type: "Upagraha",
+        type: "Bahyagraha",
         symbol: "♆",
         color: "#3f51b5",
+        shortname: { english: "Ne", hindi: "व" },
     },
     Pluto: {
         name: { english: "Pluto", hindi: "यम" },
-        type: "Upagraha",
+        type: "Bahyagraha",
         symbol: "♇",
         color: "#9b59b6",
+        shortname: { english: "Pl", hindi: "य" },
     },
+};
+
+const UpagrahaDetails: Record<
+    UpagrahaEn,
+    {
+        name: Translation<UpagrahaEn, UpagrahaHi>;
+        type: "Upagraha";
+        exaltation: RasiEn;
+        debilitation: RasiEn;
+        ownsign: RasiEn[];
+        symbol: string;
+        color: string;
+    }
+> = {
     Dhuma: {
         name: { english: "Dhuma", hindi: "धूम" },
-        type: "Bahyagraha",
+        type: "Upagraha",
         symbol: "☉",
         color: "#1e90ff",
+        exaltation: "Leo",
+        debilitation: "Aquarius",
+        ownsign: ["Capricorn"],
     },
     Vyatipata: {
-        name: {
-            english: "Vyatipata",
-            hindi: "व्यतीपात",
-        },
-        type: "Bahyagraha",
+        name: { english: "Vyatipata", hindi: "व्यतीपात" },
+        type: "Upagraha",
         symbol: "☉",
         color: "#1e90ff",
+        exaltation: "Scorpio",
+        debilitation: "Taurus",
+        ownsign: ["Gemini"],
     },
     Parivesha: {
-        name: {
-            english: "Parivesha",
-            hindi: "परिवेष",
-        },
-        type: "Bahyagraha",
+        name: { english: "Parivesha", hindi: "परिवेष" },
+        type: "Upagraha",
         symbol: "☉",
         color: "#1e90ff",
+        exaltation: "Gemini",
+        debilitation: "Sagittarius",
+        ownsign: ["Sagittarius"],
     },
     Chapa: {
         name: { english: "Chapa", hindi: "चाप" },
-        type: "Bahyagraha",
+        type: "Upagraha",
         symbol: "☉",
         color: "#1e90ff",
+        exaltation: "Sagittarius",
+        debilitation: "Gemini",
+        ownsign: ["Cancer"],
     },
     Upaketu: {
         name: { english: "Upaketu", hindi: "उपकेतु" },
-        type: "Bahyagraha",
+        type: "Upagraha",
         symbol: "☉",
         color: "#1e90ff",
+        exaltation: "Aquarius",
+        debilitation: "Leo",
+        ownsign: ["Cancer"],
     },
+};
+
+const KalavelasDetails: Record<
+    KalavelasEn,
+    {
+        name: Translation<KalavelasEn, KalavelasHi>;
+        type: "Kalavelas";
+        ownsign: RasiEn[];
+        symbol: string;
+        color: string;
+    }
+> = {
     Gulika: {
         name: { english: "Gulika", hindi: "गुलिक" },
-        type: "Bahyagraha",
+        type: "Kalavelas",
         symbol: "☉",
         color: "#1e90ff",
+        ownsign: ["Aquarius"],
     },
     Kaala: {
         name: { english: "Kaala", hindi: "काल" },
-        type: "Bahyagraha",
+        type: "Kalavelas",
         symbol: "☉",
         color: "#1e90ff",
+        ownsign: ["Capricorn"],
     },
     Mrityu: {
         name: { english: "Mrityu", hindi: "मृत्यु" },
-        type: "Bahyagraha",
+        type: "Kalavelas",
         symbol: "☉",
         color: "#1e90ff",
+        ownsign: ["Scorpio"],
     },
     Yamaghantaka: {
-        name: {
-            english: "Yamaghantaka",
-            hindi: "यमघंटक",
-        },
-        type: "Bahyagraha",
+        name: { english: "Yamaghantaka", hindi: "यमघंटक" },
+        type: "Kalavelas",
         symbol: "☉",
         color: "#1e90ff",
+        ownsign: ["Sagittarius"],
     },
     Ardhaprahara: {
-        name: {
-            english: "Ardhaprahara",
-            hindi: "अर्धप्रहर",
-        },
-        type: "Bahyagraha",
+        name: { english: "Ardhaprahara", hindi: "अर्धप्रहर" },
+        type: "Kalavelas",
         symbol: "☉",
         color: "#1e90ff",
+        ownsign: ["Gemini"],
     },
 };
 
-export const englishShortName: Partial<Record<PlanetEnglishType, string>> = {
-    Ascendant: "Asc",
-    Sun: "Su",
-    Moon: "Mo",
-    Mars: "Ma",
-    Mercury: "Me",
-    Jupiter: "Ju",
-    Venus: "Ve",
-    Saturn: "Sa",
-    Rahu: "Ra",
-    Ketu: "Ke",
-    Uranus: "Ur",
-    Neptune: "Ne",
-    Pluto: "Pl",
+export const PlanetDetails: Record<PlanetEn, PlanetDetail> = {
+    ...AscendantDetails,
+    ...SaptagrahaDetails,
+    ...ChhayagrahaDetails,
+    ...BahyagrahaDetails,
+    ...KalavelasDetails,
+    ...UpagrahaDetails,
 };
 
-export const hindiShortName: Partial<Record<PlanetHindiType, string>> = {
-    लग्न: "ल",
-    सूर्य: "सू",
-    चंद्र: "च",
-    मंगल: "मं",
-    बुध: "बु",
-    गुरु: "गु",
-    शुक्र: "शु",
-    शनि: "श",
-    राहु: "रा",
-    केतु: "के",
-    अरुण: "अ",
-    वरुण: "व",
-    यम: "य",
-};
-
-export class calcPlanet implements Planet {
+export class Planet implements PlanetDetail {
     degree: number;
     rasi: Rasi;
     nakshatra: Nakshatra;
@@ -255,37 +390,53 @@ export class calcPlanet implements Planet {
     azimuth: number;
     altitude: { true: number; apparent: number };
     divisional: Record<string, Rasi>;
-    name: Translation<PlanetEnglishType, PlanetHindiType>;
-    type: "Bahyagraha" | "Ascendant" | "Navagraha" | "Upagraha";
-    day?: DayEnglishType | undefined;
-    aspect?: RasiNumber[] | undefined;
-    happy_house?: RasiNumber[] | undefined;
-    sad_house?: RasiNumber[] | undefined;
-    enemy?: PlanetEnglishType[] | undefined;
-    friend?: PlanetEnglishType[] | undefined;
-    neutral?: PlanetEnglishType[] | undefined;
-    symbol: string;
-    color: string;
     house: HouseDetail;
 
+    name: Translation<PlanetEn, PlanetHi>;
+    shortname?: Translation<string, string>;
+    type:
+        | "Ascendant"
+        | "Saptagraha"
+        | "Chhayagraha"
+        | "Bahyagraha"
+        | "Upagraha"
+        | "Kalavelas";
+
+    day?: DayEn;
+    aspect?: HouseNumber[];
+    happy_house?: HouseNumber[];
+    sad_house?: HouseNumber[];
+    friend?: SaptagrahaEn[];
+    enemy?: SaptagrahaEn[];
+    neutral?: SaptagrahaEn[];
+    exaltation?: RasiEn;
+    debilitation?: RasiEn;
+    ownsign?: RasiEn[];
+    symbol: string;
+    color: string;
+
     constructor(
-        planetName: PlanetEnglishType,
+        planetName: PlanetEn,
         vCoords: number[],
         hCoords: number[] = [],
-        ascendant_rasi_num: number = 1
+        ascendant_rasi_num: RasiNumber = 1
     ) {
         const data = PlanetDetails[planetName];
         this.name = data.name;
+        this.shortname = data.shortname;
         this.type = data.type;
+        this.color = data.color;
+        this.symbol = data.symbol;
         this.day = data.day;
         this.aspect = data.aspect;
         this.happy_house = data.happy_house;
         this.sad_house = data.sad_house;
-        this.enemy = data.enemy;
         this.friend = data.friend;
+        this.enemy = data.enemy;
         this.neutral = data.neutral;
-        this.symbol = data.symbol;
-        this.color = data.color;
+        this.exaltation = data.exaltation;
+        this.debilitation = data.debilitation;
+        this.ownsign = data.ownsign;
 
         this.degree = MOD360(vCoords[0] ?? 0);
         this.latitude = vCoords[1] ?? 0;
@@ -382,13 +533,14 @@ export class calcPlanet implements Planet {
      *
      * @param target - The planet to check whether it receives aspect from the
      *   graha.
-     * @returns {boolean} - True if graha aspects the target, false otherwise.
+     * @returns {boolean | number} - True if graha aspects the target, false
+     *   otherwise.
      */
-    isGrahaDrishti(target: Planet): boolean {
-        return (
-            this.aspect?.includes(
-                NORMALIZE12(target.rasi.rasi_num + 1 - this.rasi.rasi_num)
-            ) ?? false
+    isAspecting(target: Planet): boolean | number {
+        const aspectDistance = NORMALIZE12(
+            target.rasi.rasi_num + 1 - this.rasi.rasi_num
         );
+        const hasAspect = this.aspect?.includes(aspectDistance) ?? false;
+        return hasAspect ? aspectDistance : false;
     }
 }

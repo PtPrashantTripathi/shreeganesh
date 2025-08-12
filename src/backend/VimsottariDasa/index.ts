@@ -1,9 +1,15 @@
 import type { DateTime } from "src/backend/datetime";
+import type {
+    Dasha,
+    DashaName,
+    Nakshatra,
+    NavagrahaEn,
+} from "src/backend/types";
 import { reorderArray } from "src/backend/utils";
 import { AntarDashaPhal } from "src/backend/VimsottariDasa/AntarDashaPhal";
 import { MahaDashaPhal } from "src/backend/VimsottariDasa/MahaDashaPhal";
 
-export const DurationOfVimsottariDasa: Record<NavagrahaEnglishType, number> = {
+export const DurationOfVimsottariDasa: Record<NavagrahaEn, number> = {
     Mercury: 17,
     Ketu: 7,
     Venus: 20,
@@ -40,7 +46,7 @@ export function calcVimsottariDasa(
 
 function computeDasha(
     dashaName: DashaName,
-    parentLord: NavagrahaEnglishType,
+    parentLord: NavagrahaEn,
     startDate: DateTime,
     solarYear: number, // The length of the tropical year in days
     parentDuration: number
@@ -48,7 +54,7 @@ function computeDasha(
     const sequence = reorderArray(
         Object.keys(DurationOfVimsottariDasa),
         parentLord
-    ) as NavagrahaEnglishType[];
+    ) as NavagrahaEn[];
 
     let cursor = startDate;
 

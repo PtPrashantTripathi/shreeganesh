@@ -1,6 +1,12 @@
-import { toFixedLengthArray } from "src/backend/swisseph-wasm/utils/fixed-length-array";
+import {
+    type FixedLengthArray,
+    toFixedLengthArray,
+} from "src/backend/swisseph-wasm/utils/fixed-length-array";
 import { NUMBER_TYPE_SIZES } from "src/backend/swisseph-wasm/utils/wasm-helper/number_pointer";
 import type { WASMModule } from "src/backend/swisseph-wasm/wasm";
+
+/** C-style Number Pointer types */
+export type C_NumberPointerType = Emscripten.CIntType | Emscripten.CFloatType;
 
 /** A class representing a typed numeric array in WASM memory. */
 export class ArrayPointer {
@@ -108,7 +114,7 @@ export class ArrayPointer {
             (_, i) => this.wasm.getValue(this.ptr + i * size, this.type)
         );
 
-        return toFixedLengthArray(array, fixed_length, null);
+        return toFixedLengthArray(array, fixed_length);
     }
 
     /**

@@ -1,6 +1,8 @@
+import type { DashaPhal, NavagrahaEn } from "src/backend/types";
+
 export const AntarDashaPhal: Record<
-    NavagrahaEnglishType,
-    Record<NavagrahaEnglishType, DashaPhal>
+    NavagrahaEn,
+    Record<NavagrahaEn, DashaPhal>
 > = {
     Sun: {
         Sun: {

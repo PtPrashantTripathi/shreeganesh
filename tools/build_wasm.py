@@ -14,7 +14,7 @@ class SwissephBuildTools:
     # Current script's directory
     base_dir = Path(__file__).parent.parent / "src/backend/swisseph-wasm"
     base_url = "https://github.com/aloistr/swisseph/raw/refs/heads/master"
-    lib_dir = base_dir / "swisseph-lib"
+    lib_dir = base_dir / "lib"
     wasm_dir = base_dir / "wasm"
     header_file = lib_dir / "swephexp.h"
     output_ts = wasm_dir / "index.d.ts"

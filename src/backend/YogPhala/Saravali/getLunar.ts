@@ -1,7 +1,10 @@
+import type { Planet } from "src/backend/Planet";
+import type { phala, PlanetEn } from "src/backend/types";
 import { NORMALIZE12 } from "src/backend/utils";
-
-export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
-    return [
+export function getSaravaliLunarYogPhala(
+    planets: Record<PlanetEn, Planet>
+): phala[] {
+    const effectTable: Array<phala & { rule: boolean }> = [
         {
             description: {
                 english: "Sunapha Yoga caused by Mars",
@@ -13,9 +16,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि मंगल के कारण (चन्द्रमा के द्वितीय भाव में होने से) सुनफा योग हो तो जातक वीर, धनवान, वाणी में क्रूर, सेनापति, उग्र, अत्याचारी, अभिमानी और शत्रुवत होगा।",
             },
             rule:
-                planets.Mars.rasi.rasi_num ==
+                planets.Mars.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -28,9 +30,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि चन्द्रमा से बारहवें भाव में स्थित मंगल के कारण अनफा योग हो तो जातक चोरों के गिरोह का मुखिया, अहंकारी, प्रतिष्ठित, युद्धप्रिय, क्रोधी, अच्छा, प्रशंसनीय, सुडौल और अभिमानी होगा।",
             },
             rule:
-                planets.Mars.rasi.rasi_num ==
+                planets.Mars.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
         {
             description: {
@@ -43,15 +44,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि दुरुधुर योग मंगल और बुध की जोड़ी के कारण हो तो जातक झूठा, बहुत धनवान, विशेषज्ञ, बहुत दुष्ट, बहुत कंजूस, वृद्ध महिला पर आसक्त तथा अपने कुल में मुखिया होगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -65,27 +65,26 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "सुनफा योग में जन्म लेने वाला व्यक्ति धनवान, स्वनिर्मित पराक्रमी (अथवा अपने प्रयासों से उच्च पद पर पहुंच जाएगा), बहुत गुणी, शास्त्रों और उनके अर्थों का ज्ञाता, बहुत प्रसिद्ध, गुणी (भगवान राम के समान), शांत स्वभाव वाला, सुखी, राजा या मंत्री तथा अत्यधिक बुद्धिमान होगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) &&
-                planets.Mars.rasi.rasi_num !=
+                planets.Mars.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Mercury.rasi.rasi_num !=
+                planets.Mercury.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Jupiter.rasi.rasi_num !=
+                planets.Jupiter.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Venus.rasi.rasi_num !=
+                planets.Venus.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Saturn.rasi.rasi_num !=
+                planets.Saturn.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
         {
             description: {
@@ -99,27 +98,26 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "अनफा योग में जन्म लेने वाला व्यक्ति वाकपटु, उदार, गुणवान, भोजन, पेय, पुष्प, वस्त्र और स्त्रियों का भोग करने वाला, प्रसिद्ध, शांत स्वभाव वाला, प्रसन्न, प्रसन्न और सुंदर शरीर वाला होता है।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)) &&
-                planets.Mars.rasi.rasi_num !=
+                planets.Mars.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Mercury.rasi.rasi_num !=
+                planets.Mercury.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Jupiter.rasi.rasi_num !=
+                planets.Jupiter.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Venus.rasi.rasi_num !=
+                planets.Venus.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Saturn.rasi.rasi_num !=
+                planets.Saturn.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -133,27 +131,26 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "दुरुधुर योग में जन्म लेने वाला व्यक्ति अपनी वाणी, बुद्धि, पराक्रम और गुणों के लिए पृथ्वी पर प्रसिद्ध होगा। वह स्वतंत्रता, सुख-सुविधाओं, धन और वाहन-सुविधाओं का आनंद उठाएगा। वह उदार होगा, लेकिन अपने परिवार के सदस्यों का पालन-पोषण करते हुए दुःख उठाएगा। उसका आचरण अच्छा होगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1) ||
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)) &&
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Mercury.rasi.rasi_num ==
+                    planets.Mercury.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1) ||
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -167,27 +164,26 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "केमद्रुम योग वाला जातक जीवन, पेय, भोजन, निवास, वस्त्र और मित्रों से वंचित रहेगा, भले ही वह राजसी वंश का हो। वह दरिद्रता, दुःख, रोग से ग्रस्त रहेगा और गंदा रहेगा। वह कठोर परिश्रम करेगा, दुष्ट होगा और सभी से द्वेष रखेगा।",
             },
             rule:
-                planets.Mars.rasi.rasi_num !=
+                planets.Mars.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Mercury.rasi.rasi_num !=
+                planets.Mercury.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Jupiter.rasi.rasi_num !=
+                planets.Jupiter.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Venus.rasi.rasi_num !=
+                planets.Venus.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Saturn.rasi.rasi_num !=
+                planets.Saturn.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                planets.Mars.rasi.rasi_num !=
+                planets.Mars.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Mercury.rasi.rasi_num !=
+                planets.Mercury.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Jupiter.rasi.rasi_num !=
+                planets.Jupiter.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Venus.rasi.rasi_num !=
+                planets.Venus.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                planets.Saturn.rasi.rasi_num !=
+                planets.Saturn.rasi.rasi_num !==
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -200,15 +196,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि दुरुधुर योग मंगल और बृहस्पति के कारण हो तो व्यक्ति अपने कर्मों से प्रसिद्ध होगा, शक्तिशाली (या धनवान) होगा, बहुतों से शत्रुतापूर्ण व्यवहार करेगा और क्रोधी होगा, अपने लोगों की रक्षा करेगा और धन इकट्ठा करेगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -221,15 +216,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि चन्द्रमा के दोनों ओर शुक्र और मंगल हो तो जातक की पत्नी गुणवान, भाग्यशाली, तर्कशील, पवित्र, कुशल, व्यायाम करने वाला तथा युद्ध में साहसी होगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -242,15 +236,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि शनि और मंगल चंद्रमा पर हों, तो जातक बुरी स्त्री का पति होगा। वह बहुत सारा धन संचय करेगा। उसमें बुराइयाँ होंगी। वह क्रोधी और चुगलखोर होगा। वह अपने शत्रुओं पर विजय प्राप्त करेगा।",
             },
             rule:
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mars.rasi.rasi_num ==
+                (planets.Mars.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -263,9 +256,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बुध सुनफा योग का कारक हो, तो जातक वेद, शास्त्र और संगीत में निपुण होगा। वह गुणी और कवि होगा। वह उच्च विचारों वाला, सभी का भला सोचने वाला और तेजस्वी शरीर वाला होगा।",
             },
             rule:
-                planets.Mercury.rasi.rasi_num ==
+                planets.Mercury.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -278,9 +270,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बुध ग्रह से युति हो तो जातक गायन, नृत्य और लेखन में निपुण, कवि और कुशल वक्ता होगा। उसे शासक द्वारा सम्मान प्राप्त होगा। उसका शरीर तेजस्वी होगा और वह प्रसिद्ध कार्य करेगा।",
             },
             rule:
-                planets.Mercury.rasi.rasi_num ==
+                planets.Mercury.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
         {
             description: {
@@ -293,15 +284,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बृहस्पति और बुध चन्द्रमा के दोनों ओर हों तो जातक गुणवान, शास्त्रों का ज्ञाता, वाचाल, अच्छा कवि, धनवान, त्याग करने में सक्षम और प्रसिद्ध होगा।",
             },
             rule:
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Jupiter.rasi.rasi_num ==
+                    planets.Jupiter.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -314,15 +304,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि दुरुधुर योग बुध और शुक्र से बनता है तो जातक मधुरभाषी, भाग्यशाली, तेजस्वी, सुंदर, नृत्य, गायन आदि का शौकीन, सेवाभावी, पराक्रमी और मंत्री होता है।",
             },
             rule:
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -335,15 +324,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बुध और शनि चन्द्रमा पर दृष्टि डालें, तो जातक धन कमाने के लिए एक देश से दूसरे देश जाता रहेगा। वह अधिक शिक्षित नहीं होगा, दूसरों द्वारा पूजित होगा, लेकिन अपने ही लोगों से द्वेष रखेगा।",
             },
             rule:
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Mercury.rasi.rasi_num ==
+                (planets.Mercury.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -356,9 +344,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बृहस्पति सुनफा योग का निर्माण करता है, तो इस योग में जन्म लेने वाला व्यक्ति उच्च विद्या वाला, प्रसिद्ध, स्वयं राजा या राजा का प्रिय होगा। उसका परिवार उत्तम होगा और उसके पास प्रचुर धन होगा।",
             },
             rule:
-                planets.Jupiter.rasi.rasi_num ==
+                planets.Jupiter.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -371,9 +358,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि यह योग बृहस्पति से उत्पन्न हो तो जातक प्रतापी, बलवान, बुद्धिमान, सभाप्रिय, राजा द्वारा प्रसिद्ध तथा कवि होगा।",
             },
             rule:
-                planets.Jupiter.rasi.rasi_num ==
+                planets.Jupiter.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
         {
             description: {
@@ -386,15 +372,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बृहस्पति और शुक्र चंद्रमा के दोनों ओर स्थित होकर इस योग का निर्माण करते हैं, तो जातक साहसी, बुद्धिमान, राजनीतिक ज्ञान वाला, स्वर्ण और रत्नों का स्वामी, प्रसिद्ध और राजा के अधीन नौकरी करने वाला होगा।",
             },
             rule:
-                (planets.Jupiter.rasi.rasi_num ==
+                (planets.Jupiter.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Jupiter.rasi.rasi_num ==
+                (planets.Jupiter.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Venus.rasi.rasi_num ==
+                    planets.Venus.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -407,15 +392,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि बृहस्पति और शनि ऐसे ग्रह हों जो दुरुधुर योग का निर्माण करते हों तो जातक सुखी, राजनीति का जानकार, मधुर वाणी वाला, विद्वान, शांत, धनवान और सुंदर होगा।",
             },
             rule:
-                (planets.Jupiter.rasi.rasi_num ==
+                (planets.Jupiter.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Jupiter.rasi.rasi_num ==
+                (planets.Jupiter.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -428,9 +412,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "शुक्र जातक को पत्नी, भूमि, धन, पराक्रम, चतुर्भुज और वीरता प्रदान करेगा। जातक राजा द्वारा सम्मानित होगा और साहसी भी होगा।",
             },
             rule:
-                planets.Venus.rasi.rasi_num ==
+                planets.Venus.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -443,9 +426,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "इस योग का कारण बनने वाला शुक्र जातक को स्त्रियों के प्रति अत्यधिक आकर्षण प्रदान करता है। जातक राजा का प्रिय और सुख-सुविधाओं का आनंद लेने वाला होता है। वह वैभवशाली, प्रसिद्ध और प्रचुर स्वर्ण से युक्त होता है।",
             },
             rule:
-                planets.Venus.rasi.rasi_num ==
+                planets.Venus.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
         {
             description: {
@@ -458,15 +440,14 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "शुक्र और शनि से उत्पन्न दुरुधुर योग वाले जातक का आचरण वृद्ध (अर्थात परिपक्व) जैसा होगा, वह अपने कुल में प्रधान, कुशल, स्त्रियों का प्रिय और धनवान होगा। राजा द्वारा सम्मानित होगा और प्रचुर धन अर्जित करेगा।",
             },
             rule:
-                (planets.Venus.rasi.rasi_num ==
+                (planets.Venus.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num - 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num + 1)) ||
-                (planets.Venus.rasi.rasi_num ==
+                (planets.Venus.rasi.rasi_num ===
                     NORMALIZE12(planets.Moon.rasi.rasi_num + 1) &&
-                    planets.Saturn.rasi.rasi_num ==
+                    planets.Saturn.rasi.rasi_num ===
                         NORMALIZE12(planets.Moon.rasi.rasi_num - 1)),
-            highervargas: true,
         },
         {
             description: {
@@ -479,9 +460,8 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि शनि चन्द्रमा के द्वितीय भाव में हो और सुनफा योग बना रहा हो, तो जातक कुशल होगा, अपने गाँव और शहर के लोगों द्वारा पूजित होगा, उसके पास प्रचुर धन होगा। वह अपने कार्य के प्रति समर्पित और साहसी होगा।",
             },
             rule:
-                planets.Saturn.rasi.rasi_num ==
+                planets.Saturn.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num + 1),
-            highervargas: true,
         },
         {
             description: {
@@ -494,9 +474,10 @@ export function getLunar(planets: Record<PlanetEnglishType, Planet>): rules[] {
                 hindi: "यदि शनि इस योग का कारण बनता है, तो व्यक्ति चौड़े कंधों वाला, नेता होगा, अपनी प्रतिबद्धताओं को बनाए रखने के लिए प्रेरित होगा, चौपायों से समृद्ध होगा, बदनाम महिला के प्रति समर्पित होगा और गुणी होगा।",
             },
             rule:
-                planets.Saturn.rasi.rasi_num ==
+                planets.Saturn.rasi.rasi_num ===
                 NORMALIZE12(planets.Moon.rasi.rasi_num - 1),
-            highervargas: true,
         },
     ];
+
+    return effectTable.filter(entry => entry.rule); // keep only where rule is true
 }

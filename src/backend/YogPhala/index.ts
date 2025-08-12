@@ -1,37 +1,46 @@
-import { getAscendantPhalaDeepika } from "src/backend/YogPhala/getAscendantPhalaDeepika";
-import { getAspectSaravali } from "src/backend/YogPhala/getAspectSaravali";
-import { getConjunctionSaravali } from "src/backend/YogPhala/getConjunctionSaravali";
-import { getHousePosition } from "src/backend/YogPhala/getHousePosition";
-import { getHousePositionPhalaDeepika } from "src/backend/YogPhala/getHousePositionPhalaDeepika";
-import { getLordshipBPHS } from "src/backend/YogPhala/getLordshipBPHS";
-import { getLunar } from "src/backend/YogPhala/getLunar";
-import { getNabhasa } from "src/backend/YogPhala/getNabhasa";
-import { getNakshatraPositionBrihatJataka } from "src/backend/YogPhala/getNakshatraPositionBrihatJataka";
-import { getRasiPosition } from "src/backend/YogPhala/getRasiPosition";
-import { getUpagrahasAndKalavelas } from "src/backend/YogPhala/getUpagrahasAndKalavelas";
+import type { Planet } from "src/backend/Planet";
+import type { phala, PlanetEn, SourceBookEn } from "src/backend/types";
+import { getBhriguSamhitaPlanetRasiHouseYogPhala } from "src/backend/YogPhala/BhriguSamhita/getPlanetRasiHouseEffects";
+import { getBPHSLordshipYogPhala } from "src/backend/YogPhala/BPHS/getLordship";
+import { getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala } from "src/backend/YogPhala/BPHS/getUpagrahaAndKalavelaHouseEffects";
+import { getBrihatJatakaMoonNakshatraEffectYogPhala } from "src/backend/YogPhala/BrihatJataka/getMoonNakshatraEffect";
+import { getPhalaDeepikaAscendantYogPhala } from "src/backend/YogPhala/PhalaDeepika/getAscendant";
+import { getPhalaDeepikaPlanetHouseEffectsYogPhala } from "src/backend/YogPhala/PhalaDeepika/getPlanetHouseEffects";
+import { getSaravaliAspectYogPhala } from "src/backend/YogPhala/Saravali/getAspect";
+import { getSaravaliConjunctionYogPhala } from "src/backend/YogPhala/Saravali/getConjunction";
+import { getSaravaliPlanetHouseYogPhala } from "src/backend/YogPhala/Saravali/getHousePosition";
+import { getSaravaliLunarYogPhala } from "src/backend/YogPhala/Saravali/getLunar";
+import { getSaravaliNabhasaYogPhala } from "src/backend/YogPhala/Saravali/getNabhasa";
+import { getSaravaliRasiPositionYogPhala } from "src/backend/YogPhala/Saravali/getRasiPosition";
 
 export function calcYogPhala(
-    planets: Record<PlanetEnglishType, Planet>
-): Partial<Record<SourceBookEnglishType, Record<string, rules[]>>> {
+    planets: Record<PlanetEn, Planet>
+): Partial<Record<SourceBookEn, Record<string, phala[]>>> {
     return {
+        BhriguSamhita: {
+            PlanetRasiHouse: getBhriguSamhitaPlanetRasiHouseYogPhala(planets),
+        },
         BPHS: {
-            Lordship: getLordshipBPHS(planets),
-            UpagrahasAndKalavelas: getUpagrahasAndKalavelas(planets),
+            Lordship: getBPHSLordshipYogPhala(planets),
+            UpagrahasAndKalavelas:
+                getBPHSUpagrahaAndKalavelaHouseEffectsYogPhala(planets),
         },
         BrihatJataka: {
-            NakshatraPosition: getNakshatraPositionBrihatJataka(planets),
+            NakshatraPosition: [
+                getBrihatJatakaMoonNakshatraEffectYogPhala(planets),
+            ],
         },
         PhalaDeepika: {
-            Ascendant: getAscendantPhalaDeepika(planets),
-            HousePosition: getHousePositionPhalaDeepika(planets),
+            Ascendant: [getPhalaDeepikaAscendantYogPhala(planets)],
+            HousePosition: getPhalaDeepikaPlanetHouseEffectsYogPhala(planets),
         },
         Saravali: {
-            Aspect: getAspectSaravali(planets),
-            Conjunction: getConjunctionSaravali(planets),
-            HousePosition: getHousePosition(planets),
-            Lunar: getLunar(planets),
-            Nabhasa: getNabhasa(planets),
-            RasiPosition: getRasiPosition(planets),
+            Aspect: getSaravaliAspectYogPhala(planets),
+            Conjunction: getSaravaliConjunctionYogPhala(planets),
+            HousePosition: getSaravaliPlanetHouseYogPhala(planets),
+            Lunar: getSaravaliLunarYogPhala(planets),
+            Nabhasa: getSaravaliNabhasaYogPhala(planets),
+            RasiPosition: getSaravaliRasiPositionYogPhala(planets),
         },
     };
 }

@@ -1,17 +1,23 @@
+import type { Planet } from "src/backend/Planet";
 import { DEG_PER_TITHI } from "src/backend/Tithi";
-import { MOD360 } from "src/backend/utils";
+import type { HouseNumber, phala, PlanetEn } from "src/backend/types";
+import { memoizeFunction, MOD360 } from "src/backend/utils";
 
-export function getNabhasa(
-    planets: Record<PlanetEnglishType, Planet>
-): rules[] {
-    const countPlanetsInHouse = (houseNum: HouseNumber): number =>
-        Object.values(planets).filter(
-            p => p.type === "Navagraha" && p.house.num === houseNum
-        ).length;
+export function getSaravaliNabhasaYogPhala(
+    planets: Record<PlanetEn, Planet>
+): phala[] {
+    const countPlanetsInHouse = memoizeFunction(
+        (houseNum: HouseNumber): number =>
+            Object.values(planets).filter(
+                p =>
+                    (p.type === "Saptagraha" || p.type === "Chhayagraha") &&
+                    p.house.num === houseNum
+            ).length
+    );
 
     const numberOfOccupiedSigns = new Set(
         Object.values(planets)
-            .filter(p => p.type === "Navagraha")
+            .filter(p => p.type === "Saptagraha" || p.type === "Chhayagraha")
             .map(p => p.rasi.name.english)
     ).size;
 
@@ -23,13 +29,14 @@ export function getNabhasa(
      * @returns {boolean} - True if any malefic planet shares the same rasi as
      *   the target, false otherwise.
      */
-    const hasMaleficConjunction = (target: Planet): boolean =>
+    const hasMaleficConjunction = memoizeFunction((target: Planet): boolean =>
         Object.values(planets).some(
             graha =>
                 graha.name.english !== target.name.english &&
                 !isBenefic(graha) &&
                 target.rasi.rasi_num === graha.rasi.rasi_num
-        );
+        )
+    );
 
     /**
      * Checks if the target planet is aspected by any malefic planet using graha
@@ -39,15 +46,16 @@ export function getNabhasa(
      * @returns {boolean} - True if any malefic planet aspects the target
      *   planet, false otherwise.
      */
-    const isAspectedByMalefic = (target: Planet): boolean =>
+    const isAspectedByMalefic = memoizeFunction((target: Planet): boolean =>
         Object.values(planets).some(
             graha =>
                 graha.name.english !== target.name.english &&
                 !isBenefic(graha) &&
-                graha.isGrahaDrishti(target)
-        );
+                graha.isAspecting(target)
+        )
+    );
 
-    const isBenefic = (p: Planet): boolean => {
+    const isBenefic = memoizeFunction((p: Planet): boolean => {
         const { english } = p.name;
 
         if (english === "Venus" || english === "Jupiter") return true;
@@ -65,9 +73,9 @@ export function getNabhasa(
         }
 
         return false;
-    };
+    });
 
-    return [
+    const effectTable: Array<phala & { rule: boolean }> = [
         {
             description: {
                 english:
@@ -80,14 +88,13 @@ export function getNabhasa(
                 hindi: "श्रृंगटक योग। इस योग से युक्त व्यक्ति झगड़ालू, योद्धा, सुखी, राजा का प्रिय, सौभाग्यशाली पत्नी वाला, धनवान तथा स्त्री से घृणा करने वाला होता है।",
             },
             rule:
-                planets.Sun.house.num % 4 == 0 &&
-                planets.Moon.house.num % 4 == 0 &&
-                planets.Mars.house.num % 4 == 0 &&
-                planets.Mercury.house.num % 4 == 0 &&
-                planets.Jupiter.house.num % 4 == 0 &&
-                planets.Venus.house.num % 4 == 0 &&
-                planets.Saturn.house.num % 4 == 0,
-            highervargas: true,
+                planets.Sun.house.num % 4 === 0 &&
+                planets.Moon.house.num % 4 === 0 &&
+                planets.Mars.house.num % 4 === 0 &&
+                planets.Mercury.house.num % 4 === 0 &&
+                planets.Jupiter.house.num % 4 === 0 &&
+                planets.Venus.house.num % 4 === 0 &&
+                planets.Saturn.house.num % 4 === 0,
         },
         {
             description: {
@@ -100,15 +107,14 @@ export function getNabhasa(
                 hindi: "हल योग। इस योग से पीड़ित जातक अधिक भोजन करने वाला, निर्धन, कृषि व्यवसाय वाला, दुःखी, भावुक, सगे-संबंधियों और मित्रों द्वारा त्यागा हुआ तथा नौकर होगा।",
             },
             rule:
-                planets.Sun.house.num % 4 == 0 &&
-                planets.Moon.house.num % 4 == 0 &&
-                planets.Mars.house.num % 4 == 0 &&
-                planets.Mercury.house.num % 4 == 0 &&
-                planets.Jupiter.house.num % 4 == 0 &&
-                planets.Venus.house.num % 4 == 0 &&
-                planets.Saturn.house.num % 4 == 0 &&
-                countPlanetsInHouse(1) == 0,
-            highervargas: true,
+                planets.Sun.house.num % 4 === 0 &&
+                planets.Moon.house.num % 4 === 0 &&
+                planets.Mars.house.num % 4 === 0 &&
+                planets.Mercury.house.num % 4 === 0 &&
+                planets.Jupiter.house.num % 4 === 0 &&
+                planets.Venus.house.num % 4 === 0 &&
+                planets.Saturn.house.num % 4 === 0 &&
+                countPlanetsInHouse(1) === 0,
         },
         {
             description: {
@@ -122,14 +128,13 @@ export function getNabhasa(
                 hindi: "शकट योग। शकट योग में जन्म लेने वाला व्यक्ति रोगों से ग्रस्त होगा, उसकी पत्नी बुरी होगी, वह मूर्ख होगा, गाड़ी खींचकर जीवनयापन करेगा, गरीब होगा और उसके रिश्तेदार और मित्र नहीं होंगे।",
             },
             rule:
-                planets.Sun.house.num % 6 == 1 &&
-                planets.Moon.house.num % 6 == 1 &&
-                planets.Mars.house.num % 6 == 1 &&
-                planets.Mercury.house.num % 6 == 1 &&
-                planets.Jupiter.house.num % 6 == 1 &&
-                planets.Venus.house.num % 6 == 1 &&
-                planets.Saturn.house.num % 6 == 1,
-            highervargas: true,
+                planets.Sun.house.num % 6 === 1 &&
+                planets.Moon.house.num % 6 === 1 &&
+                planets.Mars.house.num % 6 === 1 &&
+                planets.Mercury.house.num % 6 === 1 &&
+                planets.Jupiter.house.num % 6 === 1 &&
+                planets.Venus.house.num % 6 === 1 &&
+                planets.Saturn.house.num % 6 === 1,
         },
         {
             description: {
@@ -143,14 +148,13 @@ export function getNabhasa(
                 hindi: "विहग योग (पक्षी योग) - इस योग से युक्त जातक भ्रमणशील, नीच प्रवृत्ति वाला, दूत, भोग विलास करने वाला, निर्लज्ज एवं झगड़ों का शौकीन होता है।",
             },
             rule:
-                planets.Sun.house.num % 6 == 4 &&
-                planets.Moon.house.num % 6 == 4 &&
-                planets.Mars.house.num % 6 == 4 &&
-                planets.Mercury.house.num % 6 == 4 &&
-                planets.Jupiter.house.num % 6 == 4 &&
-                planets.Venus.house.num % 6 == 4 &&
-                planets.Saturn.house.num % 6 == 4,
-            highervargas: true,
+                planets.Sun.house.num % 6 === 4 &&
+                planets.Moon.house.num % 6 === 4 &&
+                planets.Mars.house.num % 6 === 4 &&
+                planets.Mercury.house.num % 6 === 4 &&
+                planets.Jupiter.house.num % 6 === 4 &&
+                planets.Venus.house.num % 6 === 4 &&
+                planets.Saturn.house.num % 6 === 4,
         },
         {
             description: {
@@ -176,7 +180,6 @@ export function getNabhasa(
                 countPlanetsInHouse(1) > 0 &&
                 countPlanetsInHouse(4) > 0 &&
                 countPlanetsInHouse(7) > 0,
-            highervargas: true,
         },
         {
             description: {
@@ -196,7 +199,6 @@ export function getNabhasa(
                 planets.Jupiter.house.categories.includes("Kendra") &&
                 planets.Venus.house.categories.includes("Kendra") &&
                 planets.Saturn.house.categories.includes("Kendra"),
-            highervargas: true,
         },
         {
             description: {
@@ -225,7 +227,6 @@ export function getNabhasa(
                     planets.Jupiter.house.categories.includes("Panaphara") &&
                     planets.Venus.house.categories.includes("Panaphara") &&
                     planets.Saturn.house.categories.includes("Panaphara")),
-            highervargas: true,
         },
         {
             description: {
@@ -245,7 +246,6 @@ export function getNabhasa(
                 planets.Jupiter.rasi.nature === "Movable" &&
                 planets.Venus.rasi.nature === "Movable" &&
                 planets.Saturn.rasi.nature === "Movable",
-            highervargas: true,
         },
         {
             description: {
@@ -265,7 +265,6 @@ export function getNabhasa(
                 planets.Jupiter.rasi.nature === "Fixed" &&
                 planets.Venus.rasi.nature === "Fixed" &&
                 planets.Saturn.rasi.nature === "Fixed",
-            highervargas: true,
         },
         {
             description: {
@@ -285,7 +284,6 @@ export function getNabhasa(
                 planets.Jupiter.rasi.nature === "Dual" &&
                 planets.Venus.rasi.nature === "Dual" &&
                 planets.Saturn.rasi.nature === "Dual",
-            highervargas: true,
         },
         {
             description: {
@@ -299,17 +297,17 @@ export function getNabhasa(
                 hindi: "वज्र योग। वज्र योग के साथ जन्म लेने वाला व्यक्ति अपने जीवन के आरंभ और अंत में सुखी, साहसी, सुंदर, रोग मुक्त, दुर्भाग्यशाली और अपने लोगों के प्रति शत्रुतापूर्ण होगा।",
             },
             rule:
-                planets.Sun.house.num % 6 == 3 &&
-                (isBenefic(planets.Moon) || planets.Moon.house.num % 6 == 0) &&
-                (!isBenefic(planets.Moon) || planets.Moon.house.num % 6 == 3) &&
-                planets.Mars.house.num % 6 == 3 &&
+                planets.Sun.house.num % 6 === 3 &&
+                (isBenefic(planets.Moon) || planets.Moon.house.num % 6 === 0) &&
+                (!isBenefic(planets.Moon) ||
+                    planets.Moon.house.num % 6 === 3) &&
+                planets.Mars.house.num % 6 === 3 &&
                 (isBenefic(planets.Mercury) ||
-                    planets.Mercury.house.num % 6 == 0) &&
+                    planets.Mercury.house.num % 6 === 0) &&
                 (!isBenefic(planets.Mercury) ||
-                    planets.Mercury.house.num % 6 == 3) &&
-                planets.Venus.house.num % 6 == 0 &&
-                planets.Saturn.house.num % 6 == 3,
-            highervargas: true,
+                    planets.Mercury.house.num % 6 === 3) &&
+                planets.Venus.house.num % 6 === 0 &&
+                planets.Saturn.house.num % 6 === 3,
         },
         {
             description: {
@@ -323,17 +321,17 @@ export function getNabhasa(
                 hindi: "यव योग - यव योग में जन्म लेने वाला व्यक्ति व्रत और अन्य धार्मिक नियमों का पालन करेगा, शुभ कार्य करने का इच्छुक होगा, जीवन के मध्य में प्रसन्न रहेगा, उदार होगा और उसके पास स्थायी धन होगा।",
             },
             rule:
-                planets.Sun.house.num % 6 == 0 &&
-                (isBenefic(planets.Moon) || planets.Moon.house.num % 6 == 3) &&
-                (!isBenefic(planets.Moon) || planets.Moon.house.num % 6 == 0) &&
-                planets.Mars.house.num % 6 == 0 &&
+                planets.Sun.house.num % 6 === 0 &&
+                (isBenefic(planets.Moon) || planets.Moon.house.num % 6 === 3) &&
+                (!isBenefic(planets.Moon) ||
+                    planets.Moon.house.num % 6 === 0) &&
+                planets.Mars.house.num % 6 === 0 &&
                 (isBenefic(planets.Mercury) ||
-                    planets.Mercury.house.num % 6 == 3) &&
+                    planets.Mercury.house.num % 6 === 3) &&
                 (!isBenefic(planets.Mercury) ||
-                    planets.Mercury.house.num % 6 == 0) &&
-                planets.Venus.house.num % 6 == 3 &&
-                planets.Saturn.house.num % 6 == 0,
-            highervargas: true,
+                    planets.Mercury.house.num % 6 === 0) &&
+                planets.Venus.house.num % 6 === 3 &&
+                planets.Saturn.house.num % 6 === 0,
         },
         {
             description: {
@@ -357,7 +355,6 @@ export function getNabhasa(
                 countPlanetsInHouse(1) > 0 &&
                 countPlanetsInHouse(4) > 0 &&
                 countPlanetsInHouse(7) > 0,
-            highervargas: true,
         },
         {
             description: {
@@ -369,8 +366,7 @@ export function getNabhasa(
                     "GOLA YOGA. One born in this Yoga will be indigent, indolent, devoid of learning and honour, dirty and always grieved.",
                 hindi: "गोला योग। इस योग में जन्म लेने वाला व्यक्ति दरिद्र, आलसी, विद्या और सम्मान से रहित, गंदा और हमेशा दुखी रहेगा।",
             },
-            rule: numberOfOccupiedSigns == 1,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 1,
         },
         {
             description: {
@@ -382,8 +378,7 @@ export function getNabhasa(
                     "YUGA YOGA. One born with this Yoga will be a religious hypocrite, be bereft of wealth, forsaken by people and devoid of sons, honour and virtues.",
                 hindi: "युग योग। इस योग में जन्म लेने वाला व्यक्ति धार्मिक पाखंडी, धनहीन, लोगों द्वारा त्यागा हुआ, पुत्र, सम्मान और गुणों से रहित होगा।",
             },
-            rule: numberOfOccupiedSigns == 2,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 2,
         },
         {
             description: {
@@ -395,8 +390,7 @@ export function getNabhasa(
                     "SULA YOGA. The native with sula Yoga will be harsh, indolent, poor, torturous, become a prohibited person, bold, successful in war and fearful.",
                 hindi: "सुला योग। सुला योग से पीड़ित जातक कठोर, आलसी, दरिद्र, अत्याचारी, निषिद्ध व्यक्ति, साहसी, युद्ध में सफल और भयभीत होता है।",
             },
-            rule: numberOfOccupiedSigns == 3,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 3,
         },
         {
             description: {
@@ -408,8 +402,7 @@ export function getNabhasa(
                     "KEDARA YOGA. One born under this Yoga will be useful to many, will have agricultural profession, be truthfully disposed, fickle minded and wealthy.",
                 hindi: "केदार योग। इस योग में जन्म लेने वाला व्यक्ति अनेकों के लिए उपयोगी, कृषि व्यवसाय वाला, सत्यनिष्ठ, चंचल मन वाला और धनवान होगा।",
             },
-            rule: numberOfOccupiedSigns == 4,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 4,
         },
         {
             description: {
@@ -421,8 +414,7 @@ export function getNabhasa(
                     "PASA YOGA. One born with pasa Yoga will be bonded, be attached to work, worldly in disposition, will talk too much, will not have good qualities and will have many servants.",
                 hindi: "पासा योग। पासा योग के साथ जन्म लेने वाला व्यक्ति बंधुआ, काम में आसक्त, सांसारिक स्वभाव वाला, बहुत अधिक बोलने वाला, अच्छे गुणों वाला नहीं तथा बहुत से नौकरों वाला होगा।",
             },
-            rule: numberOfOccupiedSigns == 5,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 5,
         },
         {
             description: {
@@ -434,8 +426,7 @@ export function getNabhasa(
                     "DAMINI YOGA. One born with this Yoga will be helpful, will have cattle, be Lord of money, be foolish, will have many sons and jewels, be bold and learned.",
                 hindi: "दामिनी योग। इस योग में जन्म लेने वाला व्यक्ति सहायक, पशु वाला, धन का स्वामी, मूर्ख, अनेक पुत्रों और रत्नों वाला, साहसी और विद्वान होता है।",
             },
-            rule: numberOfOccupiedSigns == 6,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 6,
         },
         {
             description: {
@@ -447,8 +438,7 @@ export function getNabhasa(
                     "VEENA YOGA. One born with this combination will have friends, be eloquent, interested in Sastras, musical instruments and singing. He will be happy, will have many servants and be famous.",
                 hindi: "वीणा योग। इस योग में जन्म लेने वाला व्यक्ति मित्रवान, वाक्पटु, शास्त्रों, वाद्यों और गायन में रुचि रखने वाला होता है। वह सुखी, अनेक सेवकों वाला और प्रसिद्ध होता है।",
             },
-            rule: numberOfOccupiedSigns == 7,
-            highervargas: true,
+            rule: numberOfOccupiedSigns === 7,
         },
         {
             description: {
@@ -462,16 +452,15 @@ export function getNabhasa(
                 hindi: "यूप योग। इस योग से युक्त जातक आत्मरक्षा करने वाला, दानशील, धन-धान्य से संपन्न, धार्मिक व्रतों और व्रतों का पालन करने वाला होता है। वह प्रतिष्ठित व्यक्ति होता है।",
             },
             rule:
-                countPlanetsInHouse(1) != 0 &&
-                countPlanetsInHouse(2) != 0 &&
-                countPlanetsInHouse(3) != 0 &&
-                countPlanetsInHouse(4) != 0 &&
+                countPlanetsInHouse(1) !== 0 &&
+                countPlanetsInHouse(2) !== 0 &&
+                countPlanetsInHouse(3) !== 0 &&
+                countPlanetsInHouse(4) !== 0 &&
                 countPlanetsInHouse(1) +
                     countPlanetsInHouse(2) +
                     countPlanetsInHouse(3) +
-                    countPlanetsInHouse(4) ==
+                    countPlanetsInHouse(4) ===
                     7,
-            highervargas: true,
         },
         {
             description: {
@@ -485,16 +474,15 @@ export function getNabhasa(
                 hindi: "सार योग। सार योग वाला जातक तीर (आधुनिक संदर्भ में शस्त्र आदि) बनाएगा, चोरों को पकड़ेगा (उदाहरण के लिए, पुलिस अधिकारी होगा), जानवरों का शिकार करने के लिए जंगलों में रहेगा, पागल व्यक्ति के समान होगा, अत्याचार करेगा और नीच हस्तकलाओं का शौकीन होगा।",
             },
             rule:
-                countPlanetsInHouse(4) != 0 &&
-                countPlanetsInHouse(5) != 0 &&
-                countPlanetsInHouse(6) != 0 &&
-                countPlanetsInHouse(7) != 0 &&
+                countPlanetsInHouse(4) !== 0 &&
+                countPlanetsInHouse(5) !== 0 &&
+                countPlanetsInHouse(6) !== 0 &&
+                countPlanetsInHouse(7) !== 0 &&
                 countPlanetsInHouse(4) +
                     countPlanetsInHouse(5) +
                     countPlanetsInHouse(6) +
-                    countPlanetsInHouse(7) ==
+                    countPlanetsInHouse(7) ===
                     7,
-            highervargas: true,
         },
         {
             description: {
@@ -508,14 +496,13 @@ export function getNabhasa(
                 hindi: "नव योग। जातक की आजीविका जलमार्ग से होगी; उसे अनेक लाभ होंगे, वह बहुत प्रसिद्ध होगा, सुखी होगा, मितव्ययी होगा, बलवान होगा और कंजूस होगा। यह और अन्य योग दशाओं से स्वतंत्र होकर हर समय प्रभावी रहते हैं।",
             },
             rule:
-                countPlanetsInHouse(1) == 1 &&
-                countPlanetsInHouse(2) == 1 &&
-                countPlanetsInHouse(3) == 1 &&
-                countPlanetsInHouse(4) == 1 &&
-                countPlanetsInHouse(5) == 1 &&
-                countPlanetsInHouse(6) == 1 &&
-                countPlanetsInHouse(7) == 1,
-            highervargas: true,
+                countPlanetsInHouse(1) === 1 &&
+                countPlanetsInHouse(2) === 1 &&
+                countPlanetsInHouse(3) === 1 &&
+                countPlanetsInHouse(4) === 1 &&
+                countPlanetsInHouse(5) === 1 &&
+                countPlanetsInHouse(6) === 1 &&
+                countPlanetsInHouse(7) === 1,
         },
         {
             description: {
@@ -528,11 +515,10 @@ export function getNabhasa(
                 hindi: "गदा योग। इस योग में जन्म लेने वाला व्यक्ति सदैव मान-सम्मान और धन की चिंता करेगा, यज्ञ आदि करेगा, शास्त्रों और संगीत में निपुण होगा तथा धन, स्वर्ण, रत्न और संपत्ति से संपन्न होगा।",
             },
             rule:
-                countPlanetsInHouse(1) + countPlanetsInHouse(4) == 7 ||
-                countPlanetsInHouse(4) + countPlanetsInHouse(7) == 7 ||
-                countPlanetsInHouse(7) + countPlanetsInHouse(10) == 7 ||
-                countPlanetsInHouse(10) + countPlanetsInHouse(1) == 7,
-            highervargas: true,
+                countPlanetsInHouse(1) + countPlanetsInHouse(4) === 7 ||
+                countPlanetsInHouse(4) + countPlanetsInHouse(7) === 7 ||
+                countPlanetsInHouse(7) + countPlanetsInHouse(10) === 7 ||
+                countPlanetsInHouse(10) + countPlanetsInHouse(1) === 7,
         },
         {
             description: {
@@ -546,16 +532,15 @@ export function getNabhasa(
                 hindi: "शक्ति योग। इस योग से युक्त जातक धनहीन, विकृत, दुःखी, क्षुद्र, आलसी, अल्पायु, युद्ध में निपुण और सुन्दर होता है।",
             },
             rule:
-                countPlanetsInHouse(7) != 0 &&
-                countPlanetsInHouse(8) != 0 &&
-                countPlanetsInHouse(9) != 0 &&
-                countPlanetsInHouse(10) != 0 &&
+                countPlanetsInHouse(7) !== 0 &&
+                countPlanetsInHouse(8) !== 0 &&
+                countPlanetsInHouse(9) !== 0 &&
+                countPlanetsInHouse(10) !== 0 &&
                 countPlanetsInHouse(7) +
                     countPlanetsInHouse(8) +
                     countPlanetsInHouse(9) +
-                    countPlanetsInHouse(10) ==
+                    countPlanetsInHouse(10) ===
                     7,
-            highervargas: true,
         },
         {
             description: {
@@ -569,14 +554,13 @@ export function getNabhasa(
                 hindi: "कूट योग। कूट योग वाला जातक झूठा, धूर्त, जेलर, गरीब, दुष्ट, क्रूर होगा और हमेशा पहाड़ियों और किलों में रहेगा।",
             },
             rule:
-                countPlanetsInHouse(4) == 1 &&
-                countPlanetsInHouse(5) == 1 &&
-                countPlanetsInHouse(6) == 1 &&
-                countPlanetsInHouse(7) == 1 &&
-                countPlanetsInHouse(8) == 1 &&
-                countPlanetsInHouse(9) == 1 &&
-                countPlanetsInHouse(10) == 1,
-            highervargas: true,
+                countPlanetsInHouse(4) === 1 &&
+                countPlanetsInHouse(5) === 1 &&
+                countPlanetsInHouse(6) === 1 &&
+                countPlanetsInHouse(7) === 1 &&
+                countPlanetsInHouse(8) === 1 &&
+                countPlanetsInHouse(9) === 1 &&
+                countPlanetsInHouse(10) === 1,
         },
         {
             description: {
@@ -590,14 +574,13 @@ export function getNabhasa(
                 hindi: "चाप योग (कर्मुका योग)। चाप योग वाला जातक झूठा, जेलर, चोर और जंगलों में रहने वाला होता है। जीवन के मध्यकाल में उसके पास धन नहीं होता।",
             },
             rule:
-                countPlanetsInHouse(10) == 1 &&
-                countPlanetsInHouse(11) == 1 &&
-                countPlanetsInHouse(12) == 1 &&
-                countPlanetsInHouse(1) == 1 &&
-                countPlanetsInHouse(2) == 1 &&
-                countPlanetsInHouse(3) == 1 &&
-                countPlanetsInHouse(4) == 1,
-            highervargas: true,
+                countPlanetsInHouse(10) === 1 &&
+                countPlanetsInHouse(11) === 1 &&
+                countPlanetsInHouse(12) === 1 &&
+                countPlanetsInHouse(1) === 1 &&
+                countPlanetsInHouse(2) === 1 &&
+                countPlanetsInHouse(3) === 1 &&
+                countPlanetsInHouse(4) === 1,
         },
         {
             description: {
@@ -611,16 +594,15 @@ export function getNabhasa(
                 hindi: "दण्ड योग। इस योग से युक्त जातक अपनी पत्नी और पुत्रों को खो देगा, दरिद्र होगा, सभी लोगों द्वारा त्याग दिया जाएगा, अपने मण्डल के लोगों से अलग हो जाएगा, दुःखी, नीच और सेवक होगा।",
             },
             rule:
-                countPlanetsInHouse(10) != 0 &&
-                countPlanetsInHouse(11) != 0 &&
-                countPlanetsInHouse(12) != 0 &&
-                countPlanetsInHouse(1) != 0 &&
+                countPlanetsInHouse(10) !== 0 &&
+                countPlanetsInHouse(11) !== 0 &&
+                countPlanetsInHouse(12) !== 0 &&
+                countPlanetsInHouse(1) !== 0 &&
                 countPlanetsInHouse(10) +
                     countPlanetsInHouse(11) +
                     countPlanetsInHouse(12) +
-                    countPlanetsInHouse(1) ==
+                    countPlanetsInHouse(1) ===
                     7,
-            highervargas: true,
         },
         {
             description: {
@@ -634,14 +616,13 @@ export function getNabhasa(
                 hindi: "छत्र योग। छत्र योग वाला जातक अपने लोगों की सहायता करने वाला, दयालु, उदार, राजा का प्रिय, बहुत बुद्धिमान होगा तथा बचपन और अंत में सुख का आनंद लेगा।",
             },
             rule:
-                countPlanetsInHouse(7) == 1 &&
-                countPlanetsInHouse(8) == 1 &&
-                countPlanetsInHouse(9) == 1 &&
-                countPlanetsInHouse(10) == 1 &&
-                countPlanetsInHouse(11) == 1 &&
-                countPlanetsInHouse(12) == 1 &&
-                countPlanetsInHouse(1) == 1,
-            highervargas: true,
+                countPlanetsInHouse(7) === 1 &&
+                countPlanetsInHouse(8) === 1 &&
+                countPlanetsInHouse(9) === 1 &&
+                countPlanetsInHouse(10) === 1 &&
+                countPlanetsInHouse(11) === 1 &&
+                countPlanetsInHouse(12) === 1 &&
+                countPlanetsInHouse(1) === 1,
         },
         {
             description: {
@@ -655,63 +636,62 @@ export function getNabhasa(
                 hindi: "अर्ध चंद्र योग। अर्ध चंद्र योग में जन्म लेने वाला व्यक्ति भाग्यशाली, सेनापति, तेजस्वी शरीर वाला, राजा का प्रिय और बलवान होता है। उसके पास रत्न, स्वर्ण और आभूषण होते हैं।",
             },
             rule:
-                (countPlanetsInHouse(2) == 1 &&
-                    countPlanetsInHouse(3) == 1 &&
-                    countPlanetsInHouse(4) == 1 &&
-                    countPlanetsInHouse(5) == 1 &&
-                    countPlanetsInHouse(6) == 1 &&
-                    countPlanetsInHouse(7) == 1 &&
-                    countPlanetsInHouse(8) == 1) ||
-                (countPlanetsInHouse(3) == 1 &&
-                    countPlanetsInHouse(4) == 1 &&
-                    countPlanetsInHouse(5) == 1 &&
-                    countPlanetsInHouse(6) == 1 &&
-                    countPlanetsInHouse(7) == 1 &&
-                    countPlanetsInHouse(8) == 1 &&
-                    countPlanetsInHouse(9) == 1) ||
-                (countPlanetsInHouse(5) == 1 &&
-                    countPlanetsInHouse(6) == 1 &&
-                    countPlanetsInHouse(7) == 1 &&
-                    countPlanetsInHouse(8) == 1 &&
-                    countPlanetsInHouse(9) == 1 &&
-                    countPlanetsInHouse(10) == 1 &&
-                    countPlanetsInHouse(11) == 1) ||
-                (countPlanetsInHouse(6) == 1 &&
-                    countPlanetsInHouse(7) == 1 &&
-                    countPlanetsInHouse(8) == 1 &&
-                    countPlanetsInHouse(9) == 1 &&
-                    countPlanetsInHouse(10) == 1 &&
-                    countPlanetsInHouse(11) == 1 &&
-                    countPlanetsInHouse(12) == 1) ||
-                (countPlanetsInHouse(8) == 1 &&
-                    countPlanetsInHouse(9) == 1 &&
-                    countPlanetsInHouse(10) == 1 &&
-                    countPlanetsInHouse(11) == 1 &&
-                    countPlanetsInHouse(12) == 1 &&
-                    countPlanetsInHouse(1) == 1 &&
-                    countPlanetsInHouse(2) == 1) ||
-                (countPlanetsInHouse(9) == 1 &&
-                    countPlanetsInHouse(10) == 1 &&
-                    countPlanetsInHouse(11) == 1 &&
-                    countPlanetsInHouse(12) == 1 &&
-                    countPlanetsInHouse(1) == 1 &&
-                    countPlanetsInHouse(2) == 1 &&
-                    countPlanetsInHouse(3) == 1) ||
-                (countPlanetsInHouse(11) == 1 &&
-                    countPlanetsInHouse(12) == 1 &&
-                    countPlanetsInHouse(1) == 1 &&
-                    countPlanetsInHouse(2) == 1 &&
-                    countPlanetsInHouse(3) == 1 &&
-                    countPlanetsInHouse(4) == 1 &&
-                    countPlanetsInHouse(5) == 1) ||
-                (countPlanetsInHouse(12) == 1 &&
-                    countPlanetsInHouse(1) == 1 &&
-                    countPlanetsInHouse(2) == 1 &&
-                    countPlanetsInHouse(3) == 1 &&
-                    countPlanetsInHouse(4) == 1 &&
-                    countPlanetsInHouse(5) == 1 &&
-                    countPlanetsInHouse(6) == 1),
-            highervargas: true,
+                (countPlanetsInHouse(2) === 1 &&
+                    countPlanetsInHouse(3) === 1 &&
+                    countPlanetsInHouse(4) === 1 &&
+                    countPlanetsInHouse(5) === 1 &&
+                    countPlanetsInHouse(6) === 1 &&
+                    countPlanetsInHouse(7) === 1 &&
+                    countPlanetsInHouse(8) === 1) ||
+                (countPlanetsInHouse(3) === 1 &&
+                    countPlanetsInHouse(4) === 1 &&
+                    countPlanetsInHouse(5) === 1 &&
+                    countPlanetsInHouse(6) === 1 &&
+                    countPlanetsInHouse(7) === 1 &&
+                    countPlanetsInHouse(8) === 1 &&
+                    countPlanetsInHouse(9) === 1) ||
+                (countPlanetsInHouse(5) === 1 &&
+                    countPlanetsInHouse(6) === 1 &&
+                    countPlanetsInHouse(7) === 1 &&
+                    countPlanetsInHouse(8) === 1 &&
+                    countPlanetsInHouse(9) === 1 &&
+                    countPlanetsInHouse(10) === 1 &&
+                    countPlanetsInHouse(11) === 1) ||
+                (countPlanetsInHouse(6) === 1 &&
+                    countPlanetsInHouse(7) === 1 &&
+                    countPlanetsInHouse(8) === 1 &&
+                    countPlanetsInHouse(9) === 1 &&
+                    countPlanetsInHouse(10) === 1 &&
+                    countPlanetsInHouse(11) === 1 &&
+                    countPlanetsInHouse(12) === 1) ||
+                (countPlanetsInHouse(8) === 1 &&
+                    countPlanetsInHouse(9) === 1 &&
+                    countPlanetsInHouse(10) === 1 &&
+                    countPlanetsInHouse(11) === 1 &&
+                    countPlanetsInHouse(12) === 1 &&
+                    countPlanetsInHouse(1) === 1 &&
+                    countPlanetsInHouse(2) === 1) ||
+                (countPlanetsInHouse(9) === 1 &&
+                    countPlanetsInHouse(10) === 1 &&
+                    countPlanetsInHouse(11) === 1 &&
+                    countPlanetsInHouse(12) === 1 &&
+                    countPlanetsInHouse(1) === 1 &&
+                    countPlanetsInHouse(2) === 1 &&
+                    countPlanetsInHouse(3) === 1) ||
+                (countPlanetsInHouse(11) === 1 &&
+                    countPlanetsInHouse(12) === 1 &&
+                    countPlanetsInHouse(1) === 1 &&
+                    countPlanetsInHouse(2) === 1 &&
+                    countPlanetsInHouse(3) === 1 &&
+                    countPlanetsInHouse(4) === 1 &&
+                    countPlanetsInHouse(5) === 1) ||
+                (countPlanetsInHouse(12) === 1 &&
+                    countPlanetsInHouse(1) === 1 &&
+                    countPlanetsInHouse(2) === 1 &&
+                    countPlanetsInHouse(3) === 1 &&
+                    countPlanetsInHouse(4) === 1 &&
+                    countPlanetsInHouse(5) === 1 &&
+                    countPlanetsInHouse(6) === 1),
         },
         {
             description: {
@@ -731,13 +711,12 @@ export function getNabhasa(
                 countPlanetsInHouse(7) >= 1 &&
                 countPlanetsInHouse(9) >= 1 &&
                 countPlanetsInHouse(11) >= 1 &&
-                countPlanetsInHouse(2) == 0 &&
-                countPlanetsInHouse(4) == 0 &&
-                countPlanetsInHouse(6) == 0 &&
-                countPlanetsInHouse(8) == 0 &&
-                countPlanetsInHouse(10) == 0 &&
-                countPlanetsInHouse(12) == 0,
-            highervargas: true,
+                countPlanetsInHouse(2) === 0 &&
+                countPlanetsInHouse(4) === 0 &&
+                countPlanetsInHouse(6) === 0 &&
+                countPlanetsInHouse(8) === 0 &&
+                countPlanetsInHouse(10) === 0 &&
+                countPlanetsInHouse(12) === 0,
         },
         {
             description: {
@@ -757,13 +736,14 @@ export function getNabhasa(
                 countPlanetsInHouse(8) >= 1 &&
                 countPlanetsInHouse(10) >= 1 &&
                 countPlanetsInHouse(12) >= 1 &&
-                countPlanetsInHouse(1) == 0 &&
-                countPlanetsInHouse(3) == 0 &&
-                countPlanetsInHouse(5) == 0 &&
-                countPlanetsInHouse(7) == 0 &&
-                countPlanetsInHouse(9) == 0 &&
-                countPlanetsInHouse(11) == 0,
-            highervargas: true,
+                countPlanetsInHouse(1) === 0 &&
+                countPlanetsInHouse(3) === 0 &&
+                countPlanetsInHouse(5) === 0 &&
+                countPlanetsInHouse(7) === 0 &&
+                countPlanetsInHouse(9) === 0 &&
+                countPlanetsInHouse(11) === 0,
         },
     ];
+
+    return effectTable.filter(entry => entry.rule); // keep only where rule is true
 }

@@ -1,4 +1,6 @@
-export const MahaDashaPhal: Record<NavagrahaEnglishType, DashaPhal> = {
+import type { DashaPhal, NavagrahaEn } from "src/backend/types";
+
+export const MahaDashaPhal: Record<NavagrahaEn, DashaPhal> = {
     Sun: {
         BPHS: {
             english:

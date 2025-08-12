@@ -1,3 +1,6 @@
+// C-style char type (8-bit number)
+export type C_CharType = number;
+
 /**
  * Converts a single character string to a C-style char type (ASCII code).
  *

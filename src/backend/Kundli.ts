@@ -1,24 +1,30 @@
 // Import utility functions
 import { calcSunRiseSunSet } from "src/backend/calcSunRiseSunSet";
 import { DateTime } from "src/backend/datetime";
-import { calcPlanet } from "src/backend/Planet";
+import { Planet } from "src/backend/Planet";
 import SwissEPH from "src/backend/swisseph-wasm";
+import type {
+    Dasha,
+    KalavelasEn,
+    NavagrahaEn,
+    PlanetEn,
+} from "src/backend/types";
 import { reorderArray } from "src/backend/utils";
 import { calcVimsottariDasa } from "src/backend/VimsottariDasa";
 import { calcYogPhala } from "src/backend/YogPhala";
 
-export async function getPlanetaryPosition(
+// getPlanetaryPosition
+export async function Kundli(
     datetime = new DateTime(1997, 8, 11, 1, 55, 0, 0, 5.5),
     longitude = 80.38, // north positive
     latitude = 22.6, // east positive
     altitude = 0 // height above sea level in meters
-): Promise<Kundli> {
-    console.log(datetime);
+) {
     // todo : we neet to use tjd_et (Julian Day in Ephemeris Time or Terrestrial Time):
     const swe = await SwissEPH.init();
     console.log("swe_version", swe.swe_version());
 
-    await swe.swe_set_ephe_path("./database/ephe", [
+    await swe.swe_set_ephe_path("./ephe", [
         "seas_18.se1",
         "sepl_18.se1",
         "semo_18.se1",
@@ -62,24 +68,24 @@ export async function getPlanetaryPosition(
     const day_of_weekday = (swe.swe_day_of_week(sunrise) + 1) % 7;
 
     // Add Ascendant
-    const planets: Partial<Record<PlanetEnglishType, Planet>> = {};
-    planets.Ascendant = new calcPlanet("Ascendant", [ascmc[0]]);
+    const planets: Partial<Record<PlanetEn, Planet>> = {};
+    planets.Ascendant = new Planet("Ascendant", [ascmc[0]]);
 
     // Planets
-    const PLANET_IDS = {
-        Sun: swe.SE_SUN,
-        Moon: swe.SE_MOON,
-        Mercury: swe.SE_MERCURY,
-        Venus: swe.SE_VENUS,
-        Mars: swe.SE_MARS,
-        Jupiter: swe.SE_JUPITER,
-        Saturn: swe.SE_SATURN,
-        Uranus: swe.SE_URANUS,
-        Neptune: swe.SE_NEPTUNE,
-        Pluto: swe.SE_PLUTO,
-        Rahu: swe.SE_TRUE_NODE,
-    };
-    for (const [planetName, planetId] of Object.entries(PLANET_IDS)) {
+    const PLANET_IDS: Map<PlanetEn, number> = new Map([
+        ["Sun", swe.SE_SUN],
+        ["Moon", swe.SE_MOON],
+        ["Mercury", swe.SE_MERCURY],
+        ["Venus", swe.SE_VENUS],
+        ["Mars", swe.SE_MARS],
+        ["Jupiter", swe.SE_JUPITER],
+        ["Saturn", swe.SE_SATURN],
+        ["Uranus", swe.SE_URANUS],
+        ["Neptune", swe.SE_NEPTUNE],
+        ["Pluto", swe.SE_PLUTO],
+        ["Rahu", swe.SE_TRUE_NODE],
+    ]);
+    for (const [planetName, planetId] of PLANET_IDS) {
         const vCoords = swe.swe_calc_ut(julian_datetime, planetId, IFLAGS);
         const hCoords = swe.swe_azalt(
             julian_datetime,
@@ -91,8 +97,8 @@ export async function getPlanetaryPosition(
         );
 
         // Map planets using ephe_data
-        planets[planetName as PlanetEnglishType] = new calcPlanet(
-            planetName as PlanetEnglishType,
+        planets[planetName] = new Planet(
+            planetName,
             vCoords,
             hCoords,
             planets.Ascendant.rasi.rasi_num
@@ -101,7 +107,7 @@ export async function getPlanetaryPosition(
         if (planetName === "Rahu") {
             // Ketu is always 180° opposite to Rahu (i.e., Ketu = Rahu + 180°)
             vCoords[0] += 180;
-            planets.Ketu = new calcPlanet(
+            planets.Ketu = new Planet(
                 "Ketu",
                 vCoords,
                 hCoords,
@@ -112,7 +118,7 @@ export async function getPlanetaryPosition(
 
     if (planets.Sun) {
         // धूम (Dhuma) is calculated by adding 133°20′ to the Sun's position
-        planets.Dhuma = new calcPlanet(
+        planets.Dhuma = new Planet(
             "Dhuma",
             [planets.Sun.degree + 133 + 20 / 60],
             [],
@@ -120,7 +126,7 @@ export async function getPlanetaryPosition(
         );
 
         // व्यतीपात (Vyatipata) is 360° minus Dhuma's position (its opposite point)
-        planets.Vyatipata = new calcPlanet(
+        planets.Vyatipata = new Planet(
             "Vyatipata",
             [360 - planets.Dhuma.degree],
             [],
@@ -128,7 +134,7 @@ export async function getPlanetaryPosition(
         );
 
         // परिवेष (Parivesha) is 180° added to Vyatipata (opposite of Vyatipata)
-        planets.Parivesha = new calcPlanet(
+        planets.Parivesha = new Planet(
             "Parivesha",
             [planets.Vyatipata.degree + 180],
             [],
@@ -136,7 +142,7 @@ export async function getPlanetaryPosition(
         );
 
         // इन्द्रचाप (Chapa / Indrachapa) is 360° minus Parivesha
-        planets.Chapa = new calcPlanet(
+        planets.Chapa = new Planet(
             "Chapa",
             [360 - planets.Parivesha.degree],
             [],
@@ -144,7 +150,7 @@ export async function getPlanetaryPosition(
         );
 
         // उपकेतु (Upaketu / Sikhii) is Chapa + 16°40′
-        planets.Upaketu = new calcPlanet(
+        planets.Upaketu = new Planet(
             "Upaketu",
             [planets.Chapa.degree + 16 + 40 / 60],
             [],
@@ -152,18 +158,16 @@ export async function getPlanetaryPosition(
         );
     }
 
-    Object.entries(
+    for (const [name, t_jd] of Object.entries(
         KalavelasCalculation(sunrise, sunset, day_of_weekday)
-    ).forEach(v => {
-        const name = v[0] as KalavelasEnglishType;
-        const t_jd = v[1];
-        planets[name] = new calcPlanet(
+    )) {
+        planets[name] = new Planet(
             name,
             [swe.swe_houses(t_jd, latitude, longitude, "P").ascmc[0]],
             [],
             planets.Ascendant?.rasi.rasi_num
         );
-    });
+    }
 
     let vimsottari_dasa: Dasha[] = [];
     if (planets.Moon) {
@@ -183,15 +187,15 @@ export async function getPlanetaryPosition(
         datetime,
         latitude,
         longitude,
-        planets: planets as Record<PlanetEnglishType, Planet>,
+        planets: planets as Record<PlanetEn, Planet>,
         julian_datetime,
         ayanamsa,
         vimsottari_dasa,
-        yogPhala: calcYogPhala(planets as Record<PlanetEnglishType, Planet>),
+        yogPhala: calcYogPhala(planets as Record<PlanetEn, Planet>),
     };
 }
 
-const dayLords: Record<number, NavagrahaEnglishType> = {
+const dayLords: Record<number, NavagrahaEn> = {
     0: "Sun", // Sunday
     1: "Moon", // Monday
     2: "Mars", // Tuesday
@@ -205,7 +209,7 @@ function KalavelasCalculation(
     sunrise_jd: number,
     sunset_jd: number,
     day_of_weekday: number
-): Record<KalavelasEnglishType, number> {
+): Record<KalavelasEn, number> {
     const duration = sunset_jd - sunrise_jd;
     const periods = Array.from(
         { length: 8 },
@@ -216,13 +220,11 @@ function KalavelasCalculation(
         dayLords[day_of_weekday]
     );
 
-    const namedPeriods = {
+    return {
         Gulika: periods[grahaSequence.indexOf("Saturn")],
         Kaala: periods[grahaSequence.indexOf("Sun")],
         Mrityu: periods[grahaSequence.indexOf("Mars")],
         Yamaghantaka: periods[grahaSequence.indexOf("Jupiter")],
         Ardhaprahara: periods[grahaSequence.indexOf("Mercury")],
     };
-
-    return namedPeriods;
 }

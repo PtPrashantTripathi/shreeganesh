@@ -1,3 +1,4 @@
+import type { C_NumberPointerType } from "src/backend/swisseph-wasm/utils/wasm-helper/array_pointer";
 import type { WASMModule } from "src/backend/swisseph-wasm/wasm";
 
 /** Size (in bytes) for each WASM number type. */

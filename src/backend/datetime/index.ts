@@ -138,17 +138,9 @@ export class DateTime {
         return this.addHours(decimalDays * 24);
     }
 
-    /** Create from native JS Date */
-    static fromDate(date: Date): DateTime {
-        return DateTime.fromEpoch(
-            date.getTime(),
-            -new Date().getTimezoneOffset() / 60
-        );
-    }
-
     /** Create from UTC epoch in ms */
     static fromEpoch(epochMs: number, timezone_offset: number = 0): DateTime {
-        const local = new Date(epochMs + timezone_offset * 3600 * 1000);
+        const local = new Date(epochMs - timezone_offset * 3600 * 1000);
         return new DateTime(
             local.getUTCFullYear(),
             local.getUTCMonth() + 1,
@@ -161,18 +153,12 @@ export class DateTime {
         );
     }
 
-    /** Create from ISO string (e.g. 2025-07-02T14:00:00.000Z) */
-    static fromISO(isoString: string): DateTime {
-        return DateTime.fromDate(new Date(isoString));
-    }
-
-    /** Shortcut: current date in given time zone */
-    static now(): DateTime {
-        return DateTime.fromDate(new Date());
-    }
-
-    /** Shortcut: current UTC date-time */
-    static nowUTC(): DateTime {
-        return DateTime.fromDate(new Date());
+    /** Create from string (e.g. 2025-07-02T14:00:00.000) */
+    static fromDate(dt: string | Date, timezone_offset: number = 0): DateTime {
+        const date = new Date(dt);
+        const offset_date = new Date(
+            date.getTime() - date.getTimezoneOffset() * 60 * 1000
+        );
+        return DateTime.fromEpoch(offset_date.getTime(), timezone_offset);
     }
 }
