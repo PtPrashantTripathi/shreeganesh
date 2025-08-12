@@ -1,75 +1,107 @@
-// Ascendant (Ascendant) Types
-type AscendantEnglishType = "Ascendant";
-type AscendantHindiType = "लग्न";
+import type { DateTime } from "src/backend/datetime";
 
-//  Core 9 Grahas (Navagrahas) - English
-type NavagrahaEnglishType =
+/** Ascendant (Lagna) at the time of birth. */
+export type AscendantEn = "Ascendant";
+
+export type AscendantHi = "लग्न";
+
+/** Core 7 Planets */
+export type SaptagrahaEn =
     | "Sun"
     | "Moon"
     | "Mars"
     | "Mercury"
     | "Jupiter"
     | "Venus"
-    | "Saturn"
-    | "Rahu"
-    | "Ketu";
+    | "Saturn";
 
-//  Navagrahas - Hindi
-type NavagrahaHindiType =
+export type SaptagrahaHi =
     | "सूर्य"
     | "चंद्र"
     | "मंगल"
     | "बुध"
     | "गुरु"
     | "शुक्र"
-    | "शनि"
-    | "राहु"
-    | "केतु";
+    | "शनि";
 
-//  Upagrahas (Shadow Grahas) - English
-type UpagrahaEnglishType =
+/** "Chhaya" = shadow planets (lunar nodes, Rahu & Ketu). */
+export type ChhayagrahaEn = "Rahu" | "Ketu";
+
+export type ChhayagrahaHi = "राहु" | "केतु";
+
+/** Core 9 Planets (Navagrahas) - English. */
+export type NavagrahaEn = SaptagrahaEn | ChhayagrahaEn;
+
+/** Core 9 Planets (Navagrahas) - Hindi. */
+export type NavagrahaHi = SaptagrahaHi | ChhayagrahaHi;
+
+/** Outer planets beyond Saturn (Bahyagrahas). */
+export type BahyagrahaEn = "Uranus" | "Neptune" | "Pluto";
+
+export type BahyagrahaHi = "अरुण" | "वरुण" | "यम";
+
+/** Minor shadow Planets (Upagrahas). */
+export type UpagrahaEn =
     | "Dhuma"
     | "Vyatipata"
     | "Parivesha"
     | "Chapa"
     | "Upaketu";
 
-//  Upagrahas - Hindi
-type UpagrahaHindiType = "धूम" | "व्यतीपात" | "परिवेष" | "चाप" | "उपकेतु";
+export type UpagrahaHi = "धूम" | "व्यतीपात" | "परिवेष" | "चाप" | "उपकेतु";
 
-//  Kalavelas - English
-type KalavelasEnglishType =
+/** Time-based shadow periods (Kalavelas). */
+export type KalavelasEn =
     | "Gulika"
     | "Kaala"
     | "Mrityu"
     | "Yamaghantaka"
     | "Ardhaprahara";
 
-//  Kalavelas - Hindi
-type KalavelasHindiType = "गुलिक" | "काल" | "मृत्यु" | "यमघंटक" | "अर्धप्रहर";
+export type KalavelasHi = "गुलिक" | "काल" | "मृत्यु" | "यमघंटक" | "अर्धप्रहर";
 
-//  Bahyagrahas (Outer Planets) - English
-type BahyagrahaEnglishType = "Uranus" | "Neptune" | "Pluto";
+/* Planet with calculated attributes + detaildata */
+export type PlanetEn =
+    | AscendantEn
+    | SaptagrahaEn
+    | ChhayagrahaEn
+    | BahyagrahaEn
+    | UpagrahaEn
+    | KalavelasEn;
 
-//  Bahyagrahas - Hindi
-type BahyagrahaHindiType = "अरुण" | "वरुण" | "यम";
+export type PlanetHi =
+    | AscendantHi
+    | SaptagrahaHi
+    | ChhayagrahaHi
+    | BahyagrahaHi
+    | UpagrahaHi
+    | KalavelasHi;
 
-//  Final Planet Types (Includes Ascendant)
-type PlanetEnglishType =
-    | AscendantEnglishType
-    | NavagrahaEnglishType
-    | BahyagrahaEnglishType
-    | UpagrahaEnglishType
-    | KalavelasEnglishType;
+export interface PlanetDetail {
+    name: Translation<PlanetEn, PlanetHi>;
+    shortname?: Translation<string, string>;
+    type:
+        | "Ascendant"
+        | "Saptagraha"
+        | "Chhayagraha"
+        | "Bahyagraha"
+        | "Upagraha"
+        | "Kalavelas";
+    day?: DayEn;
+    aspect?: HouseNumber[];
+    happy_house?: HouseNumber[];
+    sad_house?: HouseNumber[];
+    friend?: SaptagrahaEn[];
+    enemy?: SaptagrahaEn[];
+    neutral?: SaptagrahaEn[];
+    exaltation?: RasiEn;
+    debilitation?: RasiEn;
+    ownsign?: RasiEn[];
+    symbol: string;
+    color: string;
+}
 
-type PlanetHindiType =
-    | AscendantHindiType
-    | NavagrahaHindiType
-    | BahyagrahaHindiType
-    | UpagrahaHindiType
-    | KalavelasHindiType;
-
-type RasiEnglishType =
+export type RasiEn =
     | "Aries"
     | "Taurus"
     | "Gemini"
@@ -83,7 +115,7 @@ type RasiEnglishType =
     | "Aquarius"
     | "Pisces";
 
-type RasiHindiType =
+export type RasiHi =
     | "मेष"
     | "वृषभ"
     | "मिथुन"
@@ -97,7 +129,7 @@ type RasiHindiType =
     | "कुंभ"
     | "मीन";
 
-type NakshatraEnglishType =
+export type NakshatraEn =
     | "Aswini"
     | "Bharani"
     | "Krittika"
@@ -126,7 +158,7 @@ type NakshatraEnglishType =
     | "UttaraBhadra"
     | "Revati";
 
-type NakshatraHindiType =
+export type NakshatraHi =
     | "अश्विनी"
     | "भरणी"
     | "कृतिका"
@@ -155,7 +187,7 @@ type NakshatraHindiType =
     | "उ.भाद्रपद"
     | "रेवती";
 
-type ChoghadiyaEnglishType =
+export type ChoghadiyaEn =
     | "Udveg"
     | "Amrit"
     | "Rog"
@@ -164,7 +196,7 @@ type ChoghadiyaEnglishType =
     | "Char"
     | "Kaal";
 
-type ChoghadiyaHindiType =
+export type ChoghadiyaHi =
     | "उद्वेग"
     | "अमृत"
     | "रोग"
@@ -173,7 +205,7 @@ type ChoghadiyaHindiType =
     | "चर"
     | "काल";
 
-type MaahaEnglishType =
+export type MaahaEn =
     | "Chhaitra"
     | "Vaishakha"
     | "Jyeshtha"
@@ -187,9 +219,9 @@ type MaahaEnglishType =
     | "Magha"
     | "Phalguna";
 
-type PurusharthaEnglishType = "Dharma" | "Artha" | "Kama" | "Moksha";
+export type PurusharthaEn = "Dharma" | "Artha" | "Kama" | "Moksha";
 
-type HouseCategoriesEnglishType =
+export type HouseCategoriesEn =
     | "Kendra"
     | "Trikona"
     | "Dusthana"
@@ -198,7 +230,7 @@ type HouseCategoriesEnglishType =
     | "Panaphara"
     | "Apoklima";
 
-type SamvatsaraEnglishType =
+export type SamvatsaraEn =
     | "Prabhava"
     | "Vibhava"
     | "Shukla"
@@ -260,22 +292,22 @@ type SamvatsaraEnglishType =
     | "Krodhana"
     | "Akshaya";
 
-type EffectEnglishType = "Good" | "Bad";
+export type EffectEn = "Good" | "Bad";
 
-// Classical elements
-type ElementEnglishType = "Fire" | "Earth" | "Air" | "Water";
+/* Classical elements */
+export type ElementEn = "Fire" | "Earth" | "Air" | "Water";
 
-// Gender of Rasi
-type GenderEnglishType = "M" | "F";
+/* Gender of Rasi */
+export type GenderEn = "M" | "F";
 
-// Nature of sign
-type NatureEnglishType = "Movable" | "Fixed" | "Dual";
+/* Nature of sign */
+export type NatureEn = "Movable" | "Fixed" | "Dual";
 
-// Zodiac index (1–12)
-type RasiNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+/* Zodiac index (1–12) */
+export type RasiNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
-// Nakshatra index (1–27)
-type NakshatraNumber =
+/* Nakshatra index (1–27) */
+export type NakshatraNumber =
     | 1
     | 2
     | 3
@@ -303,105 +335,60 @@ type NakshatraNumber =
     | 25
     | 26
     | 27;
-type HouseNumber = RasiNumber;
 
-type LanguageTypes = "english" | "hindi";
-interface Translation<EnglishType, HindiType> {
+export type HouseNumber = RasiNumber;
+
+export type LanguageTypes = "english" | "hindi";
+
+export interface Translation<EnglishType, HindiType> {
     english: EnglishType;
     hindi: HindiType;
 }
 
-// Static planet configuration
-interface PlanetDetail {
-    name: Translation<PlanetEnglishType, PlanetHindiType>;
-    type: "Navagraha" | "Upagraha" | "Bahyagraha" | "Ascendant";
-    day?: DayEnglishType;
-    aspect?: HouseNumber[];
-    happy_house?: HouseNumber[];
-    sad_house?: HouseNumber[];
-    enemy?: PlanetEnglishType[];
-    friend?: PlanetEnglishType[];
-    neutral?: PlanetEnglishType[];
-    symbol: string; // TBD
-    color: string; // TBD
-}
-
-// Planet with calculated attributes + detaildata
-interface Planet extends PlanetDetail {
-    degree: number;
-    rasi: Rasi;
-    nakshatra: Nakshatra;
-    motion: "Vakri" | "Margi";
-    visibility: "Asta" | "Udaya";
-    latitude: number;
-    distance: number;
-    speed: { longitude: number; latitude: number; distance: number };
-    azimuth: number;
-    altitude: { true: number; apparent: number };
-    divisional: Record<string, Rasi>;
-    house: HouseDetail;
-    isGrahaDrishti(target: Planet): boolean;
-}
-
-// Kundli object generated per birth details
-interface Kundli {
-    datetime: IDateTime; // Local + UTC datetime
-    weekday: NavagrahaEnglishType;
-    latitude: number; // Latitude of birthplace
-    longitude: number; // Longitude of birthplace
-    julian_datetime: number; // Julian Date (UTC)
-    ayanamsa: number; // Ayanamsa value at given time
-    daybirth: boolean;
-    sunrise: number;
-    sunset: number;
-    planets: Record<PlanetEnglishType, Planet>; // Planet-wise detailed data
-    vimsottari_dasa: Dasha[];
-    yogPhala: Partial<Record<SourceBookEnglishType, Record<string, rules[]>>>;
-}
-
-// Zodiac Sign Details
-interface RasiDetail {
+/* Zodiac Sign Details */
+export interface RasiDetail {
     rasi_num: RasiNumber;
-    name: Translation<RasiEnglishType, RasiHindiType>;
-    lord: PlanetEnglishType;
-    element: ElementEnglishType;
-    gender: GenderEnglishType;
-    nature: NatureEnglishType;
+    name: Translation<RasiEn, RasiHi>;
+    lord: SaptagrahaEn;
+    element: ElementEn;
+    gender: GenderEn;
+    nature: NatureEn;
     symbol: string;
     color: string;
 }
 
-// Nakshatra Details
-interface NakshatraDetail {
+/* Nakshatra Details */
+export interface NakshatraDetail {
     nakshatra_num: NakshatraNumber;
-    name: Translation<NakshatraEnglishType, NakshatraHindiType>;
-    lord: NavagrahaEnglishType;
+    name: Translation<NakshatraEn, NakshatraHi>;
+    lord: NavagrahaEn;
 }
 
-// RangeType of degrees
-interface RangeType {
+/* RangeType of degrees */
+export interface RangeType {
     min: number;
     max: number;
 }
 
-// Degree + NameType context
-interface CalculatedDetail {
+/* Degree + NameType context */
+export interface CalculatedDetail {
     degree: number;
     range: RangeType;
 }
 
-// Computed Rasi/Nakshatra details
-type Rasi = RasiDetail & CalculatedDetail;
-type Nakshatra = NakshatraDetail & CalculatedDetail;
+/* Computed Rasi/Nakshatra details */
+export type Rasi = RasiDetail & CalculatedDetail;
 
-interface ChoghadiyaDetail {
-    name: Translation<ChoghadiyaEnglishType, string>;
-    lord: PlanetEnglishType;
+export type Nakshatra = NakshatraDetail & CalculatedDetail;
+
+export interface ChoghadiyaDetail {
+    name: Translation<ChoghadiyaEn, string>;
+    lord: SaptagrahaEn;
     meaning: string;
-    effect: EffectEnglishType;
+    effect: EffectEn;
 }
 
-interface IDMS {
+export interface IDMS {
     degree: number;
     minute: number;
     second: number;
@@ -409,23 +396,25 @@ interface IDMS {
     toString: () => string;
 }
 
-// Date and Time structure
-interface HMS {
+/* Date and Time structure */
+export interface HMS {
     hour: number;
     minute: number;
     second: number;
 }
-interface DateType {
+
+export interface DateType {
     year: number;
     month: number;
     day: number;
 }
-interface DateTimeType extends DateType, HMS {
+
+export interface DateTimeType extends DateType, HMS {
     millisecond: number;
     timezone_offset: number;
 }
 
-type DayEnglishType =
+export type DayEn =
     | "Sunday"
     | "Monday"
     | "Tuesday"
@@ -434,7 +423,7 @@ type DayEnglishType =
     | "Friday"
     | "Saturday";
 
-type DayHindiType =
+export type DayHi =
     | "शनिवार"
     | "रविवार"
     | "सोमवार"
@@ -443,13 +432,13 @@ type DayHindiType =
     | "गुरुवार"
     | "शुक्रवार";
 
-interface VaraDetail {
-    name: Translation<DayEnglishType, DayHindiType>;
-    lord: PlanetEnglishType;
+export interface VaraDetail {
+    name: Translation<DayEn, DayHi>;
+    lord: SaptagrahaEn;
     num: number;
 }
 
-type KaranaEnglishType =
+export type KaranaEn =
     | "Sakuni"
     | "Catuspada"
     | "Naga"
@@ -462,30 +451,32 @@ type KaranaEnglishType =
     | "Vanij"
     | "Vishti";
 
-interface KaranaDetail {
-    name: Translation<KaranaEnglishType, string>;
+export interface KaranaDetail {
+    name: Translation<KaranaEn, string>;
     num: number;
 }
-type Karana = KaranaDetail & CalculatedDetail;
 
-interface HouseDetail {
+export type Karana = KaranaDetail & CalculatedDetail;
+
+export interface HouseDetail {
     num: HouseNumber;
     name: Translation<string, string>;
-    categories: HouseCategoriesEnglishType[];
-    purushartha: PurusharthaEnglishType;
-    karak: PlanetEnglishType[];
+    categories: HouseCategoriesEn[];
+    purushartha: PurusharthaEn;
+    karak: NavagrahaEn[];
 }
 
-interface MaahaDetail {
-    name: Translation<MaahaEnglishType, string>;
-    num: number;
-}
-interface SamvatsaraDetail {
-    name: Translation<SamvatsaraEnglishType, string>;
+export interface MaahaDetail {
+    name: Translation<MaahaEn, string>;
     num: number;
 }
 
-type TithiNumber =
+export interface SamvatsaraDetail {
+    name: Translation<SamvatsaraEn, string>;
+    num: number;
+}
+
+export type TithiNumber =
     | 1
     | 2
     | 3
@@ -502,7 +493,8 @@ type TithiNumber =
     | 14
     | 15
     | 30;
-type TithiEnglishType =
+
+export type TithiEn =
     | "Pratipada"
     | "Dvitiya"
     | "Tritiya"
@@ -520,7 +512,7 @@ type TithiEnglishType =
     | "Amavasya"
     | "Purnima";
 
-type TithiHindiType =
+export type TithiHi =
     | "प्रथमा"
     | "द्वितीया"
     | "तृतिया"
@@ -538,21 +530,25 @@ type TithiHindiType =
     | "अमावस्या"
     | "पूर्णिमा";
 
-type PakshaEnglishType = "Krishna" | "Shukla";
-type PakshaHindiType = "कृष्ण" | "शुक्ल";
-type PakshaName = Translation<PakshaEnglishType, PakshaHindiType>;
-interface TithiDetail {
-    name: Translation<TithiEnglishType, TithiHindiType>;
+export type PakshaEn = "Krishna" | "Shukla";
+
+export type PakshaHi = "कृष्ण" | "शुक्ल";
+
+export type PakshaName = Translation<PakshaEn, PakshaHi>;
+
+export interface TithiDetail {
+    name: Translation<TithiEn, TithiHi>;
     num: TithiNumber;
 }
-type Tithi = TithiDetail &
+
+export type Tithi = TithiDetail &
     CalculatedDetail & {
         pakshaname: PakshaName;
         lunarphase: number;
     };
 
-// Yoga Details
-type YogaEnglishType =
+/* Yoga Details */
+export type YogaEn =
     | "Vishkambha"
     | "Priti"
     | "Ayushman"
@@ -581,7 +577,7 @@ type YogaEnglishType =
     | "Indra"
     | "Vaidhriti";
 
-type YogaHindiType =
+export type YogaHi =
     | "विष्कम्भ"
     | "प्रीति"
     | "आयुष्मान"
@@ -609,32 +605,34 @@ type YogaHindiType =
     | "ब्रह्म"
     | "इंद्र"
     | "वैधृति";
-type YogaNumber = NakshatraNumber;
-interface YogaDetail {
-    yoga_num: YogaNumber;
-    name: Translation<YogaEnglishType, YogaHindiType>;
-}
-type Yoga = YogaDetail & CalculatedDetail;
 
-type SourceBookEnglishType =
+export type YogaNumber = NakshatraNumber;
+
+export interface YogaDetail {
+    yoga_num: YogaNumber;
+    name: Translation<YogaEn, YogaHi>;
+}
+
+export type Yoga = YogaDetail & CalculatedDetail;
+
+export type SourceBookEn =
     | "BPHS"
     | "JatakaParijata"
     | "PhalaDeepika"
     | "BrihatJataka"
-    | "Saravali";
+    | "Saravali"
+    | "BhriguSamhita";
 
-interface rules {
+export interface phala {
     description: Translation<string, string>;
     effect: Translation<string, string>;
-    rule: boolean;
-    highervargas: boolean;
 }
 
-type DashaPhal = Partial<
-    Record<SourceBookEnglishType, Translation<string, string>>
+export type DashaPhal = Partial<
+    Record<SourceBookEn, Translation<string, string>>
 >;
 
-type DashaName =
+export type DashaName =
     | "MahaDasha"
     | "AntarDasha"
     | "PratyantarDasha"
@@ -642,9 +640,9 @@ type DashaName =
     | "PraanaDasha"
     | "DehaDasha";
 
-interface Dasha {
+export interface Dasha {
     Name: DashaName;
-    Lord: NavagrahaEnglishType;
+    Lord: NavagrahaEn;
     StartDate: DateTime;
     EndDate: DateTime;
     Phal: DashaPhal;

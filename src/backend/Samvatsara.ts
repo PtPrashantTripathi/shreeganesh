@@ -1,7 +1,6 @@
-export const SamvatsaraDetails: Record<
-    SamvatsaraEnglishType,
-    SamvatsaraDetail
-> = {
+import type { SamvatsaraDetail, SamvatsaraEn } from "src/backend/types";
+
+export const SamvatsaraDetails: Record<SamvatsaraEn, SamvatsaraDetail> = {
     Prabhava: {
         name: {
             hindi: "प्रभव",

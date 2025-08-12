@@ -1,4 +1,6 @@
-export const VarasDetails: Record<DayEnglishType, VaraDetail> = {
+import type { DayEn, VaraDetail } from "src/backend/types";
+
+export const VarasDetails: Record<DayEn, VaraDetail> = {
     Monday: {
         name: {
             english: "Monday",

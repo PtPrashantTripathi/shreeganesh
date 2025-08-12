@@ -1,15 +1,20 @@
-import { DateTime } from "src/backend/datetime";
+import type { DateTime } from "src/backend/datetime";
 import { getKarana } from "src/backend/Karana";
 import { MaahaDetails } from "src/backend/Maaha";
 import { getNakshatra } from "src/backend/Nakshatra";
 import { SamvatsaraDetails } from "src/backend/Samvatsara";
 import SwissEPH from "src/backend/swisseph-wasm";
+import type { FixedLengthArray } from "src/backend/swisseph-wasm/utils/fixed-length-array";
 import { getTithi } from "src/backend/Tithi";
+import type {
+    MaahaDetail,
+    SamvatsaraDetail,
+    VaraDetail,
+} from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 import { VarasDetails } from "src/backend/Varas";
 import { getVara } from "src/backend/Varas";
 import { getYoga } from "src/backend/Yoga";
-
 /**
  * A generic search function to find the time when a function f(t) crosses zero.
  * It uses a binary search approach.
@@ -64,15 +69,15 @@ function calculateRahuKalam(
 }
 
 export async function getPanchanga(
-    date = new DateTime(2025, 7, 6),
-    latitude = 22.6,
-    longitude = 80.38,
-    altitude = 0,
-    pressure = 0, // Atmospheric values (ignored for Hindu method)
-    temperature = 0
+    date: DateTime,
+    latitude: number,
+    longitude: number,
+    altitude: number = 0,
+    pressure: number = 0, // Atmospheric values (ignored for Hindu method)
+    temperature: number = 0
 ) {
     const swe = await SwissEPH.init();
-    await swe.swe_set_ephe_path("./database/ephe", [
+    await swe.swe_set_ephe_path("./ephe", [
         "seas_18.se1",
         "sepl_18.se1",
         "semo_18.se1",

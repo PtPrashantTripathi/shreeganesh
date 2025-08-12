@@ -1,4 +1,6 @@
-export const MaahaDetails: Record<MaahaEnglishType, MaahaDetail> = {
+import type { MaahaDetail, MaahaEn } from "src/backend/types";
+
+export const MaahaDetails: Record<MaahaEn, MaahaDetail> = {
     Chhaitra: {
         name: { english: "Chhaitra", hindi: "चैत्र" },
         num: 1,

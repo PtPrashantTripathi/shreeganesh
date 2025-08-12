@@ -1,8 +1,9 @@
 import { PakshaDetails } from "src/backend/Paksha";
+import type { Tithi, TithiDetail, TithiEn } from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 
 // Tithi Details
-export const TithiDetails: Record<TithiEnglishType, TithiDetail> = {
+export const TithiDetails: Record<TithiEn, TithiDetail> = {
     Pratipada: {
         num: 1,
         name: {

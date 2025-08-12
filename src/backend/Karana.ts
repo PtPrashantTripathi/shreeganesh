@@ -1,6 +1,12 @@
+import type {
+    Karana,
+    KaranaDetail,
+    KaranaEn,
+    RangeType,
+} from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 
-export const KaranaDetails: Record<KaranaEnglishType, KaranaDetail> = {
+export const KaranaDetails: Record<KaranaEn, KaranaDetail> = {
     Bava: {
         name: { english: "Bava", hindi: "बव" },
         num: 1,

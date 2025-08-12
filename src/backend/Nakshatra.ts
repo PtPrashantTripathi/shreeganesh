@@ -1,7 +1,13 @@
+import type {
+    Nakshatra,
+    NakshatraDetail,
+    NakshatraEn,
+    NakshatraNumber,
+} from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 
 /** Dictionary of Nakshatra details */
-export const NakshatraDetails: Record<NakshatraEnglishType, NakshatraDetail> = {
+export const NakshatraDetails: Record<NakshatraEn, NakshatraDetail> = {
     Aswini: {
         nakshatra_num: 1,
         lord: "Ketu",

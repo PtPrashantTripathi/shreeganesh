@@ -1,7 +1,14 @@
+import type {
+    NatureEn,
+    Rasi,
+    RasiDetail,
+    RasiEn,
+    RasiNumber,
+} from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 
 /** Dictionary of Rasi details */
-export const RasiDetails: Record<RasiEnglishType, RasiDetail> = {
+export const RasiDetails: Record<RasiEn, RasiDetail> = {
     Aries: {
         rasi_num: 1,
         name: { hindi: "मेष", english: "Aries" },
@@ -154,7 +161,7 @@ export function getRasi(degree: number): Rasi {
     // TODO neeed tpo check
     details.nature = ["Movable", "Fixed", "Dual"][
         details.rasi_num % 3
-    ] as NatureEnglishType;
+    ] as NatureEn;
 
     // Find matching Rasi details
     return {

@@ -1,7 +1,8 @@
+import type { RangeType, Yoga, YogaDetail, YogaEn } from "src/backend/types";
 import { MOD360 } from "src/backend/utils";
 
 // Dictionary of Yoga details
-export const YogaDetails: Record<YogaEnglishType, YogaDetail> = {
+export const YogaDetails: Record<YogaEn, YogaDetail> = {
     Vishkambha: {
         yoga_num: 1,
         name: {

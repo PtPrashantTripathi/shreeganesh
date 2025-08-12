@@ -1,4 +1,4 @@
-interface EpheFileDetail {
+export interface EpheFileDetail {
     name: string;
     desc: string;
     category: string;
@@ -113,7 +113,3 @@ export const EpheFileMetadata = se1EpheFiles().concat(
     JPLEpheFiles,
     StaticTxtFiles
 );
-
-// for (const { name, desc, category } of EpheFileMetadata) {
-//     console.log(`${name.padEnd(14)}: ${category.padEnd(28)} [${desc}]`);
-// }

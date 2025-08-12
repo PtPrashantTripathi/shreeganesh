@@ -1,4 +1,5 @@
 import { EpheFileMetadata } from "src/backend/swisseph-wasm/utils/ephe_file_metadata";
+import type { FixedLengthArray } from "src/backend/swisseph-wasm/utils/fixed-length-array";
 import { getBaseURLPath } from "src/backend/swisseph-wasm/utils/get_base_url_path";
 import { SWEerror } from "src/backend/swisseph-wasm/utils/swe_error";
 import Module, { type WASMModule } from "src/backend/swisseph-wasm/wasm";
@@ -12,152 +13,144 @@ import {
 } from "./utils/wasm-helper";
 
 /** Wrapper class for Swiss Ephemeris WebAssembly bindings. */
-
 export default class SwissEPH {
-    public TRUE = 1;
-    public FALSE = 0;
-    public OK = 0;
-    public ERR = -1;
-    public NOT_AVAILABLE = -2;
-    public BEYOND_EPH_LIMITS = -3;
+    public readonly TRUE = 1;
+    public readonly FALSE = 0;
+    public readonly OK = 0;
+    public readonly ERR = -1;
+    public readonly NOT_AVAILABLE = -2;
+    public readonly BEYOND_EPH_LIMITS = -3;
+
     /** Degree as string, utf8 encoding */
-    public ODEGREE_STRING = "°";
+    public readonly ODEGREE_STRING = "°";
     /** Biggest value for REAL8 */
-    public HUGE = 1.7e308;
+    public readonly HUGE = 1.7e308;
     /** 3.14159265358979323846 */
-    public M_PI = Math.PI;
+    public readonly M_PI = Math.PI;
     /**
      * Forward static obsolete used for string declarations, allowing 255
      * char+\0
      */
-    public AS_MAXCH = 256;
-    public RADTODEG = 180.0 / this.M_PI;
-    public DEGTORAD = this.M_PI / 180.0;
+    public readonly AS_MAXCH = 256;
+    public readonly RADTODEG = 180.0 / this.M_PI;
+    public readonly DEGTORAD = this.M_PI / 180.0;
     /** Degree expressed in centiseconds */
-    public DEG = 360000;
+    public readonly DEG = 360000;
     /** 7.5 degrees */
-    public DEG7_30 = 2700000;
-    public DEG15 = 15 * this.DEG;
-    public DEG24 = 24 * this.DEG;
-    public DEG30 = 30 * this.DEG;
-    public DEG60 = 60 * this.DEG;
-    public DEG90 = 90 * this.DEG;
-    public DEG120 = 120 * this.DEG;
-    public DEG150 = 150 * this.DEG;
-    public DEG180 = 180 * this.DEG;
-    public DEG270 = 270 * this.DEG;
-    public DEG360 = 360 * this.DEG;
+    public readonly DEG7_30 = 2700000;
+    public readonly DEG15 = 15 * this.DEG;
+    public readonly DEG24 = 24 * this.DEG;
+    public readonly DEG30 = 30 * this.DEG;
+    public readonly DEG60 = 60 * this.DEG;
+    public readonly DEG90 = 90 * this.DEG;
+    public readonly DEG120 = 120 * this.DEG;
+    public readonly DEG150 = 150 * this.DEG;
+    public readonly DEG180 = 180 * this.DEG;
+    public readonly DEG270 = 270 * this.DEG;
+    public readonly DEG360 = 360 * this.DEG;
     /** CSTORAD = 4.84813681109536E-08 centisec to rad: pi / 180 /3600/100 */
-    public CSTORAD = this.DEGTORAD / 360000.0;
+    public readonly CSTORAD = this.DEGTORAD / 360000.0;
     /** RADTOCS = 2.06264806247096E+07 rad to centisec 180_3600_100/pi */
-    public RADTOCS = this.RADTODEG * 360000.0;
+    public readonly RADTOCS = this.RADTODEG * 360000.0;
     /** Centisec to degree */
-    public CS2DEG = 1.0 / 360000.0;
+    public readonly CS2DEG = 1.0 / 360000.0;
     /** Open binary file for reading */
-    public BFILE_R_ACCESS = "rb";
+    public readonly BFILE_R_ACCESS = "rb";
     /** Open binary file for writing and reading */
-    public BFILE_RW_ACCESS = "r+b";
+    public readonly BFILE_RW_ACCESS = "r+b";
     /** Create/open binary file for write */
-    public BFILE_W_CREATE = "wb";
+    public readonly BFILE_W_CREATE = "wb";
     /** Create/open binary file for append */
-    public BFILE_A_ACCESS = "a+b";
+    public readonly BFILE_A_ACCESS = "a+b";
     /** Semicolon as PATH separator */
-    public PATH_SEPARATOR = ";";
+    public readonly PATH_SEPARATOR = ";";
     /** Default file creation mode */
-    public OPEN_MODE = "0666";
+    public readonly OPEN_MODE = "0666";
     /** Open text file for reading */
-    public FILE_R_ACCESS = "rt";
+    public readonly FILE_R_ACCESS = "rt";
     /** Open text file for writing and reading */
-    public FILE_RW_ACCESS = "r+t";
+    public readonly FILE_RW_ACCESS = "r+t";
     /** Create/open text file for write */
-    public FILE_W_CREATE = "wt";
+    public readonly FILE_W_CREATE = "wt";
     /** Create/open text file for append */
-    public FILE_A_ACCESS = "a+t";
+    public readonly FILE_A_ACCESS = "a+t";
     /**
      * Attention, all backslashes for msdos directry names must be written as
      * because it is the C escape character glue string for directory/file
      */
-    public DIR_GLUE = "\\";
-
-    public SE_AUNIT_TO_KM = 149597870.7;
-    public SE_AUNIT_TO_LIGHTYEAR = 1.0 / 63241.07708427;
-    public SE_AUNIT_TO_PARSEC = 1.0 / 206264.8062471;
-
+    public readonly DIR_GLUE = "\\";
+    public readonly SE_AUNIT_TO_KM = 149597870.7;
+    public readonly SE_AUNIT_TO_LIGHTYEAR = 1.0 / 63241.07708427;
+    public readonly SE_AUNIT_TO_PARSEC = 1.0 / 206264.8062471;
     /** Values for gregflag in swe_julday() and swe_revjul() */
-    public SE_JUL_CAL = 0;
-    public SE_GREG_CAL = 1;
-
+    public readonly SE_JUL_CAL = 0;
+    public readonly SE_GREG_CAL = 1;
     /** Planet numbers for the ipl parameter in swe_calc() */
-    public SE_ECL_NUT = -1;
-    public SE_SUN = 0;
-    public SE_MOON = 1;
-    public SE_MERCURY = 2;
-    public SE_VENUS = 3;
-    public SE_MARS = 4;
-    public SE_JUPITER = 5;
-    public SE_SATURN = 6;
-    public SE_URANUS = 7;
-    public SE_NEPTUNE = 8;
-    public SE_PLUTO = 9;
-    public SE_MEAN_NODE = 10;
-    public SE_TRUE_NODE = 11;
-    public SE_MEAN_APOG = 12;
-    public SE_OSCU_APOG = 13;
-    public SE_EARTH = 14;
-    public SE_CHIRON = 15;
-    public SE_PHOLUS = 16;
-    public SE_CERES = 17;
-    public SE_PALLAS = 18;
-    public SE_JUNO = 19;
-    public SE_VESTA = 20;
-    public SE_INTP_APOG = 21;
-    public SE_INTP_PERG = 22;
-    public SE_NPLANETS = 23;
-    public SE_PLMOON_OFFSET = 9000;
-    public SE_AST_OFFSET = 10000;
-    public SE_VARUNA = this.SE_AST_OFFSET + 20000;
-
-    public SE_FICT_OFFSET = 40;
-    public SE_FICT_OFFSET_1 = 39;
-    public SE_FICT_MAX = 999;
-    public SE_NFICT_ELEM = 15;
-    public SE_COMET_OFFSET = 1000;
-    public SE_NALL_NAT_POINTS = this.SE_NPLANETS + this.SE_NFICT_ELEM;
-
+    public readonly SE_ECL_NUT = -1;
+    public readonly SE_SUN = 0;
+    public readonly SE_MOON = 1;
+    public readonly SE_MERCURY = 2;
+    public readonly SE_VENUS = 3;
+    public readonly SE_MARS = 4;
+    public readonly SE_JUPITER = 5;
+    public readonly SE_SATURN = 6;
+    public readonly SE_URANUS = 7;
+    public readonly SE_NEPTUNE = 8;
+    public readonly SE_PLUTO = 9;
+    public readonly SE_MEAN_NODE = 10;
+    public readonly SE_TRUE_NODE = 11;
+    public readonly SE_MEAN_APOG = 12;
+    public readonly SE_OSCU_APOG = 13;
+    public readonly SE_EARTH = 14;
+    public readonly SE_CHIRON = 15;
+    public readonly SE_PHOLUS = 16;
+    public readonly SE_CERES = 17;
+    public readonly SE_PALLAS = 18;
+    public readonly SE_JUNO = 19;
+    public readonly SE_VESTA = 20;
+    public readonly SE_INTP_APOG = 21;
+    public readonly SE_INTP_PERG = 22;
+    public readonly SE_NPLANETS = 23;
+    public readonly SE_PLMOON_OFFSET = 9000;
+    public readonly SE_AST_OFFSET = 10000;
+    public readonly SE_VARUNA = this.SE_AST_OFFSET + 20000;
+    public readonly SE_FICT_OFFSET = 40;
+    public readonly SE_FICT_OFFSET_1 = 39;
+    public readonly SE_FICT_MAX = 999;
+    public readonly SE_NFICT_ELEM = 15;
+    public readonly SE_COMET_OFFSET = 1000;
+    public readonly SE_NALL_NAT_POINTS = this.SE_NPLANETS + this.SE_NFICT_ELEM;
     /** Hamburger or Uranian "planets" */
-    public SE_CUPIDO = 40;
-    public SE_HADES = 41;
-    public SE_ZEUS = 42;
-    public SE_KRONOS = 43;
-    public SE_APOLLON = 44;
-    public SE_ADMETOS = 45;
-    public SE_VULKANUS = 46;
-    public SE_POSEIDON = 47;
+    public readonly SE_CUPIDO = 40;
+    public readonly SE_HADES = 41;
+    public readonly SE_ZEUS = 42;
+    public readonly SE_KRONOS = 43;
+    public readonly SE_APOLLON = 44;
+    public readonly SE_ADMETOS = 45;
+    public readonly SE_VULKANUS = 46;
+    public readonly SE_POSEIDON = 47;
     /** Other fictitious bodies */
-    public SE_ISIS = 48;
-    public SE_NIBIRU = 49;
-    public SE_HARRINGTON = 50;
-    public SE_NEPTUNE_LEVERRIER = 51;
-    public SE_NEPTUNE_ADAMS = 52;
-    public SE_PLUTO_LOWELL = 53;
-    public SE_PLUTO_PICKERING = 54;
-    public SE_VULCAN = 55;
-    public SE_WHITE_MOON = 56;
-    public SE_PROSERPINA = 57;
-    public SE_WALDEMATH = 58;
-
-    public SE_FIXSTAR = -10;
-
-    public SE_ASC = 0;
-    public SE_MC = 1;
-    public SE_ARMC = 2;
-    public SE_VERTEX = 3;
-    public SE_EQUASC = 4; /** "equatorial ascendant" */
-    public SE_COASC1 = 5; /** "co-ascendant" ( W. Koch) */
-    public SE_COASC2 = 6; /** "co-ascendant" ( M. Munkasey) */
-    public SE_POLASC = 7; /** "polar ascendant" ( M. Munkasey) */
-    public SE_NASCMC = 8;
-
+    public readonly SE_ISIS = 48;
+    public readonly SE_NIBIRU = 49;
+    public readonly SE_HARRINGTON = 50;
+    public readonly SE_NEPTUNE_LEVERRIER = 51;
+    public readonly SE_NEPTUNE_ADAMS = 52;
+    public readonly SE_PLUTO_LOWELL = 53;
+    public readonly SE_PLUTO_PICKERING = 54;
+    public readonly SE_VULCAN = 55;
+    public readonly SE_WHITE_MOON = 56;
+    public readonly SE_PROSERPINA = 57;
+    public readonly SE_WALDEMATH = 58;
+    public readonly SE_FIXSTAR = -10;
+    public readonly SE_ASC = 0;
+    public readonly SE_MC = 1;
+    public readonly SE_ARMC = 2;
+    public readonly SE_VERTEX = 3;
+    public readonly SE_EQUASC = 4; /** "equatorial ascendant" */
+    public readonly SE_COASC1 = 5; /** "co-ascendant" ( W. Koch) */
+    public readonly SE_COASC2 = 6; /** "co-ascendant" ( M. Munkasey) */
+    public readonly SE_POLASC = 7; /** "polar ascendant" ( M. Munkasey) */
+    public readonly SE_NASCMC = 8;
     /**
      * Flag bits for parameter iflag in swe_calc() The flag bits are defined in
      * such a way that iflag = 0 delivers what one usually wants:
@@ -169,490 +162,470 @@ export default class SwissEPH {
      *   integers ( Long) are used.
      */
     /** Use JPL ephemeris */
-    public SEFLG_JPLEPH = 1;
+    public readonly SEFLG_JPLEPH = 1;
     /** Use SWISSEPH ephemeris */
-    public SEFLG_SWIEPH = 2;
+    public readonly SEFLG_SWIEPH = 2;
     /** Use Moshier ephemeris */
-    public SEFLG_MOSEPH = 4;
-
+    public readonly SEFLG_MOSEPH = 4;
     /** Heliocentric position */
-    public SEFLG_HELCTR = 8;
+    public readonly SEFLG_HELCTR = 8;
     /** True/geometric position, not apparent position */
-    public SEFLG_TRUEPOS = 16;
+    public readonly SEFLG_TRUEPOS = 16;
     /** No precession, i.e. give J2000 equinox */
-    public SEFLG_J2000 = 32;
+    public readonly SEFLG_J2000 = 32;
     /** No nutation, i.e. mean equinox of date */
-    public SEFLG_NONUT = 64;
+    public readonly SEFLG_NONUT = 64;
     /**
      * Speed from 3 positions (do not use it, SEFLG_SPEED is faster and more
      * precise.)
      */
-    public SEFLG_SPEED3 = 128;
+    public readonly SEFLG_SPEED3 = 128;
     /** High precision speed */
-    public SEFLG_SPEED = 256;
+    public readonly SEFLG_SPEED = 256;
     /** Turn off gravitational deflection */
-    public SEFLG_NOGDEFL = 512;
+    public readonly SEFLG_NOGDEFL = 512;
     /** Turn off 'annual' aberration of light */
-    public SEFLG_NOABERR = 1024;
+    public readonly SEFLG_NOABERR = 1024;
     /**
      * Astrometric position, i.e. with light - time, but without aberration and
      * light deflection
      */
-    public SEFLG_ASTROMETRIC = this.SEFLG_NOABERR | this.SEFLG_NOGDEFL;
+    public readonly SEFLG_ASTROMETRIC = this.SEFLG_NOABERR | this.SEFLG_NOGDEFL;
     /** Equatorial positions are wanted */
-    public SEFLG_EQUATORIAL = 2 * 1024;
+    public readonly SEFLG_EQUATORIAL = 2 * 1024;
     /** Cartesian, not polar, coordinates */
-    public SEFLG_XYZ = 4 * 1024;
+    public readonly SEFLG_XYZ = 4 * 1024;
     /** Coordinates in radians, not degrees */
-    public SEFLG_RADIANS = 8 * 1024;
+    public readonly SEFLG_RADIANS = 8 * 1024;
     /** Barycentric position */
-    public SEFLG_BARYCTR = 16 * 1024;
+    public readonly SEFLG_BARYCTR = 16 * 1024;
     /** Topocentric position */
-    public SEFLG_TOPOCTR = 32 * 1024;
+    public readonly SEFLG_TOPOCTR = 32 * 1024;
     /** Used for Astronomical Almanac mode in calculation of Kepler elipses */
-    public SEFLG_ORBEL_AA = this.SEFLG_TOPOCTR;
+    public readonly SEFLG_ORBEL_AA = this.SEFLG_TOPOCTR;
     /** Tropical position ( default) */
-    public SEFLG_TROPICAL = 0;
+    public readonly SEFLG_TROPICAL = 0;
     /** Sidereal position */
-    public SEFLG_SIDEREAL = 64 * 1024;
+    public readonly SEFLG_SIDEREAL = 64 * 1024;
     /** ICRS ( DE406 reference frame) */
-    public SEFLG_ICRS = 128 * 1024;
+    public readonly SEFLG_ICRS = 128 * 1024;
     /** Reproduce JPL Horizons 1962 - today to 0.002 arcsec. */
-    public SEFLG_DPSIDEPS_1980 = 256 * 1024;
-    public SEFLG_JPLHOR = this.SEFLG_DPSIDEPS_1980;
+    public readonly SEFLG_DPSIDEPS_1980 = 256 * 1024;
+    public readonly SEFLG_JPLHOR = this.SEFLG_DPSIDEPS_1980;
     /** Approximate JPL Horizons 1962 - today */
-    public SEFLG_JPLHOR_APPROX = 512 * 1024;
+    public readonly SEFLG_JPLHOR_APPROX = 512 * 1024;
     /**
      * Calculate position of center of body ( COB) of planet, not barycenter of
      * its system
      */
-    public SEFLG_CENTER_BODY = 1024 * 1024;
+    public readonly SEFLG_CENTER_BODY = 1024 * 1024;
     /** Test raw data in files sepm9* */
-    public SEFLG_TEST_PLMOON =
+    public readonly SEFLG_TEST_PLMOON =
         (2 * 1024 * 1024) |
         this.SEFLG_J2000 |
         this.SEFLG_ICRS |
         this.SEFLG_HELCTR |
         this.SEFLG_TRUEPOS;
 
-    public SE_SIDBITS = 256;
+    public readonly SE_SIDBITS = 256;
     /** For projection onto ecliptic of t0 */
-    public SE_SIDBIT_ECL_T0 = 256;
+    public readonly SE_SIDBIT_ECL_T0 = 256;
     /** For projection onto solar system plane */
-    public SE_SIDBIT_SSY_PLANE = 512;
+    public readonly SE_SIDBIT_SSY_PLANE = 512;
     /** With user-defined ayanamsha, t0 is UT */
-    public SE_SIDBIT_USER_UT = 1024;
+    public readonly SE_SIDBIT_USER_UT = 1024;
     /**
      * Ayanamsha measured on ecliptic of date; see commentaries in sweph.c:
      * swi_get_ayanamsa_ex().
      */
-    public SE_SIDBIT_ECL_DATE = 2048;
+    public readonly SE_SIDBIT_ECL_DATE = 2048;
     /**
      * Test feature: don't apply const ant offset to ayanamsha see commentary
      * above sweph.c: get_aya_correction()
      */
-    public SE_SIDBIT_NO_PREC_OFFSET = 4096;
+    public readonly SE_SIDBIT_NO_PREC_OFFSET = 4096;
     /** Test feature: calculate ayanamsha using its original precession model */
-    public SE_SIDBIT_PREC_ORIG = 8192;
-
+    public readonly SE_SIDBIT_PREC_ORIG = 8192;
     /** Sidereal modes ( ayanamsas) */
-    public SE_SIDM_FAGAN_BRADLEY = 0;
-    public SE_SIDM_LAHIRI = 1;
-    public SE_SIDM_DELUCE = 2;
-    public SE_SIDM_RAMAN = 3;
-    public SE_SIDM_USHASHASHI = 4;
-    public SE_SIDM_KRISHNAMURTI = 5;
-    public SE_SIDM_DJWHAL_KHUL = 6;
-    public SE_SIDM_YUKTESHWAR = 7;
-    public SE_SIDM_JN_BHASIN = 8;
-    public SE_SIDM_BABYL_KUGLER1 = 9;
-    public SE_SIDM_BABYL_KUGLER2 = 10;
-    public SE_SIDM_BABYL_KUGLER3 = 11;
-    public SE_SIDM_BABYL_HUBER = 12;
-    public SE_SIDM_BABYL_ETPSC = 13;
-    public SE_SIDM_ALDEBARAN_15TAU = 14;
-    public SE_SIDM_HIPPARCHOS = 15;
-    public SE_SIDM_SASSANIAN = 16;
-    public SE_SIDM_GALCENT_0SAG = 17;
-    public SE_SIDM_J2000 = 18;
-    public SE_SIDM_J1900 = 19;
-    public SE_SIDM_B1950 = 20;
-    public SE_SIDM_SURYASIDDHANTA = 21;
-    public SE_SIDM_SURYASIDDHANTA_MSUN = 22;
-    public SE_SIDM_ARYABHATA = 23;
-    public SE_SIDM_ARYABHATA_MSUN = 24;
-    public SE_SIDM_SS_REVATI = 25;
-    public SE_SIDM_SS_CITRA = 26;
-    public SE_SIDM_TRUE_CITRA = 27;
-    public SE_SIDM_TRUE_REVATI = 28;
-    public SE_SIDM_TRUE_PUSHYA = 29;
-    public SE_SIDM_GALCENT_RGILBRAND = 30;
-    public SE_SIDM_GALEQU_IAU1958 = 31;
-    public SE_SIDM_GALEQU_TRUE = 32;
-    public SE_SIDM_GALEQU_MULA = 33;
-    public SE_SIDM_GALALIGN_MARDYKS = 34;
-    public SE_SIDM_TRUE_MULA = 35;
-    public SE_SIDM_GALCENT_MULA_WILHELM = 36;
-    public SE_SIDM_ARYABHATA_522 = 37;
-    public SE_SIDM_BABYL_BRITTON = 38;
-    public SE_SIDM_TRUE_SHEORAN = 39;
-    public SE_SIDM_GALCENT_COCHRANE = 40;
-    public SE_SIDM_GALEQU_FIORENZA = 41;
-    public SE_SIDM_VALENS_MOON = 42;
-    public SE_SIDM_LAHIRI_1940 = 43;
-    public SE_SIDM_LAHIRI_VP285 = 44;
-    public SE_SIDM_KRISHNAMURTI_VP291 = 45;
-    public SE_SIDM_LAHIRI_ICRC = 46;
+    public readonly SE_SIDM_FAGAN_BRADLEY = 0;
+    public readonly SE_SIDM_LAHIRI = 1;
+    public readonly SE_SIDM_DELUCE = 2;
+    public readonly SE_SIDM_RAMAN = 3;
+    public readonly SE_SIDM_USHASHASHI = 4;
+    public readonly SE_SIDM_KRISHNAMURTI = 5;
+    public readonly SE_SIDM_DJWHAL_KHUL = 6;
+    public readonly SE_SIDM_YUKTESHWAR = 7;
+    public readonly SE_SIDM_JN_BHASIN = 8;
+    public readonly SE_SIDM_BABYL_KUGLER1 = 9;
+    public readonly SE_SIDM_BABYL_KUGLER2 = 10;
+    public readonly SE_SIDM_BABYL_KUGLER3 = 11;
+    public readonly SE_SIDM_BABYL_HUBER = 12;
+    public readonly SE_SIDM_BABYL_ETPSC = 13;
+    public readonly SE_SIDM_ALDEBARAN_15TAU = 14;
+    public readonly SE_SIDM_HIPPARCHOS = 15;
+    public readonly SE_SIDM_SASSANIAN = 16;
+    public readonly SE_SIDM_GALCENT_0SAG = 17;
+    public readonly SE_SIDM_J2000 = 18;
+    public readonly SE_SIDM_J1900 = 19;
+    public readonly SE_SIDM_B1950 = 20;
+    public readonly SE_SIDM_SURYASIDDHANTA = 21;
+    public readonly SE_SIDM_SURYASIDDHANTA_MSUN = 22;
+    public readonly SE_SIDM_ARYABHATA = 23;
+    public readonly SE_SIDM_ARYABHATA_MSUN = 24;
+    public readonly SE_SIDM_SS_REVATI = 25;
+    public readonly SE_SIDM_SS_CITRA = 26;
+    public readonly SE_SIDM_TRUE_CITRA = 27;
+    public readonly SE_SIDM_TRUE_REVATI = 28;
+    public readonly SE_SIDM_TRUE_PUSHYA = 29;
+    public readonly SE_SIDM_GALCENT_RGILBRAND = 30;
+    public readonly SE_SIDM_GALEQU_IAU1958 = 31;
+    public readonly SE_SIDM_GALEQU_TRUE = 32;
+    public readonly SE_SIDM_GALEQU_MULA = 33;
+    public readonly SE_SIDM_GALALIGN_MARDYKS = 34;
+    public readonly SE_SIDM_TRUE_MULA = 35;
+    public readonly SE_SIDM_GALCENT_MULA_WILHELM = 36;
+    public readonly SE_SIDM_ARYABHATA_522 = 37;
+    public readonly SE_SIDM_BABYL_BRITTON = 38;
+    public readonly SE_SIDM_TRUE_SHEORAN = 39;
+    public readonly SE_SIDM_GALCENT_COCHRANE = 40;
+    public readonly SE_SIDM_GALEQU_FIORENZA = 41;
+    public readonly SE_SIDM_VALENS_MOON = 42;
+    public readonly SE_SIDM_LAHIRI_1940 = 43;
+    public readonly SE_SIDM_LAHIRI_VP285 = 44;
+    public readonly SE_SIDM_KRISHNAMURTI_VP291 = 45;
+    public readonly SE_SIDM_LAHIRI_ICRC = 46;
     // public SE_SIDM_MANJULA = 43
     /** User-defined ayanamsha, t0 is TT */
-    public SE_SIDM_USER = 255;
-
-    public SE_NSIDM_PREDEF = 47;
-
+    public readonly SE_SIDM_USER = 255;
+    public readonly SE_NSIDM_PREDEF = 47;
     /** Used for swe_nod_aps(): */
     /** Mean nodes/apsides */
-    public SE_NODBIT_MEAN = 1;
+    public readonly SE_NODBIT_MEAN = 1;
     /** Osculating nodes/apsides */
-    public SE_NODBIT_OSCU = 2;
+    public readonly SE_NODBIT_OSCU = 2;
     /** Same, but motion about solar system barycenter is considered */
-    public SE_NODBIT_OSCU_BAR = 4;
+    public readonly SE_NODBIT_OSCU_BAR = 4;
     /** Focal point of orbit instead of aphelion */
-    public SE_NODBIT_FOPOINT = 256;
-
+    public readonly SE_NODBIT_FOPOINT = 256;
     /** Default ephemeris used when no ephemeris flagbit is set */
-    public SEFLG_DEFAULTEPH = this.SEFLG_SWIEPH;
-
+    public readonly SEFLG_DEFAULTEPH = this.SEFLG_SWIEPH;
     /**
      * Maximum size of fixstar name; the parameter star in swe_fixstar must
      * allow twice this space for the returned star name.
      */
-    public SE_MAX_STNAME = 256;
-
+    public readonly SE_MAX_STNAME = 256;
     /** Defines for eclipse computations */
-    public SE_ECL_CENTRAL = 1;
-    public SE_ECL_NONCENTRAL = 2;
-    public SE_ECL_TOTAL = 4;
-    public SE_ECL_ANNULAR = 8;
-    public SE_ECL_PARTIAL = 16;
-    public SE_ECL_ANNULAR_TOTAL = 32;
+    public readonly SE_ECL_CENTRAL = 1;
+    public readonly SE_ECL_NONCENTRAL = 2;
+    public readonly SE_ECL_TOTAL = 4;
+    public readonly SE_ECL_ANNULAR = 8;
+    public readonly SE_ECL_PARTIAL = 16;
+    public readonly SE_ECL_ANNULAR_TOTAL = 32;
     /** = annular-total */
-    public SE_ECL_HYBRID = 32;
-    public SE_ECL_PENUMBRAL = 64;
-    public SE_ECL_ALLTYPES_SOLAR =
+    public readonly SE_ECL_HYBRID = 32;
+    public readonly SE_ECL_PENUMBRAL = 64;
+    public readonly SE_ECL_ALLTYPES_SOLAR =
         this.SE_ECL_CENTRAL |
         this.SE_ECL_NONCENTRAL |
         this.SE_ECL_TOTAL |
         this.SE_ECL_ANNULAR |
         this.SE_ECL_PARTIAL |
         this.SE_ECL_ANNULAR_TOTAL;
-    public SE_ECL_ALLTYPES_LUNAR =
+
+    public readonly SE_ECL_ALLTYPES_LUNAR =
         this.SE_ECL_TOTAL | this.SE_ECL_PARTIAL | this.SE_ECL_PENUMBRAL;
-    public SE_ECL_VISIBLE = 128;
-    public SE_ECL_MAX_VISIBLE = 256;
+
+    public readonly SE_ECL_VISIBLE = 128;
+    public readonly SE_ECL_MAX_VISIBLE = 256;
     /** Begin of partial eclipse */
-    public SE_ECL_1ST_VISIBLE = 512;
+    public readonly SE_ECL_1ST_VISIBLE = 512;
     /** Begin of partial eclipse */
-    public SE_ECL_PARTBEG_VISIBLE = 512;
+    public readonly SE_ECL_PARTBEG_VISIBLE = 512;
     /** Begin of total eclipse */
-    public SE_ECL_2ND_VISIBLE = 1024;
+    public readonly SE_ECL_2ND_VISIBLE = 1024;
     /** Begin of total eclipse */
-    public SE_ECL_TOTBEG_VISIBLE = 1024;
+    public readonly SE_ECL_TOTBEG_VISIBLE = 1024;
     /** End of total eclipse */
-    public SE_ECL_3RD_VISIBLE = 2048;
+    public readonly SE_ECL_3RD_VISIBLE = 2048;
     /** End of total eclipse */
-    public SE_ECL_TOTEND_VISIBLE = 2048;
+    public readonly SE_ECL_TOTEND_VISIBLE = 2048;
     /** End of partial eclipse */
-    public SE_ECL_4TH_VISIBLE = 4096;
+    public readonly SE_ECL_4TH_VISIBLE = 4096;
     /** End of partial eclipse */
-    public SE_ECL_PARTEND_VISIBLE = 4096;
+    public readonly SE_ECL_PARTEND_VISIBLE = 4096;
     /** Begin of penumbral eclipse */
-    public SE_ECL_PENUMBBEG_VISIBLE = 8192;
+    public readonly SE_ECL_PENUMBBEG_VISIBLE = 8192;
     /** End of penumbral eclipse */
-    public SE_ECL_PENUMBEND_VISIBLE = 16384;
+    public readonly SE_ECL_PENUMBEND_VISIBLE = 16384;
     /** Occultation begins during the day */
-    public SE_ECL_OCC_BEG_DAYLIGHT = 8192;
+    public readonly SE_ECL_OCC_BEG_DAYLIGHT = 8192;
     /** Occultation ends during the day */
-    public SE_ECL_OCC_END_DAYLIGHT = 16384;
+    public readonly SE_ECL_OCC_END_DAYLIGHT = 16384;
     /**
      * Check if the next conjunction of the moon with a planet is an
      * occultation; don't search further
      */
-    public SE_ECL_ONE_TRY = 32 * 1024;
-
+    public readonly SE_ECL_ONE_TRY = 32 * 1024;
     /** For swe_rise_transit() */
-    public SE_CALC_RISE = 1;
-    public SE_CALC_SET = 2;
-    public SE_CALC_MTRANSIT = 4;
-    public SE_CALC_ITRANSIT = 8;
+    public readonly SE_CALC_RISE = 1;
+    public readonly SE_CALC_SET = 2;
+    public readonly SE_CALC_MTRANSIT = 4;
+    public readonly SE_CALC_ITRANSIT = 8;
     /**
      * To be or'ed to SE_CALC_RISE/SET, if rise or set of disc center is
      * required
      */
-    public SE_BIT_DISC_CENTER = 256;
+    public readonly SE_BIT_DISC_CENTER = 256;
     /**
      * To be or'ed to SE_CALC_RISE/SET, if rise or set of lower limb of disc is
      * requried
      */
-    public SE_BIT_DISC_BOTTOM = 8192;
+    public readonly SE_BIT_DISC_BOTTOM = 8192;
     /**
      * Use geocentric rather than topocentric position of object and ignore its
      * ecliptic latitude
      */
-    public SE_BIT_GEOCTR_NO_ECL_LAT = 128;
+    public readonly SE_BIT_GEOCTR_NO_ECL_LAT = 128;
     /** To be or'ed to SE_CALC_RISE/SET, if refraction is to be ignored */
-    public SE_BIT_NO_REFRACTION = 512;
+    public readonly SE_BIT_NO_REFRACTION = 512;
     /** To be or'ed to SE_CALC_RISE/SET */
-    public SE_BIT_CIVIL_TWILIGHT = 1024;
+    public readonly SE_BIT_CIVIL_TWILIGHT = 1024;
     /** To be or'ed to SE_CALC_RISE/SET */
-    public SE_BIT_NAUTIC_TWILIGHT = 2048;
+    public readonly SE_BIT_NAUTIC_TWILIGHT = 2048;
     /** To be or'ed to SE_CALC_RISE/SET */
-    public SE_BIT_ASTRO_TWILIGHT = 4096;
+    public readonly SE_BIT_ASTRO_TWILIGHT = 4096;
     /** Or'ed to SE_CALC_RISE/SET: neglect the effect of distance on disc size */
-    public SE_BIT_FIXED_DISC_SIZE = 16384;
+    public readonly SE_BIT_FIXED_DISC_SIZE = 16384;
     /**
      * This is only an Astrodienst in-house test flag.It forces the usage of the
      * old, slow calculation of risings and settings.
      */
-    public SE_BIT_FORCE_SLOW_METHOD = 32768;
-    public SE_BIT_HINDU_RISING =
+    public readonly SE_BIT_FORCE_SLOW_METHOD = 32768;
+    public readonly SE_BIT_HINDU_RISING =
         this.SE_BIT_DISC_CENTER |
         this.SE_BIT_NO_REFRACTION |
         this.SE_BIT_GEOCTR_NO_ECL_LAT;
 
     /** For swe_azalt() and swe_azalt_rev() */
-    public SE_ECL2HOR = 0;
-    public SE_EQU2HOR = 1;
-    public SE_HOR2ECL = 0;
-    public SE_HOR2EQU = 1;
-
+    public readonly SE_ECL2HOR = 0;
+    public readonly SE_EQU2HOR = 1;
+    public readonly SE_HOR2ECL = 0;
+    public readonly SE_HOR2EQU = 1;
     /** For swe_refrac() */
-    public SE_TRUE_TO_APP = 0;
-    public SE_APP_TO_TRUE = 1;
-
+    public readonly SE_TRUE_TO_APP = 0;
+    public readonly SE_APP_TO_TRUE = 1;
     /**
      * Only used for experimenting with various JPL ephemeris files which are
      * available at Astrodienst's internal network
      */
-    public SE_DE_NUMBER = 431;
-    public SE_FNAME_DE200 = "de200.eph";
-    public SE_FNAME_DE403 = "de403.eph";
-    public SE_FNAME_DE404 = "de404.eph";
-    public SE_FNAME_DE405 = "de405.eph";
-    public SE_FNAME_DE406 = "de406.eph";
-    public SE_FNAME_DE431 = "de431.eph";
-    public SE_FNAME_DFT = this.SE_FNAME_DE431;
-    public SE_FNAME_DFT2 = this.SE_FNAME_DE406;
-    public SE_STARFILE_OLD = "fixstars.cat";
-    public SE_STARFILE = "sefstars.txt";
-    public SE_ASTNAMFILE = "seasnam.txt";
-    public SE_FICTFILE = "seorbel.txt";
-
+    public readonly SE_DE_NUMBER = 431;
+    public readonly SE_FNAME_DE200 = "de200.eph";
+    public readonly SE_FNAME_DE403 = "de403.eph";
+    public readonly SE_FNAME_DE404 = "de404.eph";
+    public readonly SE_FNAME_DE405 = "de405.eph";
+    public readonly SE_FNAME_DE406 = "de406.eph";
+    public readonly SE_FNAME_DE431 = "de431.eph";
+    public readonly SE_FNAME_DFT = this.SE_FNAME_DE431;
+    public readonly SE_FNAME_DFT2 = this.SE_FNAME_DE406;
+    public readonly SE_STARFILE_OLD = "fixstars.cat";
+    public readonly SE_STARFILE = "sefstars.txt";
+    public readonly SE_ASTNAMFILE = "seasnam.txt";
+    public readonly SE_FICTFILE = "seorbel.txt";
     /** Defines for swe_split_deg() ( in swephlib.c) */
-    public SE_SPLIT_DEG_ROUND_SEC = 1;
-    public SE_SPLIT_DEG_ROUND_MIN = 2;
-    public SE_SPLIT_DEG_ROUND_DEG = 4;
-    public SE_SPLIT_DEG_ZODIACAL = 8;
-    public SE_SPLIT_DEG_NAKSHATRA = 1024;
+    public readonly SE_SPLIT_DEG_ROUND_SEC = 1;
+    public readonly SE_SPLIT_DEG_ROUND_MIN = 2;
+    public readonly SE_SPLIT_DEG_ROUND_DEG = 4;
+    public readonly SE_SPLIT_DEG_ZODIACAL = 8;
+    public readonly SE_SPLIT_DEG_NAKSHATRA = 1024;
     /**
      * Don't round to next sign, e.g. 29.9999999 will be rounded to 29d59'59" (
      * or 29d59' or 29d)
      */
-    public SE_SPLIT_DEG_KEEP_SIGN = 16;
+    public readonly SE_SPLIT_DEG_KEEP_SIGN = 16;
     /**
      * Don't round to next degree e.g. 13.9999999 will be rounded to 13d59'59" (
      * or 13d59' or 13d)
      */
-    public SE_SPLIT_DEG_KEEP_DEG = 32;
-
+    public readonly SE_SPLIT_DEG_KEEP_DEG = 32;
     /** For heliacal functions */
-    public SE_HELIACAL_RISING = 1;
-    public SE_HELIACAL_SETTING = 2;
-    public SE_MORNING_FIRST = this.SE_HELIACAL_RISING;
-    public SE_EVENING_LAST = this.SE_HELIACAL_SETTING;
-    public SE_EVENING_FIRST = 3;
-    public SE_MORNING_LAST = 4;
+    public readonly SE_HELIACAL_RISING = 1;
+    public readonly SE_HELIACAL_SETTING = 2;
+    public readonly SE_MORNING_FIRST = this.SE_HELIACAL_RISING;
+    public readonly SE_EVENING_LAST = this.SE_HELIACAL_SETTING;
+    public readonly SE_EVENING_FIRST = 3;
+    public readonly SE_MORNING_LAST = 4;
     /** Still not implemented */
-    public SE_ACRONYCHAL_RISING = 5;
+    public readonly SE_ACRONYCHAL_RISING = 5;
     /** Still not implemented */
-    public SE_ACRONYCHAL_SETTING = 6;
-    public SE_COSMICAL_SETTING = this.SE_ACRONYCHAL_SETTING;
-
-    public SE_HELFLAG_LONG_SEARCH = 128;
-    public SE_HELFLAG_HIGH_PRECISION = 256;
-    public SE_HELFLAG_OPTICAL_PARAMS = 512;
-    public SE_HELFLAG_NO_DETAILS = 1024;
+    public readonly SE_ACRONYCHAL_SETTING = 6;
+    public readonly SE_COSMICAL_SETTING = this.SE_ACRONYCHAL_SETTING;
+    public readonly SE_HELFLAG_LONG_SEARCH = 128;
+    public readonly SE_HELFLAG_HIGH_PRECISION = 256;
+    public readonly SE_HELFLAG_OPTICAL_PARAMS = 512;
+    public readonly SE_HELFLAG_NO_DETAILS = 1024;
     /** 2048 */
-    public SE_HELFLAG_SEARCH_1_PERIOD = 1 << 11;
+    public readonly SE_HELFLAG_SEARCH_1_PERIOD = 1 << 11;
     /** 4096 */
-    public SE_HELFLAG_VISLIM_DARK = 1 << 12;
+    public readonly SE_HELFLAG_VISLIM_DARK = 1 << 12;
     /** 8192 */
-    public SE_HELFLAG_VISLIM_NOMOON = 1 << 13;
+    public readonly SE_HELFLAG_VISLIM_NOMOON = 1 << 13;
     /** The following undocumented defines are for test reasons only */
     /** 16384 */
-    public SE_HELFLAG_VISLIM_PHOTOPIC = 1 << 14;
+    public readonly SE_HELFLAG_VISLIM_PHOTOPIC = 1 << 14;
     /** 32768 */
-    public SE_HELFLAG_VISLIM_SCOTOPIC = 1 << 15;
+    public readonly SE_HELFLAG_VISLIM_SCOTOPIC = 1 << 15;
     /** 65536 */
-    public SE_HELFLAG_AV = 1 << 16;
+    public readonly SE_HELFLAG_AV = 1 << 16;
     /** 65536 */
-    public SE_HELFLAG_AVKIND_VR = 1 << 16;
-    public SE_HELFLAG_AVKIND_PTO = 1 << 17;
-    public SE_HELFLAG_AVKIND_MIN7 = 1 << 18;
-    public SE_HELFLAG_AVKIND_MIN9 = 1 << 19;
-    public SE_HELFLAG_AVKIND =
+    public readonly SE_HELFLAG_AVKIND_VR = 1 << 16;
+    public readonly SE_HELFLAG_AVKIND_PTO = 1 << 17;
+    public readonly SE_HELFLAG_AVKIND_MIN7 = 1 << 18;
+    public readonly SE_HELFLAG_AVKIND_MIN9 = 1 << 19;
+    public readonly SE_HELFLAG_AVKIND =
         this.SE_HELFLAG_AVKIND_VR |
         this.SE_HELFLAG_AVKIND_PTO |
         this.SE_HELFLAG_AVKIND_MIN7 |
         this.SE_HELFLAG_AVKIND_MIN9;
-    public TJD_INVALID = 99999999.0;
-    public SIMULATE_VICTORVB = 1;
 
+    public readonly TJD_INVALID = 99999999.0;
+    public readonly SIMULATE_VICTORVB = 1;
     /** Unused and redundant */
-    public SE_HELIACAL_LONG_SEARCH = 128;
-    public SE_HELIACAL_HIGH_PRECISION = 256;
-    public SE_HELIACAL_OPTICAL_PARAMS = 512;
-    public SE_HELIACAL_NO_DETAILS = 1024;
+    public readonly SE_HELIACAL_LONG_SEARCH = 128;
+    public readonly SE_HELIACAL_HIGH_PRECISION = 256;
+    public readonly SE_HELIACAL_OPTICAL_PARAMS = 512;
+    public readonly SE_HELIACAL_NO_DETAILS = 1024;
     /** 2048 */
-    public SE_HELIACAL_SEARCH_1_PERIOD = 1 << 11;
+    public readonly SE_HELIACAL_SEARCH_1_PERIOD = 1 << 11;
     /** 4096 */
-    public SE_HELIACAL_VISLIM_DARK = 1 << 12;
+    public readonly SE_HELIACAL_VISLIM_DARK = 1 << 12;
     /** 8192 */
-    public SE_HELIACAL_VISLIM_NOMOON = 1 << 13;
+    public readonly SE_HELIACAL_VISLIM_NOMOON = 1 << 13;
     /** 16384 */
-    public SE_HELIACAL_VISLIM_PHOTOPIC = 1 << 14;
+    public readonly SE_HELIACAL_VISLIM_PHOTOPIC = 1 << 14;
     /** 32768 */
-    public SE_HELIACAL_AVKIND_VR = 1 << 15;
-    public SE_HELIACAL_AVKIND_PTO = 1 << 16;
-    public SE_HELIACAL_AVKIND_MIN7 = 1 << 17;
-    public SE_HELIACAL_AVKIND_MIN9 = 1 << 18;
-    public SE_HELIACAL_AVKIND =
+    public readonly SE_HELIACAL_AVKIND_VR = 1 << 15;
+    public readonly SE_HELIACAL_AVKIND_PTO = 1 << 16;
+    public readonly SE_HELIACAL_AVKIND_MIN7 = 1 << 17;
+    public readonly SE_HELIACAL_AVKIND_MIN9 = 1 << 18;
+    public readonly SE_HELIACAL_AVKIND =
         this.SE_HELFLAG_AVKIND_VR |
         this.SE_HELFLAG_AVKIND_PTO |
         this.SE_HELFLAG_AVKIND_MIN7 |
         this.SE_HELFLAG_AVKIND_MIN9;
 
-    public SE_PHOTOPIC_FLAG = 0;
-    public SE_SCOTOPIC_FLAG = 1;
-    public SE_MIXEDOPIC_FLAG = 2;
-
+    public readonly SE_PHOTOPIC_FLAG = 0;
+    public readonly SE_SCOTOPIC_FLAG = 1;
+    public readonly SE_MIXEDOPIC_FLAG = 2;
     /**
      * For swe_set_tid_acc() and ephemeris-dependent delta t: intrinsic tidal
      * acceleration in the mean motion of the moon, not given in the parameters
      * list of the ephemeris files but computed by Chapront / Chapront - Touzé /
      * Francou A & A 387(2002), p. 705.
      */
-    public SE_TIDAL_DE200 = -23.8946;
+    public readonly SE_TIDAL_DE200 = -23.8946;
     /** Was ( -25.8) until V. 1.76.2 */
-    public SE_TIDAL_DE403 = -25.58;
+    public readonly SE_TIDAL_DE403 = -25.58;
     /** Was ( -25.8) until V. 1.76.2 */
-    public SE_TIDAL_DE404 = -25.58;
+    public readonly SE_TIDAL_DE404 = -25.58;
     /** Was ( -25.7376) until V. 1.76.2 */
-    public SE_TIDAL_DE405 = -25.826;
+    public readonly SE_TIDAL_DE405 = -25.826;
     /** Was ( -25.7376) until V. 1.76.2 */
-    public SE_TIDAL_DE406 = -25.826;
+    public readonly SE_TIDAL_DE406 = -25.826;
     /** JPL Interoffice Memorandum 14-mar-2008 on DE421 Lunar Orbit */
-    public SE_TIDAL_DE421 = -25.85;
+    public readonly SE_TIDAL_DE421 = -25.85;
     /** JPL Interoffice Memorandum 14-mar-2008 on DE421 ( sic!) Lunar Orbit */
-    public SE_TIDAL_DE422 = -25.85;
+    public readonly SE_TIDAL_DE422 = -25.85;
     /** JPL Interoffice Memorandum 9-jul-2013 on DE430 Lunar Orbit */
-    public SE_TIDAL_DE430 = -25.82;
+    public readonly SE_TIDAL_DE430 = -25.82;
     /**
      * IPN Progress Report 42-196 • February 15, 2014, p. 15; was ( -25.82) in
      * V. 2.00.00
      */
-    public SE_TIDAL_DE431 = -25.8;
+    public readonly SE_TIDAL_DE431 = -25.8;
     /** Unpublished value, from email by Jon Giorgini to DK on 11 Apr 2021 */
-    public SE_TIDAL_DE441 = -25.936;
-    public SE_TIDAL_26 = -26.0;
-    public SE_TIDAL_STEPHENSON_2016 = -25.85;
-    public SE_TIDAL_DEFAULT = this.SE_TIDAL_DE431;
-    public SE_TIDAL_AUTOMATIC = 999999;
-    public SE_TIDAL_MOSEPH = this.SE_TIDAL_DE404;
-    public SE_TIDAL_SWIEPH = this.SE_TIDAL_DEFAULT;
-    public SE_TIDAL_JPLEPH = this.SE_TIDAL_DEFAULT;
-
+    public readonly SE_TIDAL_DE441 = -25.936;
+    public readonly SE_TIDAL_26 = -26.0;
+    public readonly SE_TIDAL_STEPHENSON_2016 = -25.85;
+    public readonly SE_TIDAL_DEFAULT = this.SE_TIDAL_DE431;
+    public readonly SE_TIDAL_AUTOMATIC = 999999;
+    public readonly SE_TIDAL_MOSEPH = this.SE_TIDAL_DE404;
+    public readonly SE_TIDAL_SWIEPH = this.SE_TIDAL_DEFAULT;
+    public readonly SE_TIDAL_JPLEPH = this.SE_TIDAL_DEFAULT;
     /** For swe_set_delta_t_userdef() */
-    public SE_DELTAT_AUTOMATIC = -1e-10;
-
-    public SE_MODEL_DELTAT = 0;
-    public SE_MODEL_PREC_LONGTERM = 1;
-    public SE_MODEL_PREC_SHORTTERM = 2;
-    public SE_MODEL_NUT = 3;
-    public SE_MODEL_BIAS = 4;
-    public SE_MODEL_JPLHOR_MODE = 5;
-    public SE_MODEL_JPLHORA_MODE = 6;
-    public SE_MODEL_SIDT = 7;
-    public NSE_MODELS = 8;
-
+    public readonly SE_DELTAT_AUTOMATIC = -1e-10;
+    public readonly SE_MODEL_DELTAT = 0;
+    public readonly SE_MODEL_PREC_LONGTERM = 1;
+    public readonly SE_MODEL_PREC_SHORTTERM = 2;
+    public readonly SE_MODEL_NUT = 3;
+    public readonly SE_MODEL_BIAS = 4;
+    public readonly SE_MODEL_JPLHOR_MODE = 5;
+    public readonly SE_MODEL_JPLHORA_MODE = 6;
+    public readonly SE_MODEL_SIDT = 7;
+    public readonly NSE_MODELS = 8;
     /** Precession models */
-    public SEMOD_NPREC = 11;
-    public SEMOD_PREC_IAU_1976 = 1;
-    public SEMOD_PREC_LASKAR_1986 = 2;
-    public SEMOD_PREC_WILL_EPS_LASK = 3;
-    public SEMOD_PREC_WILLIAMS_1994 = 4;
-    public SEMOD_PREC_SIMON_1994 = 5;
-    public SEMOD_PREC_IAU_2000 = 6;
-    public SEMOD_PREC_BRETAGNON_2003 = 7;
-    public SEMOD_PREC_IAU_2006 = 8;
-    public SEMOD_PREC_VONDRAK_2011 = 9;
-    public SEMOD_PREC_OWEN_1990 = 10;
-    public SEMOD_PREC_NEWCOMB = 11;
-    public SEMOD_PREC_DEFAULT = this.SEMOD_PREC_VONDRAK_2011;
-
+    public readonly SEMOD_NPREC = 11;
+    public readonly SEMOD_PREC_IAU_1976 = 1;
+    public readonly SEMOD_PREC_LASKAR_1986 = 2;
+    public readonly SEMOD_PREC_WILL_EPS_LASK = 3;
+    public readonly SEMOD_PREC_WILLIAMS_1994 = 4;
+    public readonly SEMOD_PREC_SIMON_1994 = 5;
+    public readonly SEMOD_PREC_IAU_2000 = 6;
+    public readonly SEMOD_PREC_BRETAGNON_2003 = 7;
+    public readonly SEMOD_PREC_IAU_2006 = 8;
+    public readonly SEMOD_PREC_VONDRAK_2011 = 9;
+    public readonly SEMOD_PREC_OWEN_1990 = 10;
+    public readonly SEMOD_PREC_NEWCOMB = 11;
+    public readonly SEMOD_PREC_DEFAULT = this.SEMOD_PREC_VONDRAK_2011;
     /**
      * SE versions before 1.70 used IAU 1976 precession for a limited time range
      * of 2 centuries in combination with the long - term precession Simon
      * 1994.
      */
-    public SEMOD_PREC_DEFAULT_SHORT = this.SEMOD_PREC_VONDRAK_2011;
-
+    public readonly SEMOD_PREC_DEFAULT_SHORT = this.SEMOD_PREC_VONDRAK_2011;
     /** Nutation models */
-    public SEMOD_NNUT = 5;
-    public SEMOD_NUT_IAU_1980 = 1;
+    public readonly SEMOD_NNUT = 5;
+    public readonly SEMOD_NUT_IAU_1980 = 1;
     /**
      * Herring's ( 1987) corrections to IAU 1980 nutation series.AA(1996)
      * neglects them.
      */
-    public SEMOD_NUT_IAU_CORR_1987 = 2;
+    public readonly SEMOD_NUT_IAU_CORR_1987 = 2;
     /** Very time consuming ! */
-    public SEMOD_NUT_IAU_2000A = 3;
+    public readonly SEMOD_NUT_IAU_2000A = 3;
     /** Fast, but precision of milli-arcsec */
-    public SEMOD_NUT_IAU_2000B = 4;
-    public SEMOD_NUT_WOOLARD = 5;
+    public readonly SEMOD_NUT_IAU_2000B = 4;
+    public readonly SEMOD_NUT_WOOLARD = 5;
     /** Fast, but precision of milli-arcsec */
-    public SEMOD_NUT_DEFAULT = this.SEMOD_NUT_IAU_2000B;
-
+    public readonly SEMOD_NUT_DEFAULT = this.SEMOD_NUT_IAU_2000B;
     /** Methods for sidereal time */
-    public SEMOD_NSIDT = 4;
-    public SEMOD_SIDT_IAU_1976 = 1;
-    public SEMOD_SIDT_IAU_2006 = 2;
-    public SEMOD_SIDT_IERS_CONV_2010 = 3;
-    public SEMOD_SIDT_LONGTERM = 4;
-    public SEMOD_SIDT_DEFAULT = this.SEMOD_SIDT_LONGTERM;
+    public readonly SEMOD_NSIDT = 4;
+    public readonly SEMOD_SIDT_IAU_1976 = 1;
+    public readonly SEMOD_SIDT_IAU_2006 = 2;
+    public readonly SEMOD_SIDT_IERS_CONV_2010 = 3;
+    public readonly SEMOD_SIDT_LONGTERM = 4;
+    public readonly SEMOD_SIDT_DEFAULT = this.SEMOD_SIDT_LONGTERM;
     // const  SEMOD_SIDT_DEFAULT = SEMOD_SIDT_IERS_CONV_2010
     /** Frame bias methods */
-    public SEMOD_NBIAS = 3;
+    public readonly SEMOD_NBIAS = 3;
     /** Ignore frame bias */
-    public SEMOD_BIAS_NONE = 1;
+    public readonly SEMOD_BIAS_NONE = 1;
     /** Use frame bias matrix IAU 2000 */
-    public SEMOD_BIAS_IAU2000 = 2;
+    public readonly SEMOD_BIAS_IAU2000 = 2;
     /** Use frame bias matrix IAU 2006 */
-    public SEMOD_BIAS_IAU2006 = 3;
-    public SEMOD_BIAS_DEFAULT = this.SEMOD_BIAS_IAU2006;
-
+    public readonly SEMOD_BIAS_IAU2006 = 3;
+    public readonly SEMOD_BIAS_DEFAULT = this.SEMOD_BIAS_IAU2006;
     /**
      * Methods of JPL Horizons ( iflag & SEFLG_JPLHOR), using daily dpsi, deps;
      * see explanations below
      */
-    public SEMOD_NJPLHOR = 2;
+    public readonly SEMOD_NJPLHOR = 2;
     /** Daily dpsi and deps from file are */
-    public SEMOD_JPLHOR_LONG_AGREEMENT = 1;
+    public readonly SEMOD_JPLHOR_LONG_AGREEMENT = 1;
     /**
      * Limited to 1962 - today.JPL uses the first and last value for all dates
      * beyond this time range.
      */
-    public SEMOD_JPLHOR_DEFAULT = this.SEMOD_JPLHOR_LONG_AGREEMENT;
-
+    public readonly SEMOD_JPLHOR_DEFAULT = this.SEMOD_JPLHOR_LONG_AGREEMENT;
     /**
      * Note, currently this is the only option for SEMOD_JPLHOR..
      * SEMOD_JPLHOR_LONG_AGREEMENT, if combined with SEFLG_JPLHOR provides good
@@ -669,11 +642,11 @@ export default class SwissEPH {
      *       Horizons ( iflag & SEFLG_JPLHORA), without dpsi, deps; see
      *       explanations below
      */
-    public SEMOD_NJPLHORA = 3;
-    public SEMOD_JPLHORA_1 = 1;
-    public SEMOD_JPLHORA_2 = 2;
-    public SEMOD_JPLHORA_3 = 3;
-    public SEMOD_JPLHORA_DEFAULT = this.SEMOD_JPLHORA_3;
+    public readonly SEMOD_NJPLHORA = 3;
+    public readonly SEMOD_JPLHORA_1 = 1;
+    public readonly SEMOD_JPLHORA_2 = 2;
+    public readonly SEMOD_JPLHORA_3 = 3;
+    public readonly SEMOD_JPLHORA_DEFAULT = this.SEMOD_JPLHORA_3;
     /**
      * With SEMOD_JPLHORA_1, planetary positions are always calculated using a
      * recent precession / nutation model.Frame bias matrix is applied with some
@@ -688,14 +661,15 @@ export default class SwissEPH {
      * SEFLG_JPLHOR before that.this allows EXTREMELY good agreement with JPL
      * Horizons over its whole time range.
      */
-    public SEMOD_NDELTAT = 5;
-    public SEMOD_DELTAT_STEPHENSON_MORRISON_1984 = 1;
-    public SEMOD_DELTAT_STEPHENSON_1997 = 2;
-    public SEMOD_DELTAT_STEPHENSON_MORRISON_2004 = 3;
-    public SEMOD_DELTAT_ESPENAK_MEEUS_2006 = 4;
-    public SEMOD_DELTAT_STEPHENSON_ETC_2016 = 5;
+    public readonly SEMOD_NDELTAT = 5;
+    public readonly SEMOD_DELTAT_STEPHENSON_MORRISON_1984 = 1;
+    public readonly SEMOD_DELTAT_STEPHENSON_1997 = 2;
+    public readonly SEMOD_DELTAT_STEPHENSON_MORRISON_2004 = 3;
+    public readonly SEMOD_DELTAT_ESPENAK_MEEUS_2006 = 4;
+    public readonly SEMOD_DELTAT_STEPHENSON_ETC_2016 = 5;
     /** Public SEMOD_DELTAT_DEFAULT = SEMOD_DELTAT_ESPENAK_MEEUS_2006; */
-    public SEMOD_DELTAT_DEFAULT = this.SEMOD_DELTAT_STEPHENSON_ETC_2016;
+    public readonly SEMOD_DELTAT_DEFAULT =
+        this.SEMOD_DELTAT_STEPHENSON_ETC_2016;
 
     /** The Swisseph Emscripten WebAssembly Module instance. */
     public wasm: WASMModule;
@@ -708,6 +682,7 @@ export default class SwissEPH {
     constructor(wasm: WASMModule) {
         this.wasm = wasm;
     }
+
     /**
      * Static method for creating and initializing the Swisseph module.
      *
@@ -800,7 +775,6 @@ export default class SwissEPH {
         const geoposPtr = ArrayPointer.from(this.wasm, "double", geopos);
         const xinPtr = ArrayPointer.from(this.wasm, "double", xin);
         const outPtr = ArrayPointer.alloc(this.wasm, "double", 3); // Allocate space for 3 doubles: az, alt, ap
-
         this.wasm._swe_azalt(
             tjd_ut,
             calc_flag,
@@ -810,10 +784,8 @@ export default class SwissEPH {
             xinPtr.ptr,
             outPtr.ptr
         );
-
         geoposPtr.free();
         xinPtr.free();
-
         return outPtr.readAndFree(3);
     }
 
@@ -854,7 +826,6 @@ export default class SwissEPH {
     ): CelestialCoordinatesAdvance {
         const xxPtr = ArrayPointer.alloc(this.wasm, "double", 6);
         const serrPtr = StringPointer.alloc(this.wasm, this.AS_MAXCH); // Predefined buffer length for error strings
-
         const flag = this.wasm._swe_calc_pctr(
             tjd_et,
             ipl,
@@ -863,7 +834,6 @@ export default class SwissEPH {
             xxPtr.ptr,
             serrPtr.ptr
         );
-
         const errorMsg = serrPtr.readAndFree();
         if (flag < this.OK) throw new SWEerror(errorMsg, flag);
         return xxPtr.readAndFree(6);
@@ -914,7 +884,6 @@ export default class SwissEPH {
             serrPtr.ptr
         );
         if (flag < this.OK) throw new SWEerror(serrPtr.readAndFree(), flag);
-
         return xxPtr.readAndFree(6);
     }
 
@@ -951,7 +920,6 @@ export default class SwissEPH {
     ): CelestialCoordinatesAdvance {
         const xxPtr = ArrayPointer.alloc(this.wasm, "double", 6);
         const serrPtr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         const flag = this.wasm._swe_calc(
             tjd_et,
             ipl,
@@ -960,7 +928,6 @@ export default class SwissEPH {
             serrPtr.ptr
         );
         if (flag < this.OK) throw new SWEerror(serrPtr.readAndFree(), flag);
-
         return xxPtr.readAndFree(6);
     }
 
@@ -1152,6 +1119,7 @@ export default class SwissEPH {
         if (flag < this.OK) throw new SWEerror("illegal date", flag);
         return tjd.readAndFree();
     }
+
     /**
      * Find which day of the week a particular date is
      *
@@ -1187,6 +1155,7 @@ export default class SwissEPH {
         if (error.trim().length > 1) throw new SWEerror(error, this.ERR);
         return out;
     }
+
     /**
      * Obtain the Delta T value for a particular date
      *
@@ -1219,6 +1188,7 @@ export default class SwissEPH {
     swe_difcsn(csecP1: number, csecP2: number): number {
         return this.wasm._swe_difcsn(csecP1, csecP2);
     }
+
     /**
      * Arc distance between two points in degrees
      *
@@ -1230,6 +1200,7 @@ export default class SwissEPH {
     swe_difdeg2n(deg1: number, deg2: number): number {
         return this.wasm._swe_difdeg2n(deg1, deg2);
     }
+
     /**
      * Arc distance between two points in degrees in a single direction
      *
@@ -1240,6 +1211,7 @@ export default class SwissEPH {
     swe_difdegn(deg1: number, deg2: number): number {
         return this.wasm._swe_difdegn(deg1, deg2);
     }
+
     /**
      * Get the visual magnitude (brightness) of a fixed star
      *
@@ -1317,7 +1289,6 @@ export default class SwissEPH {
         const xx = ArrayPointer.alloc(this.wasm, "double", 6);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const starPtr = StringPointer.from(this.wasm, star);
-
         const flag = this.wasm._swe_fixstar(
             starPtr.ptr,
             tjd_et,
@@ -1325,11 +1296,9 @@ export default class SwissEPH {
             xx.ptr,
             serr.ptr
         );
-
         if (flag < this.OK) {
             throw new SWEerror(serr.readAndFree(), flag);
         }
-
         return {
             star_name: starPtr.readAndFree(),
             data: xx.readAndFree(6),
@@ -1446,7 +1415,6 @@ export default class SwissEPH {
         const xx = ArrayPointer.alloc(this.wasm, "double", 6);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const starPtr = StringPointer.from(this.wasm, star);
-
         const flag = this.wasm._swe_fixstar2(
             starPtr.ptr,
             tjd_et,
@@ -1499,7 +1467,6 @@ export default class SwissEPH {
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const starnamePtr = StringPointer.from(this.wasm, starname);
         const dgsect = NumberPointer.alloc(this.wasm, "double");
-
         const flag = this.wasm._swe_gauquelin_sector(
             tjd_ut,
             ipl,
@@ -1512,9 +1479,7 @@ export default class SwissEPH {
             dgsect.ptr,
             serr.ptr
         );
-
         if (flag < this.OK) throw new SWEerror(serr.readAndFree(), flag);
-
         return dgsect.readAndFree();
     }
 
@@ -1539,16 +1504,13 @@ export default class SwissEPH {
     swe_get_ayanamsa_ex_ut(tjd_ut: number, iflags: number): number {
         const ayan = NumberPointer.alloc(this.wasm, "double");
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         const flag = this.wasm._swe_get_ayanamsa_ex_ut(
             tjd_ut,
             iflags,
             ayan.ptr,
             serr.ptr
         );
-
         if (flag < this.OK) throw new SWEerror(serr.readAndFree(), flag);
-
         return ayan.readAndFree();
     }
 
@@ -1698,7 +1660,6 @@ export default class SwissEPH {
     ): OrbitalElements {
         const dataPtr = ArrayPointer.alloc(this.wasm, "double", 50);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         const flag = this.wasm._swe_get_orbital_elements(
             tjd_et,
             ipl,
@@ -1706,9 +1667,7 @@ export default class SwissEPH {
             dataPtr.ptr,
             serr.ptr
         );
-
         if (flag < this.OK) throw new SWEerror(serr.readAndFree(), flag);
-
         return dataPtr.readAndFree(17);
     }
 
@@ -1870,6 +1829,7 @@ export default class SwissEPH {
         object_namePtr.free();
         return retPtr.readAndFree(3);
     }
+
     /**
      * Compute a planets heliocentric crossing over some longitude
      *
@@ -1900,7 +1860,6 @@ export default class SwissEPH {
         );
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return jd_cross.readAndFree();
     }
 
@@ -1938,6 +1897,7 @@ export default class SwissEPH {
         if (flag < this.OK) throw new SWEerror(error, flag);
         return jd_cross.readAndFree();
     }
+
     /**
      * Get the name of a house system
      *
@@ -2022,11 +1982,9 @@ export default class SwissEPH {
         const ascmc = ArrayPointer.alloc(this.wasm, "double", 10);
         const ascmc_speed = ArrayPointer.alloc(this.wasm, "double", 10);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         if (decl !== undefined && !isNaN(decl)) {
             ascmc.add(9, decl);
         }
-
         const flag = this.wasm._swe_houses_armc_ex2(
             armc,
             geolat,
@@ -2038,10 +1996,8 @@ export default class SwissEPH {
             ascmc_speed.ptr,
             serr.ptr
         );
-
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             cusps: cusps.readAndFree(cuspLen),
             ascmc: ascmc.readAndFree(8),
@@ -2193,7 +2149,6 @@ export default class SwissEPH {
         );
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             cusps: cusps.readAndFree(cuspLen),
             ascmc: ascmc.readAndFree(8),
@@ -2228,7 +2183,6 @@ export default class SwissEPH {
         const cuspLen = hsys === "G" ? 37 : 13;
         const cusps = ArrayPointer.alloc(this.wasm, "double", 37);
         const ascmc = ArrayPointer.alloc(this.wasm, "double", 10);
-
         const flag = this.wasm._swe_houses(
             tjd_ut,
             geolat,
@@ -2243,6 +2197,7 @@ export default class SwissEPH {
             ascmc: ascmc.readAndFree(8),
         } as ConditionalReturnType<HS, { G: Houses<37> }, Houses<13>>;
     }
+
     /**
      * Convert julian day in ephemeris/terrestrial time to calendar date
      *
@@ -2280,6 +2235,7 @@ export default class SwissEPH {
             second: second.readAndFree(),
         };
     }
+
     /**
      * Convert julian day in universal time to calendar date
      *
@@ -2338,6 +2294,7 @@ export default class SwissEPH {
     ): number {
         return this.wasm._swe_julday(year, month, day, hour, gregflag);
     }
+
     /**
      * Transform local apparent time to local mean time
      *
@@ -2382,6 +2339,7 @@ export default class SwissEPH {
         if (flag < this.OK) throw new SWEerror(error, flag);
         return tjd_lat.readAndFree();
     }
+
     /**
      * Get lunar eclipse data for a given date
      *
@@ -2409,7 +2367,6 @@ export default class SwissEPH {
         geopos: [longitude: number, latitude: number, elevation: number]
     ): LunarEclipseCharacteristics {
         const geoposPtr = ArrayPointer.from(this.wasm, "double", geopos);
-
         const attr = ArrayPointer.alloc(this.wasm, "double", 20);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const flag = this.wasm._swe_lun_eclipse_how(
@@ -2726,7 +2683,6 @@ export default class SwissEPH {
         starnamePtr.free();
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             data: geopos.readAndFree(10),
             Array: attr.readAndFree(8),
@@ -2761,7 +2717,6 @@ export default class SwissEPH {
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const xlon = NumberPointer.alloc(this.wasm, "double");
         const xlat = NumberPointer.alloc(this.wasm, "double");
-
         const jd = this.wasm._swe_mooncross_node_ut(
             jd_ut,
             flag,
@@ -2771,7 +2726,6 @@ export default class SwissEPH {
         );
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             jd,
             longitude: xlon.readAndFree(),
@@ -2823,6 +2777,7 @@ export default class SwissEPH {
             latitude: xlat.readAndFree(),
         };
     }
+
     /**
      * Compute Moon's crossing over some longitude
      *
@@ -2910,10 +2865,8 @@ export default class SwissEPH {
             aph.ptr,
             serr.ptr
         );
-
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             ascending: asc.readAndFree(6),
             descending: dsc.readAndFree(6),
@@ -2961,7 +2914,6 @@ export default class SwissEPH {
         const per = ArrayPointer.alloc(this.wasm, "double", 6);
         const aph = ArrayPointer.alloc(this.wasm, "double", 6);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         const flag = this.wasm._swe_nod_aps(
             tjd_et,
             ipl,
@@ -2973,10 +2925,8 @@ export default class SwissEPH {
             aph.ptr,
             serr.ptr
         );
-
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return {
             ascending: asc.readAndFree(6),
             descending: dsc.readAndFree(6),
@@ -3394,15 +3344,12 @@ export default class SwissEPH {
         fileNames: Array<string> = ["seas_18.se1", "sepl_18.se1", "semo_18.se1"]
     ): Promise<void> {
         const epheDir = "/ephe";
-
         // Create ephemeris directory in WASM FS if it doesn't exist
         if (!this.wasm.FS.analyzePath(epheDir, true).exists) {
             this.wasm.FS.mkdir(epheDir);
         }
-
         const baseUrl = getBaseURLPath(epheUrl);
         const loaded: string[] = [];
-
         for (const { name, desc, category } of EpheFileMetadata) {
             try {
                 if (fileNames && !fileNames.includes(name)) continue;
@@ -3410,14 +3357,11 @@ export default class SwissEPH {
                 if (response.ok && response.status === 200) {
                     const buffer = await response.arrayBuffer();
                     const data = new Uint8Array(buffer);
-
                     // ✅ 2. Delete file if it already exists before creating
                     const filePath = `${epheDir}/${name}`;
-
                     if (this.wasm.FS.analyzePath(filePath).exists) {
                         this.wasm.FS.unlink(filePath); // remove existing file
                     }
-
                     this.wasm.FS.createDataFile(
                         epheDir,
                         name,
@@ -3426,7 +3370,6 @@ export default class SwissEPH {
                         true, // writable
                         true // canOwn
                     );
-
                     loaded.push(
                         `${name.padEnd(14)}: ${category.padEnd(28)} [${desc}]`
                     );
@@ -3435,17 +3378,14 @@ export default class SwissEPH {
                 console.error(`Skipped ${name} due to error:`, err);
             }
         }
-
         if (loaded.length === 0) {
             throw new SWEerror(
                 `No ephemeris files loaded from "${epheUrl}"`,
                 this.ERR
             );
         }
-
         console.log(loaded.join("\n"));
         console.log(`Total ephemeris files loaded: ${loaded.length}`);
-
         // Set ephemeris path in Swiss Ephemeris
         const ephePathPtr = StringPointer.from(this.wasm, epheDir);
         this.wasm._swe_set_ephe_path(ephePathPtr.ptr);
@@ -3673,7 +3613,6 @@ export default class SwissEPH {
         const tret = ArrayPointer.alloc(this.wasm, "double", 10);
         const attr = ArrayPointer.alloc(this.wasm, "double", 20);
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
-
         const flag = this.wasm._swe_sol_eclipse_when_loc(
             tjd_start,
             ifl,
@@ -3683,14 +3622,11 @@ export default class SwissEPH {
             toBooleanType(backwards),
             serr.ptr
         );
-
         geoposPtr.free();
         const error = serr.readAndFree();
-
         if (flag < this.OK) {
             throw new SWEerror(error, flag);
         }
-
         return {
             eclipseContactTimes: tret.readAndFree(7),
             eclipseAttributes: attr.readAndFree(11),
@@ -3853,10 +3789,8 @@ export default class SwissEPH {
         const e = NumberPointer.alloc(this.wasm, "double");
         const serr = StringPointer.alloc(this.wasm, this.AS_MAXCH);
         const flag = this.wasm._swe_time_equ(tjd_ut, e.ptr, serr.ptr);
-
         const error = serr.readAndFree();
         if (flag < this.OK) throw new SWEerror(error, flag);
-
         return e.readAndFree();
     }
 
@@ -3909,7 +3843,6 @@ export default class SwissEPH {
             minute.ptr,
             seconds.ptr
         );
-
         return {
             year: year.readAndFree(),
             month: month.readAndFree(),
@@ -4060,3 +3993,824 @@ export default class SwissEPH {
         return ret.readAndFree(8);
     }
 }
+
+/**
+ * Returns a type based on a string `INPUT`, using a conditional type mapping.
+ * If `INPUT` exists as a key in the `CONDITIONS` map, returns the mapped type.
+ * Otherwise, returns the `DEFAULT` type.
+ *
+ * @example
+ *     type MyReturn = ConditionalReturnType<"G", { G: number }, string>; // => number
+ *     type Fallback = ConditionalReturnType<"Z", { G: number }, string>; // => string
+ *
+ * @template INPUT - Input string literal to check.
+ * @template CONDITIONS - A record mapping string keys to specific return types.
+ * @template DEFAULT - The fallback type if `INPUT` is not found in
+ *   `CONDITIONS`.
+ */
+export type ConditionalReturnType<
+    INPUT extends string,
+    CONDITIONS extends Record<string, unknown>,
+    DEFAULT,
+> = INPUT extends keyof CONDITIONS ? CONDITIONS[INPUT] : DEFAULT;
+
+export type HouseSystems =
+    | "A"
+    | "B"
+    | "C"
+    | "D"
+    | "E"
+    | "F"
+    | "G"
+    | "H"
+    | "I"
+    | "i"
+    | "K"
+    | "L"
+    | "M"
+    | "N"
+    | "O"
+    | "P"
+    | "Q"
+    | "R"
+    | "S"
+    | "T"
+    | "U"
+    | "V"
+    | "W"
+    | "X"
+    | "Y";
+
+/** Represents a complete date and time value. */
+export interface DateTimeObject {
+    /** Full year (e.g., 2025) */
+    year: number;
+    /** Month of the year (1–12) */
+    month: number;
+    /** Day of the month (1–31) */
+    day: number;
+    /** Hour of the day (0–23) */
+    hour: number;
+    /** Minute of the hour (0–59) */
+    minute: number;
+    /** Second of the minute including fractional part (0–59.99999) */
+    second: number;
+}
+
+/**
+ * Represents horizontal coordinates of a celestial object:
+ *
+ * Array format:
+ *
+ * - `[0]` → Azimuth in degrees (measured from the south point, increasing
+ *   westwards)
+ * - `[1]` → True altitude above the horizon in degrees
+ * - `[2]` → Apparent altitude in degrees (corrected for atmospheric refraction)
+ */
+export type HorizontalCoordinates = [az: number, alt: number, ap: number];
+
+/**
+ * Full celestial position values returned from a position calculation.
+ *
+ * By default, values are in ecliptic coordinates (longitude, latitude,
+ * distance). If `SEFLG_SPEED` or `SEFLG_SPEED3` flags are set, daily speeds for
+ * each value are included; otherwise speeds are zero. If `SEFLG_EQUATORIAL`
+ * flag is set, values are in equatorial coordinates (right ascension,
+ * declination, distance). If `SEFLG_XYZ` flag is set, values are in cartesian
+ * coordinates (X, Y, Z). If the target object ID is `SE_ECL_NUT`, values
+ * contain obliquity and nutation data instead.
+ *
+ * Array format:
+ *
+ * - `[0]` → Longitude (λ), Right Ascension (α), Cartesian X, or True Obliquity
+ *   (ε) depending on flags
+ * - `[1]` → Latitude (β), Declination (δ), Cartesian Y, or Mean Obliquity (ε)
+ *   depending on flags
+ */
+export type CelestialCoordinates2D = [
+    /**
+     * - `λ`: Ecliptic longitude
+     * - `α`: Equatorial right ascension if `SEFLG_EQUATORIAL`
+     * - `x`: Cartesian X if `SEFLG_XYZ`
+     * - `ε`: True obliquity of the ecliptic if object ID is `SE_ECL_NUT`
+     */
+    lon: number,
+    /**
+     * - `β`: Ecliptic latitude
+     * - `δ`: Equatorial declination if `SEFLG_EQUATORIAL`
+     * - `y`: Cartesian Y if `SEFLG_XYZ`
+     * - `ε`: Mean obliquity of the ecliptic if object ID is `SE_ECL_NUT`
+     */
+    lat: number,
+];
+
+/**
+ * Full celestial position values returned from a position calculation.
+ *
+ * - By default, values are in ecliptic coordinates (longitude, latitude,
+ *   distance).
+ * - If `SEFLG_SPEED` or `SEFLG_SPEED3` flags are set, daily speeds for each value
+ *   are included; otherwise speeds are zero.
+ * - If `SEFLG_EQUATORIAL` flag is set, values are in equatorial coordinates
+ *   (right ascension, declination, distance).
+ * - If `SEFLG_XYZ` flag is set, values are in cartesian coordinates (X, Y, Z).
+ * - If the target object ID is `SE_ECL_NUT`, values contain obliquity and
+ *   nutation data instead.
+ *
+ * Array format:
+ *
+ * - `[0]` → Longitude (λ), Right Ascension (α), Cartesian X, or True Obliquity
+ *   (ε) depending on flags
+ * - `[1]` → Latitude (β), Declination (δ), Cartesian Y, or Mean Obliquity (ε)
+ *   depending on flags
+ * - `[2]` → Distance (AU), Cartesian Z, or Nutation in longitude (Δψ) depending
+ *   on flags
+ */
+export type CelestialCoordinates3D = [
+    ...CelestialCoordinates2D,
+    /**
+     * - `au`: Distance in astronomical units (AU)
+     * - `z`: Cartesian Z if `SEFLG_XYZ`
+     * - `Δψ`: Nutation in longitude if object ID is `SE_ECL_NUT`
+     */
+    dist: number,
+];
+
+/**
+ * Full celestial position values returned from a position calculation.
+ *
+ * - By default, values are in ecliptic coordinates (longitude, latitude,
+ *   distance).
+ * - If `SEFLG_SPEED` or `SEFLG_SPEED3` flags are set, daily speeds for each value
+ *   are included; otherwise speeds are zero.
+ * - If `SEFLG_EQUATORIAL` flag is set, values are in equatorial coordinates
+ *   (right ascension, declination, distance).
+ * - If `SEFLG_XYZ` flag is set, values are in cartesian coordinates (X, Y, Z).
+ * - If the target object ID is `SE_ECL_NUT`, values contain obliquity and
+ *   nutation data instead.
+ *
+ * Array format:
+ *
+ * - `[0]` → Longitude (λ), Right Ascension (α), Cartesian X, or True Obliquity
+ *   (ε) depending on flags
+ * - `[1]` → Latitude (β), Declination (δ), Cartesian Y, or Mean Obliquity (ε)
+ *   depending on flags
+ * - `[2]` → Distance (AU), Cartesian Z, or Nutation in longitude (Δψ) depending
+ *   on flags
+ * - `[3]` → Longitude daily speed (λs), Right Ascension daily speed (αs),
+ *   Cartesian X speed (xs), or Nutation in obliquity (Δε)
+ * - `[4]` → Latitude daily speed (βs), Declination daily speed (δs), Cartesian Y
+ *   speed (ys)
+ * - `[5]` → Distance daily speed (aus), Cartesian Z speed (zs)
+ */
+export type CelestialCoordinatesAdvance = [
+    ...CelestialCoordinates3D,
+    /**
+     * - `λs`: Ecliptic longitude daily speed
+     * - `αs`: Equatorial right ascension daily speed if `SEFLG_EQUATORIAL`
+     * - `xs`: Cartesian X daily speed if `SEFLG_XYZ`
+     * - `Δε`: Nutation in obliquity if object ID is `SE_ECL_NUT`
+     */
+    lonSpd: number,
+    /**
+     * - `βs`: Ecliptic latitude daily speed
+     * - `δs`: Equatorial declination daily speed if `SEFLG_EQUATORIAL`
+     * - `ys`: Cartesian Y daily speed if `SEFLG_XYZ`
+     */
+    latSpd: number,
+    /**
+     * - `aus`: Distance daily speed in AU
+     * - `zs`: Cartesian Z daily speed if `SEFLG_XYZ`
+     */
+    distSpd: number,
+];
+
+/** Result returned by the `swe_fixstar` function. */
+export interface FixstarResult {
+    /** Full star name as defined in `sefstars.txt`. */
+    star_name: string;
+    /** Celestial position and motion data of the star. */
+    data: CelestialCoordinatesAdvance;
+}
+
+/** Metadata for a fixed star entry. */
+export interface FixstarMagnitude {
+    /** The full star name as it appears in the `sefstars.txt` catalog. */
+    star_name: string;
+    /** Visual magnitude of the star (brightness). */
+    magnitude: number;
+}
+
+/**
+ * Array of key angular points related to the Ascendant and other significant
+ * positions.
+ *
+ * Array format:
+ *
+ * - `[0]` → Ascendant longitude
+ * - `[1]` → Midheaven (MC) longitude
+ * - `[2]` → Right Ascension of the Midheaven (ARMC)
+ * - `[3]` → Vertex longitude
+ * - `[4]` → Equatorial Ascendant longitude
+ * - `[5]` → Walter Koch's Co-Ascendant longitude
+ * - `[6]` → Michael Munkasey's Co-Ascendant longitude
+ * - `[7]` → Michael Munkasey's Polar Ascendant longitude
+ */
+export type AscendantValues = [
+    /** Longitude of the Ascendant */
+    asc: number,
+    /** Longitude of the Midheaven (MC) */
+    mc: number,
+    /** Right Ascension of the Midheaven (ARMC) */
+    armc: number,
+    /** Longitude of the Vertex */
+    vertex: number,
+    /** Longitude of the Equatorial Ascendant */
+    equasc: number,
+    /** Longitude of Walter Koch's Co-Ascendant */
+    coasc1: number,
+    /** Longitude of Michael Munkasey's Co-Ascendant */
+    coasc2: number,
+    /** Longitude of Michael Munkasey's Polar Ascendant */
+    polasc: number,
+];
+
+/**
+ * Array of momentary motion speeds for the Ascendant, Midheaven, and related
+ * points.
+ *
+ * Values represent angular speeds in degrees per day.
+ *
+ * Array format:
+ *
+ * - `[0]` → Ascendant speed
+ * - `[1]` → Midheaven speed
+ * - `[2]` → Right Ascension of the Midheaven speed
+ * - `[3]` → Vertex speed
+ * - `[4]` → Equatorial Ascendant speed
+ * - `[5]` → Walter Koch's Co-Ascendant speed
+ * - `[6]` → Michael Munkasey's Co-Ascendant speed
+ * - `[7]` → Michael Munkasey's Polar Ascendant speed
+ */
+export type AscendantPointsSpeeds = [
+    /** Momentary speed of the Ascendant */
+    asc_speed: number,
+    /** Momentary speed of the Midheaven (MC) */
+    mc_speed: number,
+    /** Momentary speed of the Right Ascension of the Midheaven (ARMC) */
+    armc_speed: number,
+    /** Momentary speed of the Vertex */
+    vertex_speed: number,
+    /** Momentary speed of the Equatorial Ascendant */
+    equasc_speed: number,
+    /** Momentary speed of Walter Koch's Co-Ascendant */
+    coasc1_speed: number,
+    /** Momentary speed of Michael Munkasey's Co-Ascendant */
+    coasc2_speed: number,
+    /** Momentary speed of Michael Munkasey's Polar Ascendant */
+    polasc_speed: number,
+];
+
+/**
+ * Times of various eclipse phases (Julian Dates).
+ *
+ * Unused slot retained for compatibility.
+ *
+ * Array format:
+ *
+ * - `[0]` → Time of maximum eclipse (JD)
+ * - `[1]` → Unused (reserved)
+ * - `[2]` → Partial phase start time (JD)
+ * - `[3]` → Partial phase end time (JD)
+ * - `[4]` → Totality start time (JD)
+ * - `[5]` → Totality end time (JD)
+ * - `[6]` → Penumbral phase start time (JD)
+ * - `[7]` → Penumbral phase end time (JD)
+ */
+export type EclipsePhaseTimes = [
+    /** Time of maximum eclipse (JD) */
+    max: number,
+    /** Unused slot (reserved) */
+    unused: number,
+    /** Start time of partial phase (JD) */
+    partialStart: number,
+    /** End time of partial phase (JD) */
+    partialEnd: number,
+    /** Start time of totality (JD) */
+    totalStart: number,
+    /** End time of totality (JD) */
+    totalEnd: number,
+    /** Start time of penumbral phase (JD) */
+    penumbralStart: number,
+    /** End time of penumbral phase (JD) */
+    penumbralEnd: number,
+];
+
+/**
+ * Eclipse times including moonrise and moonset during eclipse (if applicable).
+ *
+ * Array format:
+ *
+ * - `[0]` → Time of maximum eclipse (JD)
+ * - `[1]` → Unused (reserved)
+ * - `[2]` → Partial phase start time (JD)
+ * - `[3]` → Partial phase end time (JD)
+ * - `[4]` → Totality start time (JD)
+ * - `[5]` → Totality end time (JD)
+ * - `[6]` → Penumbral phase start time (JD)
+ * - `[7]` → Penumbral phase end time (JD)
+ * - `[8]` → Moonrise time during eclipse (JD), if it occurs
+ * - `[9]` → Moonset time during eclipse (JD), if it occurs
+ */
+export type EclipsePhaseTimesWithMoonriseSet = [
+    ...phases: EclipsePhaseTimes,
+    /** Moonrise time during eclipse (JD), if it occurs */
+    moonrise: number,
+    /** Moonset time during eclipse (JD), if it occurs */
+    moonset: number,
+];
+
+/**
+ * Detailed eclipse timings for local observation, including phases, centerline,
+ * and annular-total transitions.
+ *
+ * All times are expressed in Julian Day (JD).
+ *
+ * Array format:
+ *
+ * - `[0]` → Time of maximum eclipse
+ * - `[1]` → Time of local apparent noon
+ * - `[2]` → Eclipse start time
+ * - `[3]` → Eclipse end time
+ * - `[4]` → Totality start time
+ * - `[5]` → Totality end time
+ * - `[6]` → Center line start time
+ * - `[7]` → Center line end time
+ * - `[8]` → Time when annular-total eclipse becomes total
+ * - `[9]` → Time when annular-total eclipse becomes annular again
+ */
+export type EclipsePhaseTimesAdvance = [
+    /** Time of maximum eclipse (JD) */
+    max: number,
+    /** Time of local apparent noon during eclipse (JD) */
+    localNoon: number,
+    /** Eclipse start time (JD) */
+    start: number,
+    /** Eclipse end time (JD) */
+    end: number,
+    /** Start time of totality (JD) */
+    totalStart: number,
+    /** End time of totality (JD) */
+    totalEnd: number,
+    /** Start time of center line (JD) */
+    centerStart: number,
+    /** End time of center line (JD) */
+    centerEnd: number,
+    /** Time annular-total eclipse becomes total (JD) */
+    annularToTotal: number,
+    /** Time annular-total eclipse becomes annular again (JD) */
+    totalToAnnular: number,
+];
+
+/**
+ * Contact times of an eclipse and sunrise/sunset during the event (JD).
+ *
+ * Array format:
+ *
+ * - `[0]` → Time of maximum eclipse (JD)
+ * - `[1]` → Time of first contact (JD)
+ * - `[2]` → Time of second contact (JD)
+ * - `[3]` → Time of third contact (JD)
+ * - `[4]` → Time of fourth contact (JD)
+ * - `[5]` → Sunrise time during eclipse (JD)
+ * - `[6]` → Sunset time during eclipse (JD)
+ */
+export type EclipseContactTimes = [
+    /** Time of maximum eclipse (JD) */
+    max: number,
+    /** Time of first contact (JD) */
+    first: number,
+    /** Time of second contact (JD) */
+    second: number,
+    /** Time of third contact (JD) */
+    third: number,
+    /** Time of fourth contact (JD) */
+    fourth: number,
+    /** Sunrise time during eclipse (JD) */
+    sunrise: number,
+    /** Sunset time during eclipse (JD) */
+    sunset: number,
+];
+
+/**
+ * Geographic coordinates defining the central path and limits of an eclipse on
+ * Earth.
+ *
+ * Array format:
+ *
+ * - `[0]` → Central line longitude (degrees)
+ * - `[1]` → Central line latitude (degrees)
+ * - `[2]` → Northern umbral limit longitude (degrees)
+ * - `[3]` → Northern umbral limit latitude (degrees)
+ * - `[4]` → Southern umbral limit longitude (degrees)
+ * - `[5]` → Southern umbral limit latitude (degrees)
+ * - `[6]` → Northern penumbral limit longitude (degrees)
+ * - `[7]` → Northern penumbral limit latitude (degrees)
+ * - `[8]` → Southern penumbral limit longitude (degrees)
+ * - `[9]` → Southern penumbral limit latitude (degrees)
+ */
+export type EclipseGeographicCoords = [
+    /** Central line longitude (degrees) */
+    centralLongitude: number,
+    /** Central line latitude (degrees) */
+    centralLatitude: number,
+    /** Northern umbral limit longitude (degrees) */
+    northUmbraLongitude: number,
+    /** Northern umbral limit latitude (degrees) */
+    northUmbraLatitude: number,
+    /** Southern umbral limit longitude (degrees) */
+    southUmbraLongitude: number,
+    /** Southern umbral limit latitude (degrees) */
+    southUmbraLatitude: number,
+    /** Northern penumbral limit longitude (degrees) */
+    northPenumbraLongitude: number,
+    /** Northern penumbral limit latitude (degrees) */
+    northPenumbraLatitude: number,
+    /** Southern penumbral limit longitude (degrees) */
+    southPenumbraLongitude: number,
+    /** Southern penumbral limit latitude (degrees) */
+    southPenumbraLatitude: number,
+];
+
+/**
+ * Basic characteristics of an eclipse at a given moment.
+ *
+ * Array format:
+ *
+ * - `[0]` → Fraction of solar diameter covered by the moon (magnitude)
+ * - `[1]` → Ratio of lunar diameter to solar diameter
+ * - `[2]` → Fraction of solar disc obscured by the moon (obscuration)
+ * - `[3]` → Diameter of the core shadow in kilometers
+ * - `[4]` → Azimuth of the sun (degrees)
+ * - `[5]` → True altitude of the sun above the horizon (degrees)
+ * - `[6]` → Apparent altitude of the sun above the horizon (degrees)
+ * - `[7]` → Elongation of the moon from the sun (degrees)
+ */
+export type EclipseCharacteristics = [
+    /** Fraction of solar diameter covered by the moon (magnitude) */
+    solarDiameterFraction: number,
+    /** Ratio of lunar diameter to solar diameter */
+    lunarDiameterRatio: number,
+    /** Fraction of solar disc covered by moon (obscuration) */
+    solarDiscObscuration: number,
+    /** Diameter of the core shadow in kilometers */
+    coreShadowDiameterKm: number,
+    /** Azimuth of the sun (degrees) */
+    sunAzimuth: number,
+    /** True altitude of the sun above the horizon (degrees) */
+    trueSunAltitude: number,
+    /** Apparent altitude of the sun above the horizon (degrees) */
+    apparentSunAltitude: number,
+    /** Moon elongation in degrees */
+    moonElongation: number,
+];
+
+/**
+ * Extended eclipse attributes including basic characteristics, magnitude, and
+ * Saros series information.
+ *
+ * Array format:
+ *
+ * - `[0]` → Fraction of solar diameter covered by the moon (magnitude)
+ * - `[1]` → Ratio of lunar diameter to solar diameter
+ * - `[2]` → Fraction of solar disc obscured by the moon (obscuration)
+ * - `[3]` → Diameter of the core shadow in kilometers
+ * - `[4]` → Azimuth of the sun (degrees)
+ * - `[5]` → True altitude of the sun above the horizon (degrees)
+ * - `[6]` → Apparent altitude of the sun above the horizon (degrees)
+ * - `[7]` → Elongation of the moon from the sun (degrees)
+ * - `[8]` → Eclipse magnitude (same as solar diameter fraction or lunar diameter
+ *   ratio depending on eclipse type)
+ * - `[9]` → Saros series number (or `-99999999` if unknown)
+ * - `[10]` → Saros series member number (or `-99999999` if unknown)
+ */
+export type EclipseAttributes = [
+    ...base: EclipseCharacteristics,
+    /**
+     * Eclipse magnitude (usually matches solarDiameterFraction or
+     * lunarDiameterRatio depending on eclipse type)
+     */
+    magnitude: number,
+    /** Saros series number, or -99999999 if unknown */
+    sarosSeries: number,
+    /** Saros series member number, or -99999999 if unknown */
+    sarosMember: number,
+];
+
+/**
+ * Characteristics of a lunar eclipse at a given moment, including magnitude,
+ * positions, and Saros series data.
+ *
+ * Array format:
+ *
+ * - `[0]` → Umbral magnitude at the time of observation
+ * - `[1]` → Penumbral magnitude
+ * - `[2]` → Unused (reserved)
+ * - `[3]` → Unused (reserved)
+ * - `[4]` → Azimuth of the moon (degrees)
+ * - `[5]` → True altitude of the moon above the horizon (degrees)
+ * - `[6]` → Apparent altitude of the moon above the horizon (degrees)
+ * - `[7]` → Distance of the moon from opposition (degrees)
+ * - `[8]` → Eclipse magnitude (typically same as umbral magnitude)
+ * - `[9]` → Saros series number (or `-99999999` if unknown)
+ * - `[10]` → Saros series member number (or `-99999999` if unknown)
+ */
+export type LunarEclipseCharacteristics = [
+    /** Umbral magnitude at time (JD) */
+    umbralMagnitude: number,
+    /** Penumbral magnitude */
+    penumbralMagnitude: number,
+    /** Unused slot */
+    unused1: number,
+    /** Unused slot */
+    unused2: number,
+    /** Moon azimuth (degrees) */
+    moonAzimuth: number,
+    /** True altitude of the moon (degrees) */
+    trueMoonAltitude: number,
+    /** Apparent altitude of the moon (degrees) */
+    apparentMoonAltitude: number,
+    /** Distance of moon from opposition (degrees) */
+    distanceFromOpposition: number,
+    /** Eclipse magnitude (usually umbral magnitude) */
+    magnitude: number,
+    /** Saros series number, or -99999999 if unknown */
+    sarosSeries: number,
+    /** Saros series member number, or -99999999 if unknown */
+    sarosMember: number,
+];
+
+/**
+ * Represents calculated positions for houses and related points on the great
+ * circles.
+ */
+export interface Houses<N extends number> {
+    /**
+     * Longitude positions of the houses:
+     *
+     * - `36` positions for Gauquelin sectors
+     * - `12` positions for all other house systems
+     *
+     * Array format:
+     *
+     * - `cusp[0]` → 1st house cusp longitude
+     * - ...
+     * - `cusp[N-1]` → Nth house cusp longitude
+     */
+    cusps: FixedLengthArray<N, number>;
+    /**
+     * Longitude positions of other key points of interest on the great circles
+     * (e.g., MC, IC, Ascendant, Descendant, etc.)
+     */
+    ascmc: AscendantValues;
+}
+
+/**
+ * Extended house calculation result:
+ *
+ * Includes positions for the houses, other points, and their momentary motion
+ * Speeds.
+ */
+export interface HousesEx<N extends number> extends Houses<N> {
+    /**
+     * Momentary motion speeds of the houses.
+     *
+     * Array format:
+     *
+     * - `cusp_speed[0]` → Speed of 1st house cusp in degrees/day
+     * - `cusp_speed[N-1]` → Speed of Nth house cusp
+     */
+    cusp_speed: FixedLengthArray<N, number>;
+    /**
+     * Momentary motion speeds of other key points of interest on the great
+     * circles (e.g., MC, IC, Ascendant, Descendant, etc.).
+     *
+     * Units: degrees per day.
+     */
+    ascmc_speed: AscendantPointsSpeeds;
+}
+
+/**
+ * Object containing ascending node, descending node, aphelion and perihelion
+ * values Depending on the specific object and the method flag used, the values
+ * can be either "mean" or "osculating"
+ */
+export interface NodAps {
+    /** Array of ascending node values returned by the calculation */
+    ascending: CelestialCoordinatesAdvance;
+    /** Array of descending node values returned by the calculation */
+    descending: CelestialCoordinatesAdvance;
+    /** Array of perihelion node values returned by the calculation */
+    perihelion: CelestialCoordinatesAdvance;
+    /** Array of aphelion values returned by the calculation */
+    aphelion: CelestialCoordinatesAdvance;
+}
+
+/**
+ * Data array representing heliacal phenomena computations for a celestial
+ * object.
+ *
+ * The array contains observational, geometric, and photometric values relevant
+ * to heliacal visibility (e.g. arcus visionis, azimuths, crescent width).
+ *
+ * Array format:
+ *
+ * - `[0]` → `AltO` – Topocentric (unrefracted) altitude of object (°)
+ * - `[1]` → `AppAltO` – Apparent (refracted) altitude of object (°)
+ * - `[2]` → `GeoAltO` – Geocentric altitude of object (°)
+ * - `[3]` → `AziO` – Azimuth of object (°)
+ * - `[4]` → `AltS` – Topocentric altitude of Sun (°)
+ * - `[5]` → `AziS` – Azimuth of Sun (°)
+ * - `[6]` → `TAVact` – Actual topocentric arcus visionis (°)
+ * - `[7]` → `ARCVact` – Actual geocentric arcus visionis (°)
+ * - `[8]` → `DAZact` – Actual difference in azimuth between object and Sun (°)
+ * - `[9]` → `ARCLact` – Actual ecliptic longitude difference between object and
+ *   Sun (°)
+ * - `[10]` → `kact` – Extinction coefficient
+ * - `[11]` → `minTAV` – Minimum topocentric arcus visionis (°)
+ * - `[12]` → `TfistVR` – First visibility time (JD, VR method)
+ * - `[13]` → `TbVR` – Best/optimum visibility time (JD, VR method)
+ * - `[14]` → `TlastVR` – Last visibility time (JD, VR method)
+ * - `[15]` → `TbYallop` – Best visibility time (JD, Yallop method)
+ * - `[16]` → `WMoon` – Crescent width of Moon (°)
+ * - `[17]` → `qYal` – Yallop Q-test value
+ * - `[18]` → `qCrit` – Yallop Q-test threshold
+ * - `[19]` → `ParO` – Parallax of object (°)
+ * - `[20]` → `Magn` – Apparent magnitude of object
+ * - `[21]` → `RiseO` – Rise/set time of object (JD)
+ * - `[22]` → `RiseS` – Rise/set time of Sun (JD)
+ * - `[23]` → `Lag` – Rise/set time difference (object - Sun) (JD)
+ * - `[24]` → `TvisVR` – Visibility duration (JD)
+ * - `[25]` → `LMoon` – Crescent length of Moon (°)
+ * - `[26]` → `CVAact` – Actual crescent visibility angle (°)
+ * - `[27]` → `Illum` – Moon illumination (%)
+ * - `[28]` → `MSk` – MSk factor (model-specific visibility metric)
+ */
+export type HeliacalPhenomena = [
+    /** Topocentric altitude of object in degrees (unrefracted) */
+    AltO: number,
+    /** Apparent altitude of object in degrees (refracted) */
+    AppAltO: number,
+    /** Geocentric altitude of object in degrees */
+    GeoAltO: number,
+    /** Azimuth of object in degrees */
+    AziO: number,
+    /** Topocentric altitude of Sun in degrees */
+    AltS: number,
+    /** Azimuth of Sun in degrees */
+    AziS: number,
+    /** Actual topocentric arcus visionis in degrees */
+    TAVact: number,
+    /** Actual (geocentric) arcus visionis in degrees */
+    ARCVact: number,
+    /** Actual difference between object's and sun's azimuth in degrees */
+    DAZact: number,
+    /** Actual longitude difference between object and sun in degrees */
+    ARCLact: number,
+    /** Extinction coefficient */
+    kact: number,
+    /** Smallest topocentric arcus visionis in degrees */
+    minTAV: number,
+    /** First time object is visible:number, according to VR in JD */
+    TfistVR: number,
+    /** Optimum time the object is visible:number, according to VR in JD */
+    TbVR: number,
+    /** Last time object is visible:number, according to VR in JD */
+    TlastVR: number,
+    /** Best time the object is visible:number, according to Yallop in JD */
+    TbYallop: number,
+    /** Crescent width of Moon in degrees */
+    WMoon: number,
+    /** Q-test value of Yallop */
+    qYal: number,
+    /** Q-test criterion of Yallop */
+    qCrit: number,
+    /** Parallax of object in degrees */
+    ParO: number,
+    /** Magnitude of object */
+    Magn: number,
+    /** Rise/set time of object in JD */
+    RiseO: number,
+    /** Rise/set time of Sun in JD */
+    RiseS: number,
+    /** Rise/set time of object minus rise/set time of Sun in JD */
+    Lag: number,
+    /** Visibility duration in JD */
+    TvisVR: number,
+    /** Crescent length of Moon in degrees */
+    LMoon: number,
+    /** CVAact in degrees */
+    CVAact: number,
+    /** Illum in percentage */
+    Illum: number,
+    /** CVAact in degrees */
+    CVAact: number,
+    /** MSk */
+    MSk: number,
+];
+
+/**
+ * Orbital elements returned for a celestial object at a given time.
+ *
+ * These values represent the shape, orientation, and position of the orbit in
+ * space, including angular and distance-related parameters.
+ *
+ * Array format:
+ *
+ * - `[0]` → `a` – Semimajor axis (AU)
+ * - `[1]` → `e` – Eccentricity
+ * - `[2]` → `i` – Inclination (°)
+ * - `[3]` → `Ω` – Longitude of ascending node (°)
+ * - `[4]` → `ω` – Argument of periapsis (°)
+ * - `[5]` → `ϖ` – Longitude of periapsis (°)
+ * - `[6]` → `M0` – Mean anomaly at epoch (°)
+ * - `[7]` → `v0` – True anomaly at epoch (°)
+ * - `[8]` → `E0` – Eccentric anomaly at epoch (°)
+ * - `[9]` → `L0` – Mean longitude at epoch (°)
+ * - `[10]` → `sidereal_period` – Sidereal orbital period (tropical years)
+ * - `[11]` → `daily_motion` – Mean daily motion (°/day)
+ * - `[12]` → `tropical_period` – Tropical orbital period (years)
+ * - `[13]` → `synodic_period` – Synodic period (days). May be negative for inner
+ *   planets or Moon.
+ * - `[14]` → `perihelion_passage` – Julian day of perihelion passage
+ * - `[15]` → `perihelion_distance` – Distance at perihelion (AU)
+ * - `[16]` → `aphelion_distance` – Distance at aphelion (AU)
+ */
+export type OrbitalElements = [
+    /** Semimajor axis */
+    a: number,
+    /** Eccentricity */
+    e: number,
+    /** Inclination */
+    i: number,
+    /** Longitude of ascending node */
+    Ω: number,
+    /** Argument of periapsis */
+    ω: number,
+    /** Longitude of periapsis */
+    ϖ: number,
+    /** Mean anomaly at epoch */
+    M0: number,
+    /** True anomaly at epoch */
+    v0: number,
+    /** Eccentric anomaly at epoch */
+    E0: number,
+    /** Mean longitude at epoch */
+    L0: number,
+    /** Sidereal orbital period in tropical years */
+    sidereal_period: number,
+    /** Mean daily motion */
+    daily_motion: number,
+    /** Tropical period in years */
+    tropical_period: number,
+    /**
+     * Synodic period in days Negative, if inner planet (Venus, Mercury, Aten
+     * asteroids) or Moon
+     */
+    synodic_period: number,
+    /** Time of perihelion passage */
+    perihelion_passage: number,
+    /** Perihelion distance */
+    perihelion_distance: number,
+    /** Aphelion distance */
+    aphelion_distance: number,
+];
+
+/**
+ * Julian Day results for the next heliacal visibility event.
+ *
+ * This tuple provides key Julian Dates related to the visibility of a celestial
+ * object, depending on the selected heliacal algorithm (`hel_flag`).
+ *
+ * Array format:
+ *
+ * - `[0]` → Start of visibility (`vis_start`)
+ * - `[1]` → Optimum visibility (`vis_opt`) — May be `0` if `hel_flag >=
+ *   SE_HELFLAG_AV`
+ * - `[2]` → End of visibility (`vis_end`) — May be `0` if `hel_flag >=
+ *   SE_HELFLAG_AV`
+ */
+export type HeliacalVisibilityWindow = [
+    /** Julian Day of first possible visibility */
+    vis_start: number,
+    /**
+     * Julian Day of best/optimum visibility; `0` if not calculated with AV
+     * methods
+     */
+    vis_opt: number,
+    /**
+     * Julian Day of last possible visibility; `0` if not calculated with AV
+     * methods
+     */
+    vis_end: number,
+];

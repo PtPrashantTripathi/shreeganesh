@@ -1,3 +1,5 @@
+import type { HMS, IDMS, RasiNumber } from "src/backend/types";
+
 // --- Constants ---
 export const EPS = 1e-12; // Smallest meaningful difference
 export const TPI = 2 * Math.PI; // 2π
@@ -133,7 +135,71 @@ export function percentage(p: number, x: number): number {
     return (p * x) / 100;
 }
 
+/**
+ * Reorders an array so that it starts from the given `startValue`, wrapping
+ * around to the beginning if necessary.
+ *
+ * @example
+ *     // Basic usage
+ *     reorderArray([1, 2, 3, 4], 3);
+ *     // → [3, 4, 1, 2]
+ *
+ * @example
+ *     // Works with strings
+ *     reorderArray(["a", "b", "c", "d"], "b");
+ *     // → ['b', 'c', 'd', 'a']
+ *
+ * @example
+ *     // If startValue is not found, returns the original array
+ *     reorderArray([1, 2, 3], 5);
+ *     // → [1, 2, 3]
+ *
+ * @template T - The type of elements in the array.
+ * @param {T[]} arr - The array to reorder.
+ * @param {T} startValue - The value to start the array from.
+ * @returns {T[]} A new reordered array.
+ */
 export function reorderArray<T>(arr: T[], startValue: T): T[] {
     const startIndex = arr.indexOf(startValue);
+    if (startIndex === -1) return arr; // avoid unexpected behavior
     return [...arr.slice(startIndex), ...arr.slice(0, startIndex)];
+}
+
+/**
+ * Creates a memoized version of the given function.
+ *
+ * The memoized function caches results based on the stringified arguments. If
+ * the same arguments are passed again, it returns the cached result instead of
+ * re-executing the original function.
+ *
+ * @example
+ *     // A slow function
+ *     function slowSquare(n: number): number {
+ *         console.log(`Calculating square for ${n}...`);
+ *         return n * n;
+ *     }
+ *
+ *     const memoizedSquare = memoizeFunction(slowSquare);
+ *
+ *     console.log(memoizedSquare(4)); // Logs: Calculating square for 4... → 16
+ *     console.log(memoizedSquare(4)); // Uses cache → 16
+ *
+ * @template T - A function type.
+ * @param {T} fn - The function whose results should be cached.
+ * @returns {T} A new function that returns cached results when called with the
+ *   same arguments.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function memoizeFunction<T extends (...args: any[]) => any>(fn: T): T {
+    const cache = new Map<string, ReturnType<T>>();
+
+    return function (...args: Parameters<T>): ReturnType<T> {
+        const key = JSON.stringify(args);
+        if (cache.has(key)) {
+            return cache.get(key)!;
+        }
+        const result = fn(...args);
+        cache.set(key, result);
+        return result;
+    } as T;
 }
