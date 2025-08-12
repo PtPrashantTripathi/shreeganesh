@@ -1,4 +1,6 @@
-type ValidPageType =
+import type { IconType } from "react-icons/lib";
+
+export type ValidPageType =
     | "Home"
     | "Panchang"
     | "KundliForm"
@@ -13,28 +15,37 @@ type ValidPageType =
     | "Settings"
     | "About";
 
-interface ErrorType {
+export interface ErrorType {
     type: "error" | "warning" | "info" | "success";
     message: string;
 }
 
-interface SessionData {
-    url: string;
+export interface SearchParams {
     page: ValidPageType;
-    datetime: IDateTime;
-    latitude: number;
-    longitude: number;
-    ayanamsa: string;
-    city: string;
+    date: string;
+    time: string;
+    tz: number;
     tz_name: string;
+    city: string;
+    lat: number;
+    lon: number;
+    ayanamsa: string;
+}
+export interface SessionData extends SearchParams {
     error: ErrorType[];
 }
-interface SessionState {
+export interface SessionState {
     data: SessionData;
+    /**
+     * Updates session data.
+     *
+     * @param input - Partial update to the session state.
+     */
     updateData: (data: Partial<SessionData>) => void;
     setData: React.Dispatch<React.SetStateAction<SessionData>>;
+    sortURL: () => string;
 }
-interface PageDetail {
+export interface PageDetail {
     icon: IconType;
     page: ValidPageType;
     title: string;

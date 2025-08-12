@@ -1,4 +1,4 @@
-import { useSessionContext } from "src/frontend/contexts/SessionContext";
+import { useSessionContext } from "src/contexts/SessionContext";
 
 export function Errors() {
     const session = useSessionContext();

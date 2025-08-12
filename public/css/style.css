@@ -564,7 +564,13 @@ button[type="submit"] {
 }
 
 .advanced-options {
-    transition: max-height 0.2s ease-out;
+    transition: all 0.4s ease;
+    margin-top: 1rem;
+    display: none;
+}
+
+.advanced-options.show {
+    display: block;
 }
 
 .alert > div {

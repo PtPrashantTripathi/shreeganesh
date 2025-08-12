@@ -1,5 +1,5 @@
-import { DasaTable } from "src/frontend/component/DasaTable";
-
+import type { Dasha } from "src/backend/types";
+import { DasaTable } from "src/components/DasaTable";
 interface Props {
     dasaData: Dasha[];
 }

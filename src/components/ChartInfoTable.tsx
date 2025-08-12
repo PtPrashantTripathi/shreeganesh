@@ -1,7 +1,9 @@
+import type { Planet } from "src/backend/Planet";
+import type { PlanetEn } from "src/backend/types";
 import { DMS } from "src/backend/utils";
 
 interface Props {
-    grahaData: Record<PlanetEnglishType, Planet>;
+    grahaData: Record<PlanetEn, Planet>;
 }
 
 export default function ChartInfoTable({ grahaData }: Props) {

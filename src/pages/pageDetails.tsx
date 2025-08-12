@@ -10,6 +10,7 @@ import {
     FaStar,
     FaUsers,
 } from "react-icons/fa";
+import type { PageDetail } from "src/types";
 
 export const pageDetails: PageDetail[] = [
     {

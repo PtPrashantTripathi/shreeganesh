@@ -1,3 +1,5 @@
+import type { ValidPageType } from "src/types";
+
 /**
  * Validates if the given page is one of the allowed page types.
  *

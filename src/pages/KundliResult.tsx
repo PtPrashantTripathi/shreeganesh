@@ -1,23 +1,26 @@
 import { useEffect, useState } from "react";
-import { getPlanetaryPosition } from "src/backend/Kundli";
+import { DateTime } from "src/backend/datetime";
+import { Kundli } from "src/backend/Kundli";
 import { DMS } from "src/backend/utils";
-import ChartInfoTable from "src/frontend/component/ChartInfoTable";
-import KundliChartSVG from "src/frontend/component/KundliChartSVG";
-import KundliYogPhala from "src/frontend/component/KundliYogPhala";
-import Loader from "src/frontend/component/Loader";
-import VimsottariDasa from "src/frontend/component/VimsottariDasa";
-import { useSessionContext } from "src/frontend/contexts/SessionContext";
+import ChartInfoTable from "src/components/ChartInfoTable";
+import KundliChartSVG from "src/components/KundliChartSVG";
+import KundliYogPhala from "src/components/KundliYogPhala";
+import Loader from "src/components/Loader";
+import VimsottariDasa from "src/components/VimsottariDasa";
+import { useSessionContext } from "src/contexts/SessionContext";
 
 export default function KundliResult() {
     const session = useSessionContext();
-    const [kundliData, setKundliData] = useState<Kundli | null>(null);
+    const [kundliData, setKundliData] = useState<Awaited<
+        ReturnType<typeof Kundli>
+    > | null>(null);
 
     useEffect(() => {
         async function fetchKundli() {
-            const result = await getPlanetaryPosition(
-                session.data.datetime,
-                session.data.longitude,
-                session.data.latitude,
+            const result = await Kundli(
+                DateTime.fromDate(`${session.data.date}T${session.data.time}`),
+                session.data.lon,
+                session.data.lat,
                 0
             );
             setKundliData(result);
@@ -78,8 +81,9 @@ export default function KundliResult() {
                     <KundliChartSVG
                         chartData={Object.values(kundliData.planets).map(
                             planet => ({
-                                name: planet.name.english,
-                                rasi: planet.rasi,
+                                planet_name: planet.name.english,
+                                degree: planet.rasi.degree,
+                                rasi_num: planet.rasi.rasi_num,
                             })
                         )}
                     />
@@ -87,8 +91,9 @@ export default function KundliResult() {
                     <KundliChartSVG
                         chartData={Object.values(kundliData.planets).map(
                             planet => ({
-                                name: planet.name.english,
-                                rasi: planet.divisional.hora,
+                                planet_name: planet.name.english,
+                                degree: planet.divisional.hora.degree,
+                                rasi_num: planet.divisional.hora.rasi_num,
                             })
                         )}
                     />
@@ -96,8 +101,9 @@ export default function KundliResult() {
                     <KundliChartSVG
                         chartData={Object.values(kundliData.planets).map(
                             planet => ({
-                                name: planet.name.english,
-                                rasi: planet.divisional.shashtamsa,
+                                planet_name: planet.name.english,
+                                degree: planet.divisional.shashtamsa.degree,
+                                rasi_num: planet.divisional.shashtamsa.rasi_num,
                             })
                         )}
                     />
@@ -105,8 +111,9 @@ export default function KundliResult() {
                     <KundliChartSVG
                         chartData={Object.values(kundliData.planets).map(
                             planet => ({
-                                name: planet.name.english,
-                                rasi: planet.divisional.ashtamsa,
+                                planet_name: planet.name.english,
+                                degree: planet.divisional.ashtamsa.degree,
+                                rasi_num: planet.divisional.ashtamsa.rasi_num,
                             })
                         )}
                     />
@@ -114,8 +121,9 @@ export default function KundliResult() {
                     <KundliChartSVG
                         chartData={Object.values(kundliData.planets).map(
                             planet => ({
-                                name: planet.name.english,
-                                rasi: planet.divisional.navamsa,
+                                planet_name: planet.name.english,
+                                degree: planet.divisional.navamsa.degree,
+                                rasi_num: planet.divisional.navamsa.rasi_num,
                             })
                         )}
                     />

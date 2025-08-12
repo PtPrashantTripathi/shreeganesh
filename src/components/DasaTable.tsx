@@ -1,3 +1,5 @@
+import type { Dasha } from "src/backend/types";
+
 interface Props {
     dasa: Dasha;
 }

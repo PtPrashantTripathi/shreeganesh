@@ -1,7 +1,6 @@
-export const ChoghadiyaDetails: Record<
-    ChoghadiyaEnglishType,
-    ChoghadiyaDetail
-> = {
+import type { ChoghadiyaDetail, ChoghadiyaEn } from "src/backend/types";
+
+export const ChoghadiyaDetails: Record<ChoghadiyaEn, ChoghadiyaDetail> = {
     Udveg: {
         name: { english: "Udveg", hindi: "उद्वेग" },
         lord: "Sun",

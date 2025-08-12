@@ -1,20 +1,23 @@
 // KundliChartSVG.tsx
 // Renders a Vedic astrology chart SVG with planets positioned in respective houses
-import {
-    englishShortName,
-    hindiShortName,
-    PlanetDetails,
-} from "src/backend/Planet";
+import { PlanetDetails } from "src/backend/Planet";
+import type {
+    LanguageTypes,
+    PlanetDetail,
+    PlanetEn,
+    RasiNumber,
+} from "src/backend/types";
 import { NORMALIZE12, percentage } from "src/backend/utils";
 
 interface PlanetInfo {
-    planet_name: PlanetEnglishType;
+    planet: PlanetDetail;
     degree: number;
 }
 
 interface ChartData {
-    name: PlanetEnglishType;
-    rasi: Rasi;
+    planet_name: PlanetEn;
+    degree: number;
+    rasi_num: RasiNumber;
 }
 
 interface ChartSetting {
@@ -107,44 +110,28 @@ function getHouseChart(
     let lagnaIndex = 0;
     // Group planets by their Rasi number
     const signChart: Record<number, PlanetInfo[]> = {};
-    for (const { name, rasi } of chartData) {
-        const { rasi_num, degree } = rasi;
-
+    for (const { planet_name, degree, rasi_num } of chartData) {
         if (!signChart[rasi_num]) {
             signChart[rasi_num] = [];
         }
+        const planet = PlanetDetails[planet_name];
 
-        if (name === "Ascendant") {
+        if (planet_name === "Ascendant") {
             lagnaIndex = rasi_num;
             if (!chartSetting.printAscendant) {
                 continue;
             }
         }
 
-        if (
-            [
-                "Dhuma",
-                "Vyatipata",
-                "Parivesha",
-                "Chapa",
-                "Upaketu",
-                "Gulika",
-                "Kaala",
-                "Mrityu",
-                "Yamaghantaka",
-                "Ardhaprahara",
-            ].includes(name)
-        ) {
+        if (planet.type === "Bahyagraha" && !chartSetting.printOuterPlanets) {
             continue;
         }
 
-        if (["Uranus", "Neptune", "Pluto"].includes(name)) {
-            if (!chartSetting.printOuterPlanets) {
-                continue;
-            }
+        if (["Bahyagraha", "Upagraha", "Kalavelas"].includes(planet.type)) {
+            continue;
         }
 
-        signChart[rasi_num].push({ planet_name: name, degree });
+        signChart[rasi_num].push({ planet, degree });
     }
 
     // Generate the 12-house chart starting from Ascendant
@@ -219,27 +206,23 @@ export default function KundliChartSVG(input: Props) {
                             x="0"
                             y="0">
                             {houseValue.planets.map(p => {
-                                const planetDetail =
-                                    PlanetDetails[p.planet_name];
-
                                 return (
                                     <tspan
-                                        key={p.planet_name}
+                                        key={p.planet.name.english}
                                         x="0"
                                         dy={fontHeight}
                                         fontSize={fontHeight}
-                                        fill={planetDetail?.color ?? "#000"}>
-                                        {settings.lang == "english"
+                                        fill={p.planet.color}>
+                                        {settings.lang === "english"
                                             ? settings.shortName
-                                                ? englishShortName[
-                                                      planetDetail.name.english
-                                                  ]
-                                                : planetDetail.name.english
+                                                ? (p.planet.shortname
+                                                      ?.english ??
+                                                  p.planet.name.english)
+                                                : p.planet.name.english
                                             : settings.shortName
-                                              ? hindiShortName[
-                                                    planetDetail.name.hindi
-                                                ]
-                                              : planetDetail.name.hindi}
+                                              ? (p.planet.shortname?.hindi ??
+                                                p.planet.name.hindi)
+                                              : p.planet.name.hindi}
                                         <tspan
                                             baselineShift="super"
                                             textAnchor="end"

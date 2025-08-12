@@ -8,16 +8,16 @@
         "skipLibCheck": true,
         /* Bundler mode */
         "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "verbatimModuleSyntax": true,
-        "moduleDetection": "force",
+        // "allowImportingTsExtensions": true,
+        // "verbatimModuleSyntax": true,
+        // "moduleDetection": "force",
         "noEmit": true,
         "jsx": "react-jsx", // "jsx": "preserve",
         /* Linting */
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "erasableSyntaxOnly": true,
+        // "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         "allowJs": true,
@@ -28,12 +28,12 @@
         "baseUrl": ".",
         "incremental": true,
         "declaration": true /* Generates corresponding '.d.ts' file. */,
-        "outDir": "lib" /* Redirect output structure to the directory. */,
+        // "outDir": "lib" /* Redirect output structure to the directory. */,
         "allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
     },
-    "include": ["src"],
     "build": {
-        "minify": false
+        "minify": true
     },
+    "include": ["src"],
     "exclude": ["node_modules"]
 }

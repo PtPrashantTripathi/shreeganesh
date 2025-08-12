@@ -1,5 +1,5 @@
 import { FaBars } from "react-icons/fa";
-import { useSessionContext } from "src/frontend/contexts/SessionContext";
+import { useSessionContext } from "src/contexts/SessionContext";
 export function Header() {
     const session = useSessionContext();
 

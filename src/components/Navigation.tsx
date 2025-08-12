@@ -1,5 +1,5 @@
-import { useSessionContext } from "src/frontend/contexts/SessionContext";
-import { pageDetails } from "src/frontend/pages/pageDetails";
+import { useSessionContext } from "src/contexts/SessionContext";
+import { pageDetails } from "src/pages/pageDetails";
 
 export function Navigation() {
     const session = useSessionContext();

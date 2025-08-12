@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DateTime } from "src/backend/datetime";
 import { getPanchanga } from "src/backend/panchanga";
-import Loader from "src/frontend/component/Loader";
-import { useSessionContext } from "src/frontend/contexts/SessionContext";
+import Loader from "src/components/Loader";
+import { useSessionContext } from "src/contexts/SessionContext";
 
 export default function Panchang() {
     const session = useSessionContext();
@@ -14,10 +14,10 @@ export default function Panchang() {
     useEffect(() => {
         async function fetchKundli() {
             const result = await getPanchanga(
-                session.data.datetime ??
-                    new DateTime(1997, 8, 11, 1, 55, 0, 0, 5.5),
-                22.6,
-                80.38,
+                DateTime.fromDate(`${session.data.date}T${session.data.time}`),
+                session.data.lon,
+                session.data.lat,
+
                 0,
                 0
             );
