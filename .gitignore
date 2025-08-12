@@ -120,7 +120,6 @@ pids/
 *.tar.gz
 *.zip
 
-# Vite Env
-tsconfig.tsbuildinfo
-public/.well-known
+# Chrome devtools
+com.chrome.devtools.json
 
